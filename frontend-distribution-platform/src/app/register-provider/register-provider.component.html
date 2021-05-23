@@ -9,40 +9,49 @@
 <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
     <nb-card-body>
         <nb-stepper orientation="horizontal">
+        <nb-step [label]="labelTwo">
+            <ng-template #labelTwo>Account</ng-template>
+            <h3>Register with google Account</h3>
             
+            <button nbButton nbStepperNext>next</button>
+        </nb-step>    
         <nb-step [label]="labelOne" [stepControl]="personalDataForm" >
             <ng-template #labelOne>Personal Data</ng-template>
             <h3>Personal Data</h3>
             <form [formGroup]="personalDataForm" >
-                <div class="input-group">
-                    <input type="text" placeholder="Enter your name" class="form-control" required formControlName="firstName">
+
+                <div class="form-group">
+                    <label for="fistName">First Name</label>
+                    <input type="text" id="firstName" placeholder="Enter your name" class="form-control" required formControlName="firstName">
                 </div>
-                <div class="input-group">
+                <div class="form-group">
+                    <label>Last Name</label>
                     <input type="text" placeholder="Enter your name" class="form-control" required formControlName="lastName">
                 </div>
-                <div class="input-group">
+                <div class="form-group">
+                    <label>Address</label>
                     <input type="text" placeholder="Enter your name" class="form-control" required formControlName="address">
                 </div>
+
             </form>
-            <button nbButton nbStepperNext >next</button>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <button nbButton nbStepperPrev >previous</button>
+                <button nbButton nbStepperNext >next</button>
+                </div>
+                <div class="col-4"></div>
+                
+            </div>
+            
         </nb-step>
         <nb-step [label]="labelTwo">
-            <ng-template #labelTwo>Second step</ng-template>
-            <h3>Step content #2</h3>
-            <button nbButton nbStepperPrevious>prev</button>
-            <button nbButton nbStepperNext>next</button>
+            <ng-template #labelTwo>Finnish</ng-template>
+            <h3>All set</h3>
+            <button nbButton nbStepperPrev >previous</button>
+            <button nbButton  (click)="finishRegister()">finnish</button>
         </nb-step>
-        <nb-step label="Third step">
-            <h3>Step content #3</h3>
-            <button nbButton nbStepperPrevious>prev</button>
-            <button nbButton nbStepperNext>next</button>
-        </nb-step>
-        <nb-step [label]="labelFour">
-            <ng-template #labelFour>Fourth step</ng-template>
-            <h3>Step content #4</h3>
-            <button nbButton nbStepperPrevious>prev</button>
-            <button nbButton disabled nbStepperNext>next</button>
-        </nb-step>
+        
         </nb-stepper>
     </nb-card-body>
 </nb-card>

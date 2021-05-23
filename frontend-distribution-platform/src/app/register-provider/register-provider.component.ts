@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-register-provider',
@@ -12,7 +13,7 @@ export class RegisterProviderComponent implements OnInit {
   secondForm: FormGroup;
   thirdForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,public router: Router ) { }
 
   ngOnInit(): void {
     this.personalDataForm = this.fb.group({
@@ -20,16 +21,11 @@ export class RegisterProviderComponent implements OnInit {
       lastName: ['', Validators.minLength(3)],
       address: ['', Validators.minLength(3)],
     });
-
-    this.secondForm = this.fb.group({
-      secondCtrl: ['', Validators.required],
-    });
-
-    this.thirdForm = this.fb.group({
-      thirdCtrl: ['', Validators.required],
-    });
   }
   
+  finishRegister(){
+   this.router.navigate(['/login']);
+  }
 
   onSecondSubmit() {
     this.secondForm.markAsDirty();
