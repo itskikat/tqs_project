@@ -10,7 +10,7 @@ import {
 } from '@nebular/auth';
 import { LoginComponent } from './login/login.component';
 import {RegisterProviderComponent} from './register-provider/register-provider.component';
-
+import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
 
 export const routes: Routes = [
   {
@@ -51,6 +51,9 @@ export const routes: Routes = [
   },
   {
     path: 'login', component: LoginComponent
+  },
+  {
+    path:'services', component: ProviderServiceListComponent
   },
   {
     path: 'regist/provider', component: RegisterProviderComponent

@@ -10,30 +10,28 @@ import { Router } from '@angular/router';
 export class RegisterProviderComponent implements OnInit {
 
   personalDataForm: FormGroup;
-  secondForm: FormGroup;
-  thirdForm: FormGroup;
+
+  minDate: Date;
 
   constructor(private fb: FormBuilder,public router: Router ) { }
 
   ngOnInit(): void {
+    this.minDate = new Date();
+    this.minDate.setFullYear(this.minDate.getFullYear() - 18);  
+    console.log(this.minDate);
     this.personalDataForm = this.fb.group({
       firstName: ['', Validators.minLength(3)],
       lastName: ['', Validators.minLength(3)],
       address: ['', Validators.minLength(3)],
+      bdate: ['']
     });
   }
   
   finishRegister(){
-   this.router.navigate(['/login']);
+   this.router.navigate(['/services']);
   }
 
-  onSecondSubmit() {
-    this.secondForm.markAsDirty();
-  }
 
-  onThirdSubmit() {
-    this.thirdForm.markAsDirty();
-  }
 }
 
 
