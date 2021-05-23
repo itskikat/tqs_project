@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'ngx-register-provider',
@@ -7,9 +8,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterProviderComponent implements OnInit {
 
-  constructor() { }
+  personalDataForm: FormGroup;
+  secondForm: FormGroup;
+  thirdForm: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.personalDataForm = this.fb.group({
+      firstName: ['', Validators.minLength(3)],
+      lastName: ['', Validators.minLength(3)],
+      address: ['', Validators.minLength(3)],
+    });
+
+    this.secondForm = this.fb.group({
+      secondCtrl: ['', Validators.required],
+    });
+
+    this.thirdForm = this.fb.group({
+      thirdCtrl: ['', Validators.required],
+    });
+  }
+  
+
+  onSecondSubmit() {
+    this.secondForm.markAsDirty();
   }
 
+  onThirdSubmit() {
+    this.thirdForm.markAsDirty();
+  }
 }
+
+

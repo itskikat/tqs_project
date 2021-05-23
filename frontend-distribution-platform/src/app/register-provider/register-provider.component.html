@@ -1,29 +1,52 @@
+<nb-layout center>
+<nb-layout-header>
+    <span class="navbar-text" style="text-align: center;width:100%;">
+        Provider Registration
+      </span>
+</nb-layout-header>
+    
+<nb-layout-column>   
 <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
     <nb-card-body>
-      <nb-stepper orientation="horizontal">
-        <nb-step [label]="labelOne">
-          <ng-template #labelOne>First step</ng-template>
-          <h3>Step content #1</h3>
-          <button nbButton disabled nbStepperNext>prev</button>
-          <button nbButton nbStepperNext>next</button>
+        <nb-stepper orientation="horizontal">
+            
+        <nb-step [label]="labelOne" [stepControl]="personalDataForm" >
+            <ng-template #labelOne>Personal Data</ng-template>
+            <h3>Personal Data</h3>
+            <form [formGroup]="personalDataForm" >
+                <div class="input-group">
+                    <input type="text" placeholder="Enter your name" class="form-control" required formControlName="firstName">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Enter your name" class="form-control" required formControlName="lastName">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Enter your name" class="form-control" required formControlName="address">
+                </div>
+            </form>
+            <button nbButton nbStepperNext >next</button>
         </nb-step>
         <nb-step [label]="labelTwo">
-          <ng-template #labelTwo>Second step</ng-template>
-          <h3>Step content #2</h3>
-          <button nbButton nbStepperPrevious>prev</button>
-          <button nbButton nbStepperNext>next</button>
+            <ng-template #labelTwo>Second step</ng-template>
+            <h3>Step content #2</h3>
+            <button nbButton nbStepperPrevious>prev</button>
+            <button nbButton nbStepperNext>next</button>
         </nb-step>
         <nb-step label="Third step">
-          <h3>Step content #3</h3>
-          <button nbButton nbStepperPrevious>prev</button>
-          <button nbButton nbStepperNext>next</button>
+            <h3>Step content #3</h3>
+            <button nbButton nbStepperPrevious>prev</button>
+            <button nbButton nbStepperNext>next</button>
         </nb-step>
         <nb-step [label]="labelFour">
-          <ng-template #labelFour>Fourth step</ng-template>
-          <h3>Step content #4</h3>
-          <button nbButton nbStepperPrevious>prev</button>
-          <button nbButton disabled nbStepperNext>next</button>
+            <ng-template #labelFour>Fourth step</ng-template>
+            <h3>Step content #4</h3>
+            <button nbButton nbStepperPrevious>prev</button>
+            <button nbButton disabled nbStepperNext>next</button>
         </nb-step>
-      </nb-stepper>
+        </nb-stepper>
     </nb-card-body>
-  </nb-card>
+</nb-card>
+</nb-layout-column>
+<nb-layout-footer><a routerLink="../../login" >Return to Login Page</a></nb-layout-footer>
+</nb-layout>
+
