@@ -14,12 +14,10 @@
             <h3>Register Account</h3>
             <p>For a greater commodity our platform allows logging in with google account.</p>
             <div class="row" style="margin-top: 5%;">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperNext><img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png"> <span> Login with Google</span></button>
-                </div>
-                <div class="col-4"></div>
-                
+                <button nbButton nbStepperNext class="p-3 mx-auto col-5">
+                    <img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png">
+                    <span>Login with Google</span>
+                </button>                
             </div>
             
         </nb-step>    
@@ -48,13 +46,8 @@
 
             </form>
             <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperPrevious >previous</button>
-                    <button nbButton nbStepperNext >next</button>
-                </div>
-                <div class="col-4"></div>
-                
+                <button nbButton nbStepperPrevious class="ml-auto mr-3">previous</button>
+                <button nbButton nbStepperNext class="mr-auto ml-3">next</button>
             </div>
             
         </nb-step>
@@ -63,13 +56,8 @@
             <h3>All set</h3>
             <p>Are you sure the data is correct if yes press finnish and welcome to xxx</p>
             <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperPrevious >previous</button>
-                    <button nbButton  (click)="finishRegister()">finnish</button>
-                </div>
-                <div class="col-4"></div>
-                
+                <button nbButton nbStepperPrevious class="ml-auto mr-3">previous</button>
+                <button nbButton  (click)="finishRegister()" class="mr-auto ml-3">finnish</button>                
             </div>
             
         </nb-step>
