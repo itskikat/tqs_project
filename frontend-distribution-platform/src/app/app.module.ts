@@ -11,6 +11,7 @@ import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -19,17 +20,26 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+  NbCardModule,
+  NbStepperModule,
+  NbLayoutModule,
+  NbButtonModule,
+  NbInputModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterProviderComponent],
+  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    NbCardModule,
+    NbStepperModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
@@ -41,6 +51,12 @@ import { RegisterProviderComponent } from './register-provider/register-provider
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    NgbModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NbLayoutModule,
+    NbButtonModule,
+    NbInputModule
   ],
   bootstrap: [AppComponent],
 })

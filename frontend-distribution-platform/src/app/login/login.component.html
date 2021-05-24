@@ -1,12 +1,24 @@
-<div class="container">
-    <h1 id="title" class="title">Login</h1>
-    <p class="sub-title">Hello! Log in with your email.</p>
+<nb-layout center>
     
-    
-    <section class="another-action" aria-label="Register">
-      Don't have an account? 
-      <p><a class="text-link" routerLink="../registerBusiness">Register Business </a> <a class="text-link" routerLink="../regist/provider">Register Provider</a></p>
-    </section>
-</div>
-
-
+        
+    <nb-layout-column>   
+    <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+        <nb-card-body>
+        
+            <h1 id="title" class="title">Login</h1>
+            <p class="sub-title">Hello! Log in with your email.</p>
+            
+            
+            <section class="another-action" aria-label="Register">
+            Don't have an account? 
+            <p><a class="text-link" routerLink="../registerBusiness">Register Business </a> <a class="text-link" routerLink="../regist/provider">Register Provider</a></p>
+            </section>
+              
+            
+        </nb-card-body>
+    </nb-card>
+    </nb-layout-column>
+    <nb-layout-footer><a routerLink="../../login" >Return to Login Page</a></nb-layout-footer>
+</nb-layout>
+        
+        
