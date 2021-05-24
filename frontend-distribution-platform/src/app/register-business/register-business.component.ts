@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'ngx-register-business',
   templateUrl: './register-business.component.html',
@@ -9,26 +10,34 @@ import { Router } from '@angular/router';
 })
 export class RegisterBusinessComponent implements OnInit {
 
-  personalDataForm: FormGroup;
-
+  businessDataForm: FormGroup;
   minDate: Date;
+  selectedCategory = '0';
+  tokenGenerated = false;
 
   constructor(private fb: FormBuilder,public router: Router ) { }
 
   ngOnInit(): void {
     this.minDate = new Date();
-    this.minDate.setFullYear(this.minDate.getFullYear() - 18);  
     console.log(this.minDate);
-    this.personalDataForm = this.fb.group({
-      firstName: ['', Validators.minLength(3)],
-      lastName: ['', Validators.minLength(3)],
+    this.businessDataForm = this.fb.group({
+      companyName: ['', Validators.minLength(3)],
+      vat: ['', Validators.min(11111111), Validators.max(99999999)],
       address: ['', Validators.minLength(3)],
-      bdate: ['']
+      operationstart: ['']
     });
   }
   
   finishRegister(){
    this.router.navigate(['/services']);
+  }
+
+  generateToken() {
+    this.tokenGenerated = true;
+  }
+
+  revertToken() {
+    this.tokenGenerated = false;
   }
 
 

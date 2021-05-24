@@ -24,7 +24,9 @@ import {
   NbStepperModule,
   NbLayoutModule,
   NbButtonModule,
-  NbInputModule
+  NbInputModule,
+  NbSelectModule,
+  NbAlertModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
@@ -57,7 +59,9 @@ import { RegisterBusinessComponent } from './register-business/register-business
     ReactiveFormsModule,
     NbLayoutModule,
     NbButtonModule,
-    NbInputModule
+    NbInputModule,
+    NbSelectModule,
+    NbAlertModule
   ],
   bootstrap: [AppComponent],
 })

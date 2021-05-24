@@ -1,83 +1,114 @@
 <nb-layout center>
-<nb-layout-header>
-    <span class="navbar-text" style="text-align: center;width:100%;">
-        Business Registration
-      </span>
-</nb-layout-header>
+    <nb-layout-header>
+        <span class="navbar-text" style="text-align: center;width:100%;">
+            Business Registration
+        </span>
+    </nb-layout-header>
+
+    <nb-layout-column>
+        <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+            <nb-card-body>
+                <nb-stepper orientation="horizontal">
+                    <nb-step [label]="labelTwo">
+                        <ng-template #labelTwo>Account</ng-template>
+                        <h3>Register Account</h3>
+                        <p>For a greater commodity our platform allows logging in with google account.</p>
+                        <div class="row" style="margin-top: 5%;">
+                            <button nbButton nbStepperNext class="p-3 mx-auto col-5">
+                                <img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png">
+                                <span>Login with Google</span>
+                            </button>
+                        </div>
+                    </nb-step>
+                    <nb-step [label]="labelOne" [stepControl]="businessDataForm">
+                        <ng-template #labelOne>Business data</ng-template>
+                        <h3>Business data</h3>
+                        <form [formGroup]="businessDataForm">
+
+                            <div class="form-group">
+                                <label for="fistName">Company name</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Enter the company"
+                                    class="form-control" required formControlName="companyName">
+                            </div>
+                            <div class="form-group">
+                                <label>VAT Number</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Enter your VAT"
+                                    class="form-control" required formControlName="vat">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Enter your fiscal address"
+                                    class="form-control" required formControlName="address">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Business area</label>
+                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCategory">
+                                    <nb-option value="0">Diverse</nb-option>
+                                    <nb-option value="1">House maintenance</nb-option>
+                                    <nb-option value="2">Human care</nb-option>
+                                    <nb-option value="3">Cooking</nb-option>
+                                </nb-select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Operation date (prevision)</label>
+                                <input nbInput style="max-width: 100%;"
+                                    placeholder="Enter the date your business is expected to be operating"
+                                    class="form-control" [nbDatepicker]="formpicker" formControlName="operationstart">
+                                <nb-datepicker [min]="minDate" #formpicker></nb-datepicker>
+                            </div>
+
+                        </form>
+                        <div class="row">
+                            <button nbButton nbStepperPrevious class="ml-auto mr-3">previous</button>
+                            <button nbButton nbStepperNext class="mr-auto ml-3">next</button>
+                        </div>
+
+                    </nb-step>
+                    <nb-step [label]="labelTwo" class="">
+                        <ng-template #labelTwo>API Token</ng-template>
+
+                        <div class="d-flex flex-column" *ngIf="!tokenGenerated">
+                            <h3>Almost there...</h3>
+                            <p>The last step to integrate your business with our service it to generate an API Token.</p>
+                            <p>This token is going to be used by your app in order itself to the API.</p>
+                            
+                            <nb-alert status="warning">
+                                Attention! You will only be able to see the token once. Generate it only when you have a safe place to store it.
+                            </nb-alert>
     
-<nb-layout-column>   
-<nb-card class="col-md-12 col-lg-12 col-xxxl-12">
-    <nb-card-body>
-        <nb-stepper orientation="horizontal">
-        <nb-step [label]="labelTwo">
-            <ng-template #labelTwo>Account</ng-template>
-            <h3>Register Account</h3>
-            <p>For a greater commodity our platform allows logging in with google account.</p>
-            <div class="row" style="margin-top: 5%;">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperNext><img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png"> <span> Login with Google</span></button>
-                </div>
-                <div class="col-4"></div>
-                
-            </div>
-            
-        </nb-step>    
-        <nb-step [label]="labelOne" [stepControl]="personalDataForm" >
-            <ng-template #labelOne>Personal Data</ng-template>
-            <h3>Personal Data</h3>
-            <form [formGroup]="personalDataForm" >
+                            <button 
+                                nbButton 
+                                (click)="generateToken()"
+                                class="mx-auto mb-3"
+                            >Generate token</button>
 
-                <div class="form-group">
-                    <label for="fistName">First Name</label>
-                    <input nbInput style="max-width: 100%;" id="firstName" placeholder="Enter your name" class="form-control" required formControlName="firstName">
-                </div>
-                <div class="form-group">
-                    <label>Last Name</label>
-                    <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="lastName">
-                </div>
-                <div class="form-group">
-                    <label>Address</label>
-                    <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="address">
-                </div>
-                <div class="form-group">
-                    <label>Birth Date</label>
-                    <input nbInput style="max-width: 100%;" placeholder="Form Picker" class="form-control"  [nbDatepicker]="formpicker" formControlName="bdate">
-                    <nb-datepicker [max]="minDate" #formpicker></nb-datepicker>
-                </div>
+                            <div class="row">
+                                <button nbButton nbStepperPrevious class="mx-auto">previous</button>
+                            </div>
+                        </div>
 
-            </form>
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperPrevious >previous</button>
-                    <button nbButton nbStepperNext >next</button>
-                </div>
-                <div class="col-4"></div>
-                
-            </div>
-            
-        </nb-step>
-        <nb-step [label]="labelTwo">
-            <ng-template #labelTwo>Finnish</ng-template>
-            <h3>All set</h3>
-            <p>Are you sure the data is correct if yes press finnish and welcome to xxx</p>
-            <div class="row">
-                <div class="col-4"></div>
-                <div class="col-4">
-                    <button nbButton nbStepperPrevious >previous</button>
-                    <button nbButton  (click)="finishRegister()">finnish</button>
-                </div>
-                <div class="col-4"></div>
-                
-            </div>
-            
-        </nb-step>
-        
-        </nb-stepper>
-    </nb-card-body>
-</nb-card>
-</nb-layout-column>
-<nb-layout-footer><a routerLink="/login" >Return to Login Page</a></nb-layout-footer>
+                        <div *ngIf="tokenGenerated">
+                            <p>Your token has been generated successfully and is shown below!</p>
+                            <nb-alert outline="success" class="my-5 text-center">
+                                ULab6..PzmKj4!;$&@Yw`+s4tun04
+                            </nb-alert>
+                            <p>You must use it every time your app calls the API. See how in the <a>documentation</a>.</p>
+                            <p>You can now access the dashboard and monitor your app stats. To do so press FINISH.</p>
+                            
+                            <div class="row">
+                                <button nbButton (click)="revertToken()" class="ml-auto mr-3">previous</button>
+                                <button nbButton (click)="finishRegister()" class="mr-auto ml-3">finnish</button>
+                            </div>
+                        </div>
+
+                    </nb-step>
+
+                </nb-stepper>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+    <nb-layout-footer><a routerLink="/login">Return to Login Page</a></nb-layout-footer>
 </nb-layout>
-
