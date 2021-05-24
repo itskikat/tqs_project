@@ -1,0 +1,83 @@
+<nb-layout center>
+<nb-layout-header>
+    <span class="navbar-text" style="text-align: center;width:100%;">
+        Business Registration
+      </span>
+</nb-layout-header>
+    
+<nb-layout-column>   
+<nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+    <nb-card-body>
+        <nb-stepper orientation="horizontal">
+        <nb-step [label]="labelTwo">
+            <ng-template #labelTwo>Account</ng-template>
+            <h3>Register Account</h3>
+            <p>For a greater commodity our platform allows logging in with google account.</p>
+            <div class="row" style="margin-top: 5%;">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <button nbButton nbStepperNext><img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png"> <span> Login with Google</span></button>
+                </div>
+                <div class="col-4"></div>
+                
+            </div>
+            
+        </nb-step>    
+        <nb-step [label]="labelOne" [stepControl]="personalDataForm" >
+            <ng-template #labelOne>Personal Data</ng-template>
+            <h3>Personal Data</h3>
+            <form [formGroup]="personalDataForm" >
+
+                <div class="form-group">
+                    <label for="fistName">First Name</label>
+                    <input nbInput style="max-width: 100%;" id="firstName" placeholder="Enter your name" class="form-control" required formControlName="firstName">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="lastName">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="address">
+                </div>
+                <div class="form-group">
+                    <label>Birth Date</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Form Picker" class="form-control"  [nbDatepicker]="formpicker" formControlName="bdate">
+                    <nb-datepicker [max]="minDate" #formpicker></nb-datepicker>
+                </div>
+
+            </form>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <button nbButton nbStepperPrevious >previous</button>
+                    <button nbButton nbStepperNext >next</button>
+                </div>
+                <div class="col-4"></div>
+                
+            </div>
+            
+        </nb-step>
+        <nb-step [label]="labelTwo">
+            <ng-template #labelTwo>Finnish</ng-template>
+            <h3>All set</h3>
+            <p>Are you sure the data is correct if yes press finnish and welcome to xxx</p>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <button nbButton nbStepperPrevious >previous</button>
+                    <button nbButton  (click)="finishRegister()">finnish</button>
+                </div>
+                <div class="col-4"></div>
+                
+            </div>
+            
+        </nb-step>
+        
+        </nb-stepper>
+    </nb-card-body>
+</nb-card>
+</nb-layout-column>
+<nb-layout-footer><a routerLink="/login" >Return to Login Page</a></nb-layout-footer>
+</nb-layout>
+

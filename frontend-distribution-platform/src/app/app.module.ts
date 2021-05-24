@@ -30,9 +30,10 @@ import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
+import { RegisterBusinessComponent } from './register-business/register-business.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent],
+  declarations: [AppComponent, LoginComponent, RegisterBusinessComponent, RegisterProviderComponent, ProviderServiceListComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
