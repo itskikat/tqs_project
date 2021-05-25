@@ -11,7 +11,9 @@ import {
 import { LoginComponent } from './login/login.component';
 import {RegisterProviderComponent} from './register-provider/register-provider.component';
 import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
+import {ProviderServiceFormComponent} from './provider-service-form/provider-service-form.component';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
+
 
 export const routes: Routes = [
   {
@@ -52,6 +54,9 @@ export const routes: Routes = [
   },
   {
     path: 'login', component: LoginComponent
+  },
+  {
+    path:'services/add', component: ProviderServiceFormComponent
   },
   {
     path:'services', component: ProviderServiceListComponent
