@@ -21,24 +21,56 @@ import {
   NbToastrModule,
   NbWindowModule,
   NbCardModule,
+  NbProgressBarModule,
   NbStepperModule,
   NbLayoutModule,
   NbButtonModule,
   NbInputModule,
+  NbSelectModule,
+  NbUserModule,
+  NbIconModule,
+  NbTabsetModule,
+  NbListModule,
+  NbAlertModule,
   NbPopoverModule,
   NbCheckboxModule,
-  NbSelectModule,
-  NbAlertModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
-import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
+import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
+import { BusinessStatsProgressSection } from './business/business-stats/progress-section/progress-section.component';
+import { BusinessStatsCharts } from './business/business-stats/charts-panel/charts-panel.component';
+import { BusinessStatsChartsProfitChartComponent } from './business/business-stats/charts-panel/charts/profit-chart.component';
+import { BusinessStatsChartsOrdersChartComponent } from './business/business-stats/charts-panel/charts/orders-chart.component';
+import { BusinessStatsChartsChartPanelSummaryComponent } from './business/business-stats/charts-panel/chart-panel-summary/chart-panel-summary.component';
+import { BusinessStatsChartsChartPanelHeaderComponent } from './business/business-stats/charts-panel/chart-panel-header/chart-panel-header.component';
+import { BusinessStatsChartsLegendChartComponent } from './business/business-stats/charts-panel/legend-chart/legend-chart.component';
+import { ChartModule } from 'angular2-chartjs';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
+import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterBusinessComponent, RegisterProviderComponent, ProviderServiceListComponent,ProviderServiceFormComponent],
+  declarations: [
+    AppComponent, 
+    LoginComponent, 
+    RegisterProviderComponent, 
+    ProviderServiceListComponent,
+    RegisterBusinessComponent,
+    ProviderServiceFormComponent,
+    BusinessStatsComponent,
+    BusinessStatsProgressSection,
+    BusinessStatsCharts,
+    BusinessStatsChartsProfitChartComponent,
+    BusinessStatsChartsOrdersChartComponent,
+    BusinessStatsChartsChartPanelSummaryComponent,
+    BusinessStatsChartsChartPanelHeaderComponent,
+    BusinessStatsChartsLegendChartComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -64,7 +96,21 @@ import { RegisterBusinessComponent } from './register-business/register-business
     NbLayoutModule,
     NbButtonModule,
     NbInputModule,
+    NbProgressBarModule,
     NbSelectModule,
+    ThemeModule,
+    NbCardModule,
+    NbUserModule,
+    NbButtonModule,
+    NbIconModule,
+    NbTabsetModule,
+    NbSelectModule,
+    NbListModule,
+    ChartModule,
+    NbProgressBarModule,
+    NgxEchartsModule,
+    NgxChartsModule,
+    LeafletModule,
     NbCheckboxModule,
     NbAlertModule
   ],

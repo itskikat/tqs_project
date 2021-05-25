@@ -31,7 +31,7 @@ export class RegisterBusinessComponent implements OnInit {
   }
   
   finishRegister(){
-   this.router.navigate(['/services']);
+   this.router.navigate(['/business/stats']);
   }
 
   generateToken() {

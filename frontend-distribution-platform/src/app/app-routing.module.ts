@@ -13,6 +13,7 @@ import {RegisterProviderComponent} from './register-provider/register-provider.c
 import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
 import {ProviderServiceFormComponent} from './provider-service-form/provider-service-form.component';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
+import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
 
 
 export const routes: Routes = [
@@ -60,6 +61,9 @@ export const routes: Routes = [
   },
   {
     path:'services', component: ProviderServiceListComponent
+  },
+  {
+    path:'business/stats', component: BusinessStatsComponent
   },
   {
     path: 'regist/provider', component: RegisterProviderComponent
