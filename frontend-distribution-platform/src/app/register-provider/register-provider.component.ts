@@ -18,7 +18,6 @@ export class RegisterProviderComponent implements OnInit {
   ngOnInit(): void {
     this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 18);  
-    console.log(this.minDate);
     this.personalDataForm = this.fb.group({
       firstName: ['', Validators.minLength(3)],
       lastName: ['', Validators.minLength(3)],
