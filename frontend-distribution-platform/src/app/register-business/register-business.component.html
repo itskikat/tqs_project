@@ -42,6 +42,26 @@
                             </div>
                             
                             <div class="form-group">
+                                <label>Country</label>
+                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCountry">
+                                    <nb-option value="0">Portugal</nb-option>
+                                    <nb-option value="1">Spain</nb-option>
+                                    <nb-option value="2">France</nb-option>
+                                    <nb-option value="3">Germany</nb-option>
+                                </nb-select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Coverage</label>
+                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCoverage">
+                                    <nb-option value="0">Regional</nb-option>
+                                    <nb-option value="1">National</nb-option>
+                                    <nb-option value="2">Continental</nb-option>
+                                    <nb-option value="3">Worldwide</nb-option>
+                                </nb-select>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label>Business area</label>
                                 <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCategory">
                                     <nb-option value="0">Diverse</nb-option>

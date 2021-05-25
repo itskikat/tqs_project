@@ -13,6 +13,8 @@ export class RegisterBusinessComponent implements OnInit {
   businessDataForm: FormGroup;
   minDate: Date;
   selectedCategory = '0';
+  selectedCountry = '0';
+  selectedCoverage = '0';
   tokenGenerated = false;
 
   constructor(private fb: FormBuilder,public router: Router ) { }
