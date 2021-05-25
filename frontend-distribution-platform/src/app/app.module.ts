@@ -30,7 +30,10 @@ import {
   NbUserModule,
   NbIconModule,
   NbTabsetModule,
-  NbListModule
+  NbListModule,
+  NbAlertModule,
+  NbPopoverModule,
+  NbCheckboxModule,
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
@@ -48,6 +51,8 @@ import { ChartModule } from 'angular2-chartjs';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { RegisterBusinessComponent } from './register-business/register-business.component';
+import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +60,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     LoginComponent, 
     RegisterProviderComponent, 
     ProviderServiceListComponent,
+    RegisterBusinessComponent,
+    ProviderServiceFormComponent,
     BusinessStatsComponent,
     BusinessStatsProgressSection,
     BusinessStatsCharts,
@@ -84,6 +91,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     ThemeModule.forRoot(),
     NgbModule,
     FormsModule,
+    NbPopoverModule,
     ReactiveFormsModule,
     NbLayoutModule,
     NbButtonModule,
@@ -103,6 +111,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     NgxEchartsModule,
     NgxChartsModule,
     LeafletModule,
+    NbCheckboxModule,
+    NbAlertModule
   ],
   bootstrap: [AppComponent],
 })
