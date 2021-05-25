@@ -11,6 +11,7 @@ import {
 import { LoginComponent } from './login/login.component';
 import {RegisterProviderComponent} from './register-provider/register-provider.component';
 import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
+import { RegisterBusinessComponent } from './register-business/register-business.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +58,9 @@ export const routes: Routes = [
   },
   {
     path: 'regist/provider', component: RegisterProviderComponent
+  },
+  {
+    path: 'regist/business', component: RegisterBusinessComponent
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'pages' },
