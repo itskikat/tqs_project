@@ -26,7 +26,11 @@ import {
   NbLayoutModule,
   NbButtonModule,
   NbInputModule,
-  NbSelectModule
+  NbSelectModule,
+  NbUserModule,
+  NbIconModule,
+  NbTabsetModule,
+  NbListModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
@@ -34,6 +38,16 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
 import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
 import { BusinessStatsProgressSection } from './business/business-stats/progress-section/progress-section.component';
+import { BusinessStatsCharts } from './business/business-stats/charts-panel/charts-panel.component';
+import { BusinessStatsChartsProfitChartComponent } from './business/business-stats/charts-panel/charts/profit-chart.component';
+import { BusinessStatsChartsOrdersChartComponent } from './business/business-stats/charts-panel/charts/orders-chart.component';
+import { BusinessStatsChartsChartPanelSummaryComponent } from './business/business-stats/charts-panel/chart-panel-summary/chart-panel-summary.component';
+import { BusinessStatsChartsChartPanelHeaderComponent } from './business/business-stats/charts-panel/chart-panel-header/chart-panel-header.component';
+import { BusinessStatsChartsLegendChartComponent } from './business/business-stats/charts-panel/legend-chart/legend-chart.component';
+import { ChartModule } from 'angular2-chartjs';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -42,7 +56,13 @@ import { BusinessStatsProgressSection } from './business/business-stats/progress
     RegisterProviderComponent, 
     ProviderServiceListComponent,
     BusinessStatsComponent,
-    BusinessStatsProgressSection
+    BusinessStatsProgressSection,
+    BusinessStatsCharts,
+    BusinessStatsChartsProfitChartComponent,
+    BusinessStatsChartsOrdersChartComponent,
+    BusinessStatsChartsChartPanelSummaryComponent,
+    BusinessStatsChartsChartPanelHeaderComponent,
+    BusinessStatsChartsLegendChartComponent
   ],
   imports: [
     BrowserModule,
@@ -69,7 +89,20 @@ import { BusinessStatsProgressSection } from './business/business-stats/progress
     NbButtonModule,
     NbInputModule,
     NbProgressBarModule,
-    NbSelectModule
+    NbSelectModule,
+    ThemeModule,
+    NbCardModule,
+    NbUserModule,
+    NbButtonModule,
+    NbIconModule,
+    NbTabsetModule,
+    NbSelectModule,
+    NbListModule,
+    ChartModule,
+    NbProgressBarModule,
+    NgxEchartsModule,
+    NgxChartsModule,
+    LeafletModule,
   ],
   bootstrap: [AppComponent],
 })
