@@ -17,9 +17,9 @@
                 </div>
                 <div class=" col-sm-3">
                     
-                    <select id="orderSelect" (change)="optionSelected()" class="form-control" [(selected)]="selected"> 
-                        <option *ngFor="let o of options"  [ngValue]="o.id"> {{o.name}}</option>
-                    </select>
+                    <nb-select class="w-100" id="orderSelect" (change)="optionSelected()"  [(selected)]="selected"> 
+                        <nb-option *ngFor="let o of options"  [value]="o.id"> {{o.name}}</nb-option>
+                    </nb-select>
                 </div>
             </div>
         </form>

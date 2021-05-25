@@ -27,6 +27,7 @@ import {
   NbInputModule,
   NbPopoverModule,
   NbSelectModule,
+  NbCheckboxModule,
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
@@ -61,7 +62,8 @@ import { ProviderServiceFormComponent } from './provider-service-form/provider-s
     NbLayoutModule,
     NbButtonModule,
     NbInputModule,
-    NbSelectModule
+    NbSelectModule,
+    NbCheckboxModule
   ],
   bootstrap: [AppComponent],
 })
