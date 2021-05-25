@@ -53,6 +53,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
+import { ProviderProfileComponent } from './provider-profile/provider-profile.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { ProviderServiceFormComponent } from './provider-service-form/provider-s
     BusinessStatsChartsOrdersChartComponent,
     BusinessStatsChartsChartPanelSummaryComponent,
     BusinessStatsChartsChartPanelHeaderComponent,
-    BusinessStatsChartsLegendChartComponent
+    BusinessStatsChartsLegendChartComponent,
+    ProviderProfileComponent
   ],
   imports: [
     BrowserModule,

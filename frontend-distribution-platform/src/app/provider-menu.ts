@@ -9,5 +9,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'E-commerce',
     icon: 'shopping-cart-outline',
     link: '/services',
+  },
+  {
+    title: 'Profile',
+    icon: 'person',
+    link: '/profile/provider',
   }
 ];
