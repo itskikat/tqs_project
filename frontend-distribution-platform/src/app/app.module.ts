@@ -26,17 +26,19 @@ import {
   NbButtonModule,
   NbInputModule,
   NbPopoverModule,
-  NbSelectModule,
   NbCheckboxModule,
+  NbSelectModule,
+  NbAlertModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
 import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
+import { RegisterBusinessComponent } from './register-business/register-business.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent, ProviderServiceFormComponent],
+  declarations: [AppComponent, LoginComponent, RegisterBusinessComponent, RegisterProviderComponent, ProviderServiceListComponent,ProviderServiceFormComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -64,6 +66,7 @@ import { ProviderServiceFormComponent } from './provider-service-form/provider-s
     NbInputModule,
     NbSelectModule,
     NbCheckboxModule
+    NbAlertModule
   ],
   bootstrap: [AppComponent],
 })
