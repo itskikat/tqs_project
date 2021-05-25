@@ -6,6 +6,102 @@
         <nb-menu [items]="menu"></nb-menu>
     </nb-sidebar>
     <nb-layout-column>
+        <form>
+            <div class="form-group row" style="margin-bottom: 2%;">
+                <div class="col-sm-4">
+                    <button (click)="addService()" nbButton status="success">Add Service</button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-1" style="align-items: center; text-align: right; display: flex;">
+                    <p style="margin-bottom: 0; ">Order:</p>
+                </div>
+                <div class=" col-sm-3">
+                    
+                    <select id="orderSelect" (change)="optionSelected()" class="form-control" [(selected)]="selected"> 
+                        <option *ngFor="let o of options"  [ngValue]="o.id"> {{o.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xxxl-12">
+                <nb-card>
+                <nb-card-header>Service 1</nb-card-header>
+                <nb-card-body>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Area: </strong> Aveiro</p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Price: </strong> 20€/h</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
+                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
+                    </div>
+                    
+                </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xxxl-12">
+                <nb-card>
+                <nb-card-header>Service 1</nb-card-header>
+                <nb-card-body>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Area: </strong> Aveiro</p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Price: </strong> 20€/h</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
+                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
+                    </div>
+                </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-xxxl-12">
+                <nb-card>
+                <nb-card-header>Service 1</nb-card-header>
+                <nb-card-body>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Area: </strong> Aveiro</p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Price: </strong> 20€/h</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
+                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
+                    </div>
+                </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
     </nb-layout-column>
 <nb-layout-footer></nb-layout-footer>
 </nb-layout>

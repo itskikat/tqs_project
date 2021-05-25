@@ -24,15 +24,18 @@ import {
   NbStepperModule,
   NbLayoutModule,
   NbButtonModule,
-  NbInputModule
+  NbInputModule,
+  NbPopoverModule,
+  NbSelectModule,
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
+import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent],
+  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent, ProviderServiceFormComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -53,10 +56,12 @@ import { ProviderServiceListComponent } from './provider-service-list/provider-s
     ThemeModule.forRoot(),
     NgbModule,
     FormsModule,
+    NbPopoverModule,
     ReactiveFormsModule,
     NbLayoutModule,
     NbButtonModule,
-    NbInputModule
+    NbInputModule,
+    NbSelectModule
   ],
   bootstrap: [AppComponent],
 })
