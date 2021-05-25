@@ -5,8 +5,16 @@ import { BusinessStatsChartsOrdersChartComponent } from './charts/orders-chart.c
 import { BusinessStatsChartsProfitChartComponent } from './charts/profit-chart.component';
 import { OrdersChart } from '../../../@core/data/orders-chart';
 import { ProfitChart } from '../../../@core/data/profit-chart';
-import { OrderProfitChartSummary, OrdersProfitChartData } from '../../../@core/data/orders-profit-chart';
+import { OrdersProfitChartData } from '../../../@core/data/orders-profit-chart';
 
+// INTERFACE
+export interface OrderProfitChartSummary {
+  title: string;
+  value: number;
+}
+
+
+// COMPONENT
 @Component({
   selector: 'ngx-business-stats-charts',
   styleUrls: ['./charts-panel.component.scss'],
@@ -15,8 +23,23 @@ import { OrderProfitChartSummary, OrdersProfitChartData } from '../../../@core/d
 export class BusinessStatsCharts implements OnDestroy {
 
   private alive = true;
+  
+  // Data
+  chartPanelSummary: OrderProfitChartSummary[] = [
+    {
+      title: 'All businesses',
+      value: 3654,
+    },
+    {
+      title: 'Best business',
+      value: 946,
+    },
+    {
+      title: 'Average business',
+      value: 654,
+    }
+  ];
 
-  chartPanelSummary: OrderProfitChartSummary[];
   period: string = 'week';
   ordersChartData: OrdersChart;
   profitChartData: ProfitChart;
@@ -28,7 +51,7 @@ export class BusinessStatsCharts implements OnDestroy {
     this.ordersProfitChartService.getOrderProfitChartSummary()
       .pipe(takeWhile(() => this.alive))
       .subscribe((summary) => {
-        this.chartPanelSummary = summary;
+        // this.chartPanelSummary = summary;
       });
 
     this.getOrdersChartData(this.period);

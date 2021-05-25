@@ -45,15 +45,15 @@ export class BusinessStatsChartsChartPanelHeaderComponent implements OnDestroy {
     this.chartLegend = [
       {
         iconColor: orderProfitLegend.firstItem,
-        title: 'Payment',
+        title: 'This week',
       },
       {
         iconColor: orderProfitLegend.secondItem,
-        title: 'Canceled',
+        title: 'Last week',
       },
       {
         iconColor: orderProfitLegend.thirdItem,
-        title: 'All orders',
+        title: 'Average week',
       },
     ];
   }
