@@ -65,7 +65,7 @@ import { RegisterBusinessComponent } from './register-business/register-business
     NbButtonModule,
     NbInputModule,
     NbSelectModule,
-    NbCheckboxModule
+    NbCheckboxModule,
     NbAlertModule
   ],
   bootstrap: [AppComponent],
