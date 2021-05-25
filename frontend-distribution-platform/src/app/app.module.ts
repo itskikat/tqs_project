@@ -21,18 +21,29 @@ import {
   NbToastrModule,
   NbWindowModule,
   NbCardModule,
+  NbProgressBarModule,
   NbStepperModule,
   NbLayoutModule,
   NbButtonModule,
-  NbInputModule
+  NbInputModule,
+  NbSelectModule
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
+import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
+import { BusinessStatsProgressSection } from './business/business-stats/progress-section/progress-section.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterProviderComponent, ProviderServiceListComponent],
+  declarations: [
+    AppComponent, 
+    LoginComponent, 
+    RegisterProviderComponent, 
+    ProviderServiceListComponent,
+    BusinessStatsComponent,
+    BusinessStatsProgressSection
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -56,7 +67,9 @@ import { ProviderServiceListComponent } from './provider-service-list/provider-s
     ReactiveFormsModule,
     NbLayoutModule,
     NbButtonModule,
-    NbInputModule
+    NbInputModule,
+    NbProgressBarModule,
+    NbSelectModule
   ],
   bootstrap: [AppComponent],
 })
