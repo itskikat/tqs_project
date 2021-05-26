@@ -14,6 +14,7 @@ import {ProviderServiceListComponent} from './provider-service-list/provider-ser
 import {ProviderServiceFormComponent} from './provider-service-form/provider-service-form.component';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
+import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
 
 
 export const routes: Routes = [
@@ -61,6 +62,9 @@ export const routes: Routes = [
   },
   {
     path:'services', component: ProviderServiceListComponent
+  },
+  {
+    path:'requests', component: ProviderRequestsListComponent
   },
   {
     path:'business/stats', component: BusinessStatsComponent
