@@ -16,6 +16,7 @@ export class ProfitChartService extends ProfitChartData {
   ];
 
   private data = { };
+  private data_provider = { };
 
   constructor(private period: PeriodsService) {
     super();
@@ -23,6 +24,11 @@ export class ProfitChartService extends ProfitChartData {
       week: this.getDataForWeekPeriod(),
       month: this.getDataForMonthPeriod(),
       year: this.getDataForYearPeriod(),
+    };
+    this.data_provider = {
+      week: this.getProviderDataForWeekPeriod(),
+      month: this.getProviderDataForMonthPeriod(),
+      year: this.getProviderDataForYearPeriod(),
     };
   }
 
@@ -65,13 +71,55 @@ export class ProfitChartService extends ProfitChartData {
     };
   }
 
+  private getProviderDataForWeekPeriod(): ProfitChart {
+    const nPoint = this.period.getWeeks().length;
+
+    return {
+      chartLabel: this.period.getWeeks(),
+      data: [
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+      ],
+    };
+  }
+
+  private getProviderDataForMonthPeriod(): ProfitChart {
+    const nPoint = this.period.getMonths().length;
+
+    return {
+      chartLabel: this.period.getMonths(),
+      data: [
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+      ],
+    };
+  }
+
+  private getProviderDataForYearPeriod(): ProfitChart {
+    const nPoint = this.year.length;
+
+    return {
+      chartLabel: this.year,
+      data: [
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+        this.getRandomData(nPoint),
+      ],
+    };
+  }
+
   private getRandomData(nPoints: number): number[] {
     return Array.from(Array(nPoints)).map(() => {
       return Math.round(Math.random() * 500);
     });
   }
 
-  getProfitChartData(period: string): ProfitChart {
+  getProfitChartData(period: string, provider?:boolean): ProfitChart {
+    if(provider){
+      return this.data_provider[period];
+    }
     return this.data[period];
   }
 }

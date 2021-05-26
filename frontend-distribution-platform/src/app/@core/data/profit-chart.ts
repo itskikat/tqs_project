@@ -4,5 +4,5 @@ export interface ProfitChart {
 }
 
 export abstract class ProfitChartData {
-  abstract getProfitChartData(period: string): ProfitChart;
+  abstract getProfitChartData(period: string, provider?: boolean): ProfitChart;
 }
