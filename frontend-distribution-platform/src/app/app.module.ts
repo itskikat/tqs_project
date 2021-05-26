@@ -55,6 +55,14 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
 import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
+import { ProviderStatsComponent } from './provider-stats/provider-stats.component';
+import { ProviderStatsCharts} from './provider-stats/charts-panel/charts-panel.component';
+import { ProviderStatsProgressSection } from './provider-stats/progress-section/progress-section.component';
+import { ProviderStatsChartsProfitChartComponent } from './provider-stats/charts-panel/charts/profit-chart.component';
+import { ProviderStatsChartsOrdersChartComponent } from './provider-stats/charts-panel/charts/orders-chart.component';
+import { ProviderStatsChartsChartPanelSummaryComponent } from './provider-stats/charts-panel/chart-panel-summary/chart-panel-summary.component';
+import { ProviderStatsChartsChartPanelHeaderComponent } from './provider-stats/charts-panel/chart-panel-header/chart-panel-header.component';
+import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts-panel/legend-chart/legend-chart.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +80,15 @@ import { ProviderRequestsListComponent } from './provider-requests-list /provide
     BusinessStatsChartsOrdersChartComponent,
     BusinessStatsChartsChartPanelSummaryComponent,
     BusinessStatsChartsChartPanelHeaderComponent,
-    BusinessStatsChartsLegendChartComponent
+    BusinessStatsChartsLegendChartComponent,
+    ProviderStatsCharts,
+    ProviderStatsChartsChartPanelHeaderComponent,
+    ProviderStatsChartsChartPanelSummaryComponent,
+    ProviderStatsChartsLegendChartComponent,
+    ProviderStatsChartsOrdersChartComponent,
+    ProviderStatsChartsProfitChartComponent,
+    ProviderStatsComponent,
+    ProviderStatsProgressSection
   ],
   imports: [
     BrowserModule,
