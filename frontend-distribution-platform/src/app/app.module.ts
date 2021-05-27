@@ -54,6 +54,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
+import { ProviderProfileComponent } from './provider-profile/provider-profile.component';
 import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
 import { ProviderStatsComponent } from './provider-stats/provider-stats.component';
 import { ProviderStatsCharts} from './provider-stats/charts-panel/charts-panel.component';
@@ -81,6 +82,7 @@ import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts
     BusinessStatsChartsChartPanelSummaryComponent,
     BusinessStatsChartsChartPanelHeaderComponent,
     BusinessStatsChartsLegendChartComponent,
+    ProviderProfileComponent,
     ProviderStatsCharts,
     ProviderStatsChartsChartPanelHeaderComponent,
     ProviderStatsChartsChartPanelSummaryComponent,
