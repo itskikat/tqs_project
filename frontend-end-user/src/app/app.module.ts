@@ -49,6 +49,7 @@ import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
 import { ServiceIndexComponent } from "./service/index/index.component";
 import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component";
+import { ServiceFooterComponent } from "./service/footer/footer.component";
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component"
     LandingComponent,
     ProfileComponent,
     // Service
+    ServiceFooterComponent,
     ServiceNavbarComponent,
     ServiceIndexComponent,
   ],
