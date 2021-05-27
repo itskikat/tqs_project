@@ -82,7 +82,7 @@ import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts
     BusinessStatsChartsChartPanelSummaryComponent,
     BusinessStatsChartsChartPanelHeaderComponent,
     BusinessStatsChartsLegendChartComponent,
-    ProviderProfileComponent
+    ProviderProfileComponent,
     ProviderStatsCharts,
     ProviderStatsChartsChartPanelHeaderComponent,
     ProviderStatsChartsChartPanelSummaryComponent,
