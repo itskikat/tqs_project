@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 // layouts
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
+import { ServiceIndexComponent } from "./service/index/index.component";
 
 // admin views
 import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
@@ -46,7 +47,8 @@ const routes: Routes = [
   // no layout views
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
-  { path: "", component: IndexComponent },
+  { path: "index", component: IndexComponent },
+  { path: "", component: ServiceIndexComponent },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 
