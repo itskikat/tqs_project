@@ -34,6 +34,7 @@ import {
   NbAlertModule,
   NbPopoverModule,
   NbCheckboxModule,
+  NbTagModule,
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
@@ -53,6 +54,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { ProviderServiceFormComponent } from './provider-service-form/provider-service-form.component';
+import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
 import { ProviderStatsComponent } from './provider-stats/provider-stats.component';
 import { ProviderStatsCharts} from './provider-stats/charts-panel/charts-panel.component';
 import { ProviderStatsProgressSection } from './provider-stats/progress-section/progress-section.component';
@@ -68,6 +70,7 @@ import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts
     LoginComponent, 
     RegisterProviderComponent, 
     ProviderServiceListComponent,
+    ProviderRequestsListComponent,
     RegisterBusinessComponent,
     ProviderServiceFormComponent,
     BusinessStatsComponent,
@@ -128,7 +131,9 @@ import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts
     NgxChartsModule,
     LeafletModule,
     NbCheckboxModule,
-    NbAlertModule
+    NbAlertModule,
+    NbTagModule,
+    NbUserModule
   ],
   bootstrap: [AppComponent],
 })
