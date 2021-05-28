@@ -223,6 +223,56 @@
       </div>
     </div>
   </div>
+  <div
+    class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mb-20 h-20"
+    style="transform: translateZ(0)"
+  >
+    <svg
+      class="absolute bottom-0 overflow-hidden"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="none"
+      version="1.1"
+      viewBox="0 0 2560 100"
+      x="0"
+      y="0"
+    >
+      <polygon
+        class="text-white fill-current"
+        points="2560 0 2560 100 0 100"
+      ></polygon>
+    </svg>
+  </div>
+</section>
+
+<section class="pt-20 pb-48">
+  
+
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap justify-center text-center mb-24">
+      <div class="w-full lg:w-6/12 px-4">
+        <h2 class="text-4xl font-semibold">Get to know our experts!</h2>
+      </div>
+    </div>
+    <div class="flex flex-wrap">
+      <div class="w-full md:w-6/12 lg:w-3/12 lg:mb-0 mb-12 px-4" *ngFor="let a of [1,2,3,4]">
+        <div class="flex flex-row flex-wrap px-6">
+          <a href="/provider">
+            <div
+              class="mx-auto text-white p-14 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400 -m-16 max-w-150-px"
+            >
+              <h1><i class="text-4xl fas fa-user"></i></h1>
+            </div>
+            <div class="w-full pt-6 text-center">
+              <h5 class="text-xl font-bold">Professional 1</h5>
+              <p class="mt-1 text-sm text-blueGray-400 uppercase font-semibold">
+                Plumber
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <service-footer></service-footer>
