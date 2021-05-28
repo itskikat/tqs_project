@@ -21,7 +21,6 @@ export class RegisterBusinessComponent implements OnInit {
 
   ngOnInit(): void {
     this.minDate = new Date();
-    console.log(this.minDate);
     this.businessDataForm = this.fb.group({
       companyName: ['', Validators.minLength(3)],
       vat: ['', Validators.min(11111111), Validators.max(99999999)],

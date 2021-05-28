@@ -9,6 +9,8 @@ import { RegisterBusinessComponent } from './register-business/register-business
 import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
 import { ProviderProfileComponent } from './provider-profile/provider-profile.component';
 import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
+import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
+import { BusinessAPIComponent } from './business/business-api/business-api.component';
 
 
 export const routes: Routes = [
@@ -29,6 +31,12 @@ export const routes: Routes = [
   },
   {
     path:'business/stats', component: BusinessStatsComponent
+  },
+  {
+    path:'business/profile', component: BusinessProfileComponent
+  },
+  {
+    path:'business/api', component: BusinessAPIComponent
   },
   {
     path: 'regist/provider', component: RegisterProviderComponent

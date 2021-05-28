@@ -5,9 +5,15 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Stats',
     icon: 'bar-chart',
     link: '/business/stats',
-  },{
-    title: 'E-commerce',
-    icon: 'shopping-cart-outline',
-    link: '/service',
+  },
+  {
+    title: 'Business',
+    icon: 'briefcase',
+    link: '/business/profile',
+  },
+  {
+    title: 'API',
+    icon: 'link-outline',
+    link: '/business/api',
   }
 ];
