@@ -51,6 +51,7 @@ import { ServiceIndexComponent } from "./service/index/index.component";
 import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component";
 import { ServiceFooterComponent } from "./service/footer/footer.component";
 import { ServiceListComponent } from "./service/servicelist/servicelist.component";
+import { ServiceProviderComponent } from "./service/provider/provider.component";
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { ServiceListComponent } from "./service/servicelist/servicelist.componen
     ServiceFooterComponent,
     ServiceNavbarComponent,
     ServiceIndexComponent,
-    ServiceListComponent
+    ServiceListComponent,
+    ServiceProviderComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],

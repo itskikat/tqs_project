@@ -138,24 +138,27 @@
           <div
             class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
           >
-            <div class="px-4 py-5 flex-auto">
+            <div class="flex flex-column flex-grow flex-wrap px-4 py-5">
               <div
-                [class]="'text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color"
+                [class]="'mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color"
               >
                 <i [class]="service.icon"></i>
               </div>
-              <h6 class="text-xl font-semibold">{{service.name}}</h6>
-              <p class="text-blueGray-400 small">
+              <h6 class="w-full text-center text-xl font-semibold">{{service.name}}</h6>
+              <p class="w-full text-center text-blueGray-400 small">
                 <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br/>
                 <i class="fas fa-user-circle mr-1"></i>{{service.provider.name}}<br/>
                 <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
               </p>
-              <p class="mt-2 mb-4">{{service.description}}</p>
-              <h5 class="text-xl font-semibold">{{service.price}}€</h5>
-              <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+              <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
+              <div class="w-full text-center mb-4">
+                <h5 class="text-xl font-semibold">{{service.price}}€</h5>
+                <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+              </div>
               <button
-                  [class]="service.color + ' mt-4 mx-4 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
+                  [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
                   type="button"
+                  style="margin-top: auto;"
                 >
                   <i class="fas fa-plus mr-1"></i> Service details
               </button>
