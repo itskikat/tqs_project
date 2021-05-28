@@ -50,6 +50,7 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
 import { ServiceIndexComponent } from "./service/index/index.component";
 import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component";
 import { ServiceFooterComponent } from "./service/footer/footer.component";
+import { ServiceListComponent } from "./service/servicelist/servicelist.component";
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { ServiceFooterComponent } from "./service/footer/footer.component";
     ServiceFooterComponent,
     ServiceNavbarComponent,
     ServiceIndexComponent,
+    ServiceListComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
