@@ -1,22 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { Service } from "../service";
+import { Provider } from "../provider";
 
-interface Provider {
-  name: string,
-  id: number
-}
-
-interface Service {
-  id: number,
-  name: string,
-  icon: string,
-  area: string,
-  price: number,
-  color: string,
-  description: string, 
-  hasExtras: boolean,
-  provider: Provider,
-  category: string
-}
 
 var servicesList:Service[] = [
   {
@@ -32,7 +17,9 @@ var servicesList:Service[] = [
       name: 'Bob Dickard',
       id: 1
     },
-    category: "Water shortages"
+    category: "Water shortages",
+    rate: 4,
+    number_reviews: 28
   },
   {
     id: 4,
@@ -47,7 +34,9 @@ var servicesList:Service[] = [
       name: 'Bob Dickard',
       id: 1
     },
-    category: "Bathroom"
+    category: "Bathroom",
+    rate: 4,
+    number_reviews: 28
   },
   {
     id: 5,
@@ -62,7 +51,9 @@ var servicesList:Service[] = [
       name: 'Bob Dickard',
       id: 1
     },
-    category: "Tap instalation"
+    category: "Tap instalation",
+    rate: 4,
+    number_reviews: 28
   }
 ];
 

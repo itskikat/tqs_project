@@ -151,6 +151,12 @@
                   <i class="fas fa-user-circle mr-1"></i>{{service.provider.name}}<br/>
                 </a>
                 <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
+                <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                 ({{service.number_reviews}} reviews)<br/>
               </p>
               <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
               <div class="w-full text-center mb-4">
@@ -170,7 +176,6 @@
       </div>
     </div>
   </section>
-
   <section class="relative pt-20">
     <div
       class="bottom-auto top-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden -mt-20 h-20"
