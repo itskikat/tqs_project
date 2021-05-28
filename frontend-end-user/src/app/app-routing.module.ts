@@ -5,6 +5,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
 import { ServiceIndexComponent } from "./service/index/index.component";
+import { ServiceProviderComponent } from "./service/provider/provider.component";
 import { ServiceListComponent } from "./service/servicelist/servicelist.component";
 
 // admin views
@@ -52,6 +53,7 @@ const routes: Routes = [
   // Service
   { path: "", component: ServiceIndexComponent },
   { path: "services", component: ServiceListComponent },
+  { path: "provider", component: ServiceProviderComponent },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 

@@ -1,0 +1,130 @@
+<service-navbar></service-navbar>
+<main class="profile-page">
+  <section class="relative block h-500-px">
+    <div
+      class="absolute top-0 w-full h-full bg-center bg-cover"
+      style="
+        background-image: url('assets/img/water.jpg');
+      "
+    >
+      <span
+        id="blackOverlay"
+        class="w-full h-full absolute opacity-50 bg-black"
+      ></span>
+    </div>
+    <div
+      class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
+      style="transform: translateZ(0)"
+    >
+      <svg
+        class="absolute bottom-0 overflow-hidden"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+        version="1.1"
+        viewBox="0 0 2560 100"
+        x="0"
+        y="0"
+      >
+        <polygon
+          class="text-blueGray-200 fill-current"
+          points="2560 0 2560 100 0 100"
+        ></polygon>
+      </svg>
+    </div>
+  </section>
+  <section class="relative py-16 bg-blueGray-200">
+    <div class="container mx-auto px-4">
+      <div
+        class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64"
+      >
+        <div class="px-6">
+          <div class="flex flex-wrap justify-center">
+            <div class="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+              <div class="relative">
+                <div
+                class="text-white p-14 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400 -m-16 max-w-150-px"
+                >
+                  <h1><i class="text-4xl fas fa-user"></i></h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-center">
+            <div class="w-full lg:w-4/12 px-4 lg:order-1">
+              <div class="flex justify-center py-4 lg:pt-4 pt-8">
+                <div class="mr-4 p-3 text-center">
+                  <span
+                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
+                  >
+                    22
+                  </span>
+                  <span class="text-sm text-blueGray-400">Offers</span>
+                </div>                
+                <div class="p-3 text-center">
+                  <span
+                    class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
+                  >
+                    4.5
+                  </span>
+                  <span class="text-sm text-blueGray-400">Stars</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-6">
+            <h3
+              class="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
+            >
+              Bob Dickard
+            </h3>
+            <div
+              class="text-sm leading-normal mt-0 text-blueGray-400 font-bold uppercase"
+            >
+              <i
+                class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"
+              ></i>
+              Aveiro, Portugal
+            </div>
+            <div class="mb-2 text-blueGray-600 mt-2">
+              <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
+              Plumber
+            </div>
+          </div>
+          <div class="flex flex-row flex-wrap mt-10 py-10 border-t border-blueGray-200 text-center">
+            <div class="flex w-full md:w-4/12 px-4 text-center" *ngFor="let service of services">
+              <div
+                class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
+              >
+                <div class="flex flex-column flex-grow flex-wrap px-4 py-5">
+                  <div
+                    [class]="'mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color"
+                  >
+                    <i [class]="service.icon"></i>
+                  </div>
+                  <h6 class="w-full text-center text-xl font-semibold">{{service.name}}</h6>
+                  <p class="w-full text-center text-blueGray-400 small">
+                    <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br/>
+                    <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
+                  </p>
+                  <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
+                  <div class="w-full text-center mb-4">
+                    <h5 class="text-xl font-semibold">{{service.price}}€</h5>
+                    <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+                  </div>
+                  <button
+                      [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
+                      type="button"
+                      style="margin-top: auto;"
+                    >
+                      <i class="fas fa-plus mr-1"></i> Service details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<service-footer></service-footer>
