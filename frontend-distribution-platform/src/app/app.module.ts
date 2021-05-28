@@ -65,6 +65,7 @@ import { ProviderStatsChartsChartPanelSummaryComponent } from './provider-stats/
 import { ProviderStatsChartsChartPanelHeaderComponent } from './provider-stats/charts-panel/chart-panel-header/chart-panel-header.component';
 import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts-panel/legend-chart/legend-chart.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
+import { BusinessAPIComponent } from './business/business-api/business-api.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { BusinessProfileComponent } from './business/business-profile/business-p
     BusinessStatsChartsChartPanelHeaderComponent,
     BusinessStatsChartsLegendChartComponent,
     BusinessProfileComponent,
+    BusinessAPIComponent,
     ProviderProfileComponent,
     ProviderStatsCharts,
     ProviderStatsChartsChartPanelHeaderComponent,
