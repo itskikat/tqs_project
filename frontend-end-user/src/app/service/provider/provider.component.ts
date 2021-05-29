@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Service } from "../service";
 import { Provider } from "../provider";
+import { Router } from "@angular/router";
 
 
 var servicesList:Service[] = [
@@ -65,9 +66,13 @@ export class ServiceProviderComponent implements OnInit {
   
   services: Service[];
 
-  constructor() {
+  constructor(public router: Router) {
     this.services = servicesList;
   }
 
   ngOnInit(): void {}
+
+  details(id: number): void{
+    this.router.navigate(["/services/"+ id.toString()])
+  }
 }

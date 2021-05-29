@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Service } from "../service";
 import { Provider } from "../provider";
+import { Router } from '@angular/router';
 
 
 var servicesList:Service[] = [
@@ -92,11 +93,14 @@ export class PastServicesComponent implements OnInit {
 
   myServices: Service[]
   
-  constructor() { }
+  constructor(public router: Router) { }
 
   
   ngOnInit(): void {
     this.myServices=servicesList;
   }
 
+  details(id: number): void{
+    this.router.navigate(["/services/"+ id.toString()])
+  }
 }

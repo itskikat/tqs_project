@@ -53,6 +53,7 @@ import { ServiceFooterComponent } from "./service/footer/footer.component";
 import { ServiceListComponent } from "./service/servicelist/servicelist.component";
 import { ServiceProviderComponent } from "./service/provider/provider.component";
 import { PastServicesComponent } from './service/past-services/past-services.component';
+import { ServiceDetailsComponent } from './service/service-details/service-details.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { PastServicesComponent } from './service/past-services/past-services.com
     ServiceIndexComponent,
     ServiceListComponent,
     ServiceProviderComponent,
-    PastServicesComponent
+    PastServicesComponent,
+    ServiceDetailsComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
