@@ -151,11 +151,11 @@
                   <i class="fas fa-user-circle mr-1"></i>{{service.provider.name}}<br/>
                 </a>
                 <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
-                <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
-                <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
-                <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
-                <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
-                <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
                  ({{service.number_reviews}} reviews)<br/>
               </p>
               <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
@@ -167,6 +167,7 @@
                   [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
                   type="button"
                   style="margin-top: auto;"
+                  (click)="details(service.id)"
                 >
                   <i class="fas fa-plus mr-1"></i> Service details
               </button>
