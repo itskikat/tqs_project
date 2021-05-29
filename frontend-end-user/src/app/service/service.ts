@@ -13,4 +13,6 @@ export interface Service {
     category: string,
     rate: number,
     number_reviews: number
+    status?: string
+    date?: string
 }

@@ -89,7 +89,8 @@ var servicesList:Service[] = [
     category: "Tap instalation",
     rate: 3.0,
     number_reviews: 89
-  }
+  },
+  
 ];
 
 @Component({
