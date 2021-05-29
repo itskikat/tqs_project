@@ -105,6 +105,12 @@
                   <p class="w-full text-center text-blueGray-400 small">
                     <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br/>
                     <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
+                    <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                    <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                    <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                    <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                    <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"></i>
+                    ({{service.number_reviews}} reviews) <br/>
                   </p>
                   <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
                   <div class="w-full text-center mb-4">
@@ -122,6 +128,48 @@
               </div>
             </div>
           </div>
+          <div class="py-2 text-center ml-auto mr-auto">
+            <nav class="flex block text-center">
+              <ul class="flex pl-0 rounded list-none flex-wrap text-center ml-auto mr-auto">
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    <i class="fas fa-chevron-left -ml-px"></i>
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 text-white bg-lightBlue-600">
+                    1
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    2
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    3
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    4
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    5
+                  </a>
+                </li>
+                <li>
+                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
+                    <i class="fas fa-chevron-right -mr-px"></i>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <br/>
         </div>
       </div>
     </div>

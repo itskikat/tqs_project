@@ -7,6 +7,7 @@ import { AuthComponent } from "./layouts/auth/auth.component";
 import { ServiceIndexComponent } from "./service/index/index.component";
 import { ServiceProviderComponent } from "./service/provider/provider.component";
 import { ServiceListComponent } from "./service/servicelist/servicelist.component";
+import { PastServicesComponent} from "./service/past-services/past-services.component";
 
 // admin views
 import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
@@ -54,6 +55,7 @@ const routes: Routes = [
   { path: "", component: ServiceIndexComponent },
   { path: "services", component: ServiceListComponent },
   { path: "provider", component: ServiceProviderComponent },
+  { path: "past", component: PastServicesComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 

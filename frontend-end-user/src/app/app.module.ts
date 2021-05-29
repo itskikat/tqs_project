@@ -52,6 +52,7 @@ import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component"
 import { ServiceFooterComponent } from "./service/footer/footer.component";
 import { ServiceListComponent } from "./service/servicelist/servicelist.component";
 import { ServiceProviderComponent } from "./service/provider/provider.component";
+import { PastServicesComponent } from './service/past-services/past-services.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { ServiceProviderComponent } from "./service/provider/provider.component"
     ServiceNavbarComponent,
     ServiceIndexComponent,
     ServiceListComponent,
-    ServiceProviderComponent
+    ServiceProviderComponent,
+    PastServicesComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
