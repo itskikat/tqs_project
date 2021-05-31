@@ -49,3 +49,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN3 }}
         run: cd backend-distribution-platform; mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+      # BACKEND END USER
+      - name: SonarCloud Scan Backend End User
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN4 }}
+        run: cd backend-end-user; mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
