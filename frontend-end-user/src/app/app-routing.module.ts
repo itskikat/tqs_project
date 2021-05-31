@@ -4,6 +4,11 @@ import { Routes, RouterModule } from "@angular/router";
 // layouts
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
+import { ServiceIndexComponent } from "./service/index/index.component";
+import { ServiceProviderComponent } from "./service/provider/provider.component";
+import { ServiceListComponent } from "./service/servicelist/servicelist.component";
+import { PastServicesComponent} from "./service/past-services/past-services.component";
+import { ServiceDetailsComponent} from "./service/service-details/service-details.component";
 
 // admin views
 import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
@@ -46,7 +51,13 @@ const routes: Routes = [
   // no layout views
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
-  { path: "", component: IndexComponent },
+  { path: "index", component: IndexComponent },
+  // Service
+  { path: "", component: ServiceIndexComponent },
+  { path: "services/:id", component: ServiceDetailsComponent },
+  { path: "services", component: ServiceListComponent },
+  { path: "provider", component: ServiceProviderComponent },
+  { path: "past", component: PastServicesComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 

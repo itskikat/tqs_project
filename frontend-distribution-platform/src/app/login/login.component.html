@@ -11,14 +11,22 @@
             
             <section class="another-action" aria-label="Register">
             Don't have an account? 
-            <p><a class="text-link" routerLink="../registerBusiness">Register Business </a> <a class="text-link" routerLink="../regist/provider">Register Provider</a></p>
+            <div class="d-flex flex-row my-5">
+                <a class="text-link mr-3" routerLink="../regist/business">
+                    <button nbButton>Register business</button>
+                </a> 
+                <a class="text-link mr-3" routerLink="../regist/provider">
+                    <button nbButton>Register provider</button>
+                </a>
+            </div>
             </section>
               
             
         </nb-card-body>
     </nb-card>
     </nb-layout-column>
-    <nb-layout-footer><a routerLink="../../login" >Return to Login Page</a></nb-layout-footer>
+    <nb-layout-footer>
+    </nb-layout-footer>
 </nb-layout>
         
         

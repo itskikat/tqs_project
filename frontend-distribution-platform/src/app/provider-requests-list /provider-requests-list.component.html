@@ -1,0 +1,52 @@
+<nb-layout windowMode>
+    <nb-layout-header fixed>
+        <ngx-header></ngx-header>
+    </nb-layout-header>
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <nb-menu [items]="menu"></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <div class="d-flex flex-row flex-wrap">
+            <div class="col-4 p-4 d-flex" *ngFor="let r of requests">
+                <nb-card class="col-12" [accent]="!r.accepted ? 'warning' : (!r.done ? 'success' : 'basic')">
+                    <nb-card-header class="d-flex flex-column">
+                        <nb-user 
+                            class="mx-auto my-3"
+                            size="large"
+                            [name]="r.client.name"
+                            [title]="r.client.servicesRequested>=5 ? 'Frequent client' : 'New client'"
+                            [badgeText]="r.client.servicesRequested"
+                            badgeStatus="success"
+                            badgePosition="bottom right"
+                        >
+                        </nb-user>
+                        <p class="col-12 text-center font-weight-bold">{{r.service.name}} </p>
+                        
+                        <div class="d-flex flex-column col-12">
+                            <nb-tag class="mx-auto mb-1" status="warning" *ngIf="!r.accepted" appearance="filled" text="Not accepted"></nb-tag>
+                            <nb-tag class="mx-auto mb-1" status="success" *ngIf="r.accepted && !r.done" appearance="filled" text="Accepted"></nb-tag>
+                            <nb-tag class="mx-auto mb-1" status="basic" *ngIf="r.done" appearance="filled" text="job finished"></nb-tag>
+                            <nb-tag class="mx-auto mb-1" [status]="!r.accepted ? 'warning' : (!r.done ? 'success' : 'basic')" appearance="outline" [text]="r.done ? r.moment.toLocaleString() : r.minutesAgo + ' minutes ago'"></nb-tag>
+                        </div>
+                    </nb-card-header>
+                    <nb-card-body class="d-flex flex-column">
+                        <dl class="mb-4">
+                            <dt>Address</dt>
+                            <dd>{{r.address}}</dd>
+                            <dt *ngIf="!r.done">Requested</dt>
+                            <dt *ngIf="r.done">Finished</dt>
+                            <dd>{{r.moment.toLocaleString()}}</dd>
+                            <dt *ngIf="r.done">Collected</dt>
+                            <dd *ngIf="r.done">{{r.collected}}€</dd>
+                        </dl>
+                        <div class="d-flex flex-column mt-auto">
+                            <button *ngIf="!r.accepted" nbButton status="warning" class="mx-auto">Accept</button>
+                            <button *ngIf="r.accepted && !r.done" nbButton status="success" class="mx-auto">Mark as done and collect</button>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+    </nb-layout-column>
+    <nb-layout-footer></nb-layout-footer>
+</nb-layout>

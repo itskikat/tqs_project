@@ -9,6 +9,6 @@ export interface OrderProfitChartSummary {
 
 export abstract class OrdersProfitChartData {
   abstract getOrderProfitChartSummary(): Observable<OrderProfitChartSummary[]>;
-  abstract getOrdersChartData(period: string): Observable<OrdersChart>;
-  abstract getProfitChartData(period: string): Observable<ProfitChart>;
+  abstract getOrdersChartData(period: string, provider?: boolean): Observable<OrdersChart>;
+  abstract getProfitChartData(period: string, provider?:boolean): Observable<ProfitChart>;
 }

@@ -1,0 +1,43 @@
+<nb-layout windowMode>
+    <nb-layout-header fixed>
+        <ngx-header></ngx-header>
+    </nb-layout-header>
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <nb-menu [items]="menu"></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+            <nb-card-header>
+                <h3>API settings</h3>
+            </nb-card-header>
+            <nb-card-body>
+                <div class="d-flex flex-column" *ngIf="!tokenGenerated">
+                    <p>Here you can check your API Key status and generate a new one if necessary.</p>
+                    
+                    <nb-alert status="warning">
+                        Attention! You have generated an API key at {{lastAPIGenerated.toLocaleString()}}. If you generate a new one, the existing will be invalidated!
+                    </nb-alert>
+
+                    <nb-alert status="warning">
+                        Attention! When you generate a new token, you will only be able to see the token once. Generate it only when you have a safe place to store it.
+                    </nb-alert>
+                    
+                    <button 
+                        nbButton 
+                        (click)="generateToken()"
+                        class="mx-auto mb-3"
+                    >Generate token</button>
+                </div>
+
+                <div *ngIf="tokenGenerated">
+                    <p>Your token has been generated successfully and is shown below!</p>
+                    <nb-alert outline="success" class="my-5 text-center">
+                        ULab6..PzmKj4!;$&@Yw`+s4tun04
+                    </nb-alert>
+                    <p>You must use it every time your app calls the API. See how in the <a>documentation</a>.</p>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+<nb-layout-footer></nb-layout-footer>
+</nb-layout>

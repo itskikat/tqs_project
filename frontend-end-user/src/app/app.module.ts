@@ -47,6 +47,13 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
+import { ServiceIndexComponent } from "./service/index/index.component";
+import { ServiceNavbarComponent } from "./service/navbar/index-navbar.component";
+import { ServiceFooterComponent } from "./service/footer/footer.component";
+import { ServiceListComponent } from "./service/servicelist/servicelist.component";
+import { ServiceProviderComponent } from "./service/provider/provider.component";
+import { PastServicesComponent } from './service/past-services/past-services.component';
+import { ServiceDetailsComponent } from './service/service-details/service-details.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +91,14 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     IndexComponent,
     LandingComponent,
     ProfileComponent,
+    // Service
+    ServiceFooterComponent,
+    ServiceNavbarComponent,
+    ServiceIndexComponent,
+    ServiceListComponent,
+    ServiceProviderComponent,
+    PastServicesComponent,
+    ServiceDetailsComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
