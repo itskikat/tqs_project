@@ -41,6 +41,6 @@ Shared Documentation - [Google Drive](https://drive.google.com/drive/folders/1n0
 
 API Documentation - tbd
 
-Static Analysis - [Frontend Distribution Platform](https://sonarcloud.io/dashboard?id=frontend-distribution-platform)
+Static Analysis - [Frontend Distribution Platform](https://sonarcloud.io/dashboard?id=frontend-distribution-platform) + [Frontend End User](https://sonarcloud.io/project/configuration?id=frontend-end-user) 
 
 CI/CD Environment - tbd
