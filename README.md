@@ -4,7 +4,7 @@
 
 ## Project Abstract
 
-### Title: **TBD**
+### Title: **WeDo4U**
 
 ### Description:
 
@@ -41,6 +41,6 @@ Shared Documentation - [Google Drive](https://drive.google.com/drive/folders/1n0
 
 API Documentation - tbd
 
-Static Analysis - [SonarCloud](https://sonarcloud.io/dashboard?id=itskikat_tqs_project)
+Static Analysis - [Frontend Distribution Platform](https://sonarcloud.io/dashboard?id=frontend-distribution-platform) + [Frontend End User](https://sonarcloud.io/dashboard?id=frontend-end-user) + [Backend Distribution Platform](https://sonarcloud.io/dashboard?id=backend-distribution-platform) 
 
 CI/CD Environment - tbd
