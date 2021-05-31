@@ -24,6 +24,10 @@
         <mockito-core.version>3.3.3</mockito-core.version>
         <selenium.version>4.0.0-alpha-7</selenium.version>
         <maven-surefire.version>2.22.2</maven-surefire.version>
+
+        <sonar.projectKey>backend-end-user</sonar.projectKey>
+        <sonar.organization>itskikat</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
