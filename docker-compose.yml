@@ -1,0 +1,10 @@
+version: '3'
+services:
+  frontend-distribution-platform:
+    build: ./frontend-distribution-platform
+    volumes:
+      - ./frontend-distribution-platform:/usr/src/app/
+      - /usr/src/app/node_modules
+    ports:
+      - "4201:4201"
+
