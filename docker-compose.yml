@@ -1,10 +1,36 @@
 version: '3'
 services:
-  frontend-distribution-platform:
-    build: ./frontend-distribution-platform
-    volumes:
-      - ./frontend-distribution-platform:/usr/src/app/
-      - /usr/src/app/node_modules
-    ports:
-      - "4201:4201"
+  #frontend-distribution-platform:
+    #build: ./frontend-distribution-platform
+    #volumes:
+      #- ./frontend-distribution-platform:/usr/src/app/
+      #- /usr/src/app/node_modules
+    #ports:
+      #- "4201:4201"
 
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DATABASE: demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: password
+      POSTGRES_ROOT_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgres
+  
+  backend-distribution-platform:
+    build: ./backend-distribution-platform
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/demo
+      SPRING_DATASOURCE_USERNAME: demo
+      SPRING_DATASOURCE_PASSWORD: password
+    restart: on-failure
+
+volumes:
+  db-data:
