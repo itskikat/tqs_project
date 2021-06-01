@@ -6,17 +6,16 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
-import javax.persistence.OneToMany;
-
-import java.util.Set;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 import lombok.Data;
 
 
 @Entity
 @Data
-@Table(name="DISTRICT")
-public class District{
+@Table(name="CITY")
+public class City{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,9 +24,8 @@ public class District{
     @Column(name = "name")
     public String name;
 
-    @OneToMany(targetEntity=City.class)
-    private Set<City> cities;
-
-
-
+    @ManyToOne()
+    @JoinColumn(name = "district_id")
+    public District district;
+    
 }
