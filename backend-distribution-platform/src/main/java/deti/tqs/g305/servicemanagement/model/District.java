@@ -28,6 +28,12 @@ public class District{
     @OneToMany(targetEntity=City.class)
     private Set<City> cities;
 
+    public District(){
 
+    }
+    public District(long id, String name){
+        this.id=id;
+        this.name=name;
+    }
 
 }
