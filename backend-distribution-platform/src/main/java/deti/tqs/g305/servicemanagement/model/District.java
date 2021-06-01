@@ -1,18 +1,13 @@
 package deti.tqs.g305.servicemanagement.model;
 
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import java.util.Set;
 
 import lombok.Data;
 
 
+@Embeddable
 @Entity
 @Data
 @Table(name="DISTRICT")
