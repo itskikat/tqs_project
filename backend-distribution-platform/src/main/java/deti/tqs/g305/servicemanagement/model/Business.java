@@ -1,9 +1,8 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import lombok.Data;
-
+import java.util.Set;
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Data
@@ -22,6 +21,9 @@ public class Business extends User {
 
     @Column(name = "nif")
     private String nif;
+
+    @OneToMany(mappedBy="business")
+    private Set<BusinessService> businessServices;
 
     public Business(){
 

@@ -28,6 +28,8 @@ public class ServiceType{
     @Column(name="extras")
     public boolean hasExtras;
 
+    @OneToMany(mappedBy="service")
+    public Set<BusinessService> businessServices;
 
     public ServiceType(){
 
