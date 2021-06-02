@@ -3,6 +3,7 @@ package deti.tqs.g305.servicemanagement.model;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.*;
 
@@ -31,12 +32,16 @@ public class Provider extends User {
     @Column(name = "location_district")
     private List<District> location_district;
 
+    @OneToMany(mappedBy="provider")
+    private Set<ProviderService> providerServices;
+
     @Column(name = "nif")
     private Integer nif;
 
     @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
     private Date birthdate;
+
 
     public Provider() {
 

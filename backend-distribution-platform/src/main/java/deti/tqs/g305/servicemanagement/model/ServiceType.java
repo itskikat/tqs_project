@@ -31,6 +31,9 @@ public class ServiceType{
     @OneToMany(mappedBy="service")
     public Set<BusinessService> businessServices;
 
+    @OneToMany(mappedBy="service")
+    public Set<ProviderService> providerServices;
+
     public ServiceType(){
 
     }

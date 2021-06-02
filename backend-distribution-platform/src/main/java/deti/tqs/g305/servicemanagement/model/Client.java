@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -18,6 +19,9 @@ public class Client extends User {
     @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
     private Date birthdate;
+
+    @OneToMany(mappedBy="client")
+    private Set<ServiceContract> serviceContract;
 
     public Client() {
 
