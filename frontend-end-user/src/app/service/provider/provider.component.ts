@@ -61,6 +61,7 @@ var servicesList:Service[] = [
 @Component({
   selector: "service-provider",
   templateUrl: "./provider.component.html",
+  host: {'class': 'w-full flex flex-column flex-wrap'}
 })
 export class ServiceProviderComponent implements OnInit {
   
