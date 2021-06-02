@@ -4122,3 +4122,7 @@ select {
 .w-full {
   max-width: none!important;
 }
+
+.link:hover {
+  cursor: pointer;
+}

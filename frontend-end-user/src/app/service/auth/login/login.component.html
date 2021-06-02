@@ -1,5 +1,5 @@
 <service-navbar></service-navbar>
-<div 
+<div
   class="w-full container m-0 p-0 bg-cover flex-self-stretch h-100" 
   style="background-image: url('/assets/img/water.jpg');"
 >
@@ -21,10 +21,24 @@
               Google
             </button>
           </div>
-          <hr class="mt-6 border-b-1 border-blueGray-300" />
+          <hr class="mt-6 border-b-1 border-blueGray-300 mb-5" />
+          <div class="text-center mb-3">
+            <h6 class="text-blueGray-500 text-sm font-bold">Or create a new account with</h6>
+          </div>
+          <div class="btn-wrapper text-center">
+            <a href="/register">
+              <button 
+                class="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                type="button"
+              >
+                <img alt="..." class="w-5 mr-1" src="assets/img/google.svg" />
+                Google
+              </button>
+            </a>
+          </div>
           <div class="w-full text-center mt-5">
-            <a [routerLink]="['/auth/register']" class="text-blueGray-900">
-              <small>Create new account</small>
+            <a (click)="registerProvider()" class="text-blueGray-900 link">
+              <small>Register as a service provider</small>
             </a>
           </div>
         </div>
