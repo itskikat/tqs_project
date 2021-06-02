@@ -24,6 +24,8 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { ServiceLoginComponent } from "./service/auth/login/login.component";
+import { ServiceRegisterComponent } from "./service/auth/register/register.component";
 
 const routes: Routes = [
   // admin views
@@ -58,6 +60,8 @@ const routes: Routes = [
   { path: "services", component: ServiceListComponent },
   { path: "provider", component: ServiceProviderComponent },
   { path: "past", component: PastServicesComponent  },
+  { path: "login", component: ServiceLoginComponent  },
+  { path: "register", component: ServiceRegisterComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 

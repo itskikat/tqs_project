@@ -54,6 +54,8 @@ import { ServiceListComponent } from "./service/servicelist/servicelist.componen
 import { ServiceProviderComponent } from "./service/provider/provider.component";
 import { PastServicesComponent } from './service/past-services/past-services.component';
 import { ServiceDetailsComponent } from './service/service-details/service-details.component';
+import { ServiceLoginComponent } from "./service/auth/login/login.component";
+import { ServiceRegisterComponent } from "./service/auth/register/register.component";
 
 @NgModule({
   declarations: [
@@ -98,7 +100,9 @@ import { ServiceDetailsComponent } from './service/service-details/service-detai
     ServiceListComponent,
     ServiceProviderComponent,
     PastServicesComponent,
-    ServiceDetailsComponent
+    ServiceDetailsComponent,
+    ServiceLoginComponent,
+    ServiceRegisterComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
