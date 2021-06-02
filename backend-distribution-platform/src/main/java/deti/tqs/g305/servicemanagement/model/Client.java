@@ -11,8 +11,6 @@ import java.util.Set;
 @DiscriminatorValue("Client")
 public class Client extends User {
 
-    // Googleid, Username, email, full_name, address, birthdate
-
     @Column(name = "address")
     private String address;
 

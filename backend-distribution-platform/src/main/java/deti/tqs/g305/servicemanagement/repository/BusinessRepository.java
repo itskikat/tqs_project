@@ -9,7 +9,7 @@ import deti.tqs.g305.servicemanagement.model.Business;
  * BusinessRepository
  */
 @Repository
-public interface BusinessRepository extends JpaRepository<Business, Long>{
+public interface BusinessRepository extends JpaRepository<Business, String>{
 
     
 }
