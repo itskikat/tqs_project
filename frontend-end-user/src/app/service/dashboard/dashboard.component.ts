@@ -57,6 +57,7 @@ var servicesList:Service[] = [
     rate: 3.9,
     number_reviews: 20
   },
+  /*
   {
     id: 4,
     name: 'Tap instalation',
@@ -91,17 +92,19 @@ var servicesList:Service[] = [
     rate: 3.0,
     number_reviews: 89
   },
+  */
   
 ];
 
 @Component({
-  selector: "service-list",
-  templateUrl: "./servicelist.component.html",
+  selector: "service-dashboard",
+  templateUrl: "./dashboard.component.html",
   host: {'class': 'w-full flex flex-column flex-wrap'}
 })
-export class ServiceListComponent implements OnInit {
+export class ServiceDashboardComponent implements OnInit {
 
   services: Service[];
+  searched: boolean=false;
 
   constructor(public router: Router) {
     this.services = servicesList;
@@ -111,5 +114,13 @@ export class ServiceListComponent implements OnInit {
 
   details(id: number): void{
     this.router.navigate(["/services/"+ id.toString()])
+  }
+
+  search() {
+    this.searched = true;
+  }
+
+  searchRevert() {
+    this.searched = false;
   }
 }

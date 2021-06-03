@@ -6,7 +6,6 @@ import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
 import { ServiceIndexComponent } from "./service/index/index.component";
 import { ServiceProviderComponent } from "./service/provider/provider.component";
-import { ServiceListComponent } from "./service/servicelist/servicelist.component";
 import { PastServicesComponent} from "./service/past-services/past-services.component";
 import { ServiceDetailsComponent} from "./service/service-details/service-details.component";
 
@@ -26,6 +25,7 @@ import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { ServiceLoginComponent } from "./service/auth/login/login.component";
 import { ServiceRegisterComponent } from "./service/auth/register/register.component";
+import { ServiceDashboardComponent } from "./service/dashboard/dashboard.component";
 
 const routes: Routes = [
   // admin views
@@ -57,7 +57,7 @@ const routes: Routes = [
   // Service
   { path: "", component: ServiceIndexComponent },
   { path: "services/:id", component: ServiceDetailsComponent },
-  { path: "services", component: ServiceListComponent },
+  { path: "dashboard", component: ServiceDashboardComponent },
   { path: "provider", component: ServiceProviderComponent },
   { path: "past", component: PastServicesComponent  },
   { path: "login", component: ServiceLoginComponent  },
