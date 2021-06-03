@@ -3,7 +3,9 @@ package deti.tqs.g305.servicemanagement.restcontroller;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 
+
 import java.util.Date;
+import java.util.Optional;
 
 import org.mockito.internal.verification.VerificationModeFactory;
 
@@ -38,13 +40,49 @@ public class ClientRestControllerUnitTest {
     private ServiceService serviceService;
 
     @Test
-    public void whenPostServiceContract_thenCreateServiceContract( ) {
+    public void whenPostValidServiceContract_thenCreateServiceContract( ) {
         
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         when( serviceService.saveServiceContract(any())).thenReturn(sc);
 
-        with().body(sc).when().request("POST", "/api/clients/contracts/new").then().statusCode(201);
+        with().body(sc).when().request("POST", "/api/clients/contracts/new").then().statusCode(201)
+        .assertThat().body("status", equalTo("Waiting"));
 
+        verify(serviceService, times(1)).saveServiceContract(any());
     }
+
+    @Test
+    public void whenPostInvalidServiceContract_thenReturnBadRequest( ) {
+
+        with().body("ups").when().request("POST", "/api/clients/contracts/new").then().statusCode(400);
+
+        verify(serviceService, times(0)).saveServiceContract(any());
+    }
+
+
+    @Test
+    public void whenPutValidServiceContract_thenUpdateServiceContract( ) {
+
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        sc.setReview(2);
+        sc.setId(1);
+
+        when( serviceService.updateServiceContract(anyLong(),any())).thenReturn(Optional.of(sc));
+
+        with().body(sc).when().request("PUT", "/api/clients/contracts/1").then().statusCode(200)
+        .assertThat().body("review", equalTo(2));
+
+        verify(serviceService, times(1)).updateServiceContract(any(),any()); 
+    }
+
+    @Test
+    public void whenPutIValidServiceContract_thenReturnBadRequest( ) {
+
+        with().body("upsie").when().request("PUT", "/api/clients/contracts/1").then().statusCode(400);
+        
+        verify(serviceService, times(0)).updateServiceContract(any(),any());
+    }
+
+
 
 }
