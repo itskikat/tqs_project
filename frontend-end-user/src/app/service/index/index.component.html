@@ -1,5 +1,5 @@
 <service-navbar></service-navbar>
-<section class="header relative pt-16 items-center flex h-screen max-h-860-px">
+<section class="header relative pt-16 items-center flex h-screen max-h-860-px flex-self-stretch">
   <div class="container mx-auto items-center flex flex-wrap">
     <div class="w-full md:w-8/12 lg:w-6/12 xl:w-6/12 px-4">
       <div class="pt-32 sm:pt-0">
@@ -11,10 +11,10 @@
         </p>
         <div class="mt-12">
           <a
-            href="/services"
+            href="/login"
             class="get-started text-white font-bold px-6 py-4 rounded outline-none focus:outline-none mr-1 mb-1 bg-lightBlue-600 active:bg-lightBlue-700 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
           >
-            Check services out!
+            Log in now!
           </a>
         </div>
       </div>
@@ -22,7 +22,7 @@
   </div>
 
   <img
-    class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px"
+    class="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860-px "
     src="assets/img/plumber.jpg"
     alt="..."
   />
@@ -33,7 +33,7 @@
 
 
 
-<section class="mt-48 md:mt-40 relative bg-blueGray-100">
+<section class="mt-48 md:mt-40 relative bg-blueGray-100 flex-self-stretch">
   <div
     class="-mt-20 top-0 bottom-auto left-0 right-0 w-full absolute h-20"
     style="transform: translateZ(0)"
@@ -53,159 +53,62 @@
       ></polygon>
     </svg>
   </div>
-  <div class="container mx-auto">
-    <div class="w-full md:w-12/12 px-4 text-center">
-      <div
-        class="relative flex flex-col min-w-0 break-words bg-white w-full shadow-lg rounded-lg"
-      >
-        <div class="px-4 py-5 flex-auto">
-          <div
-            class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400"
-          >
-            <i class="fas fa-search"></i>
-          </div>
-          <h6 class="text-xl font-semibold">Find the right service for you!</h6>
-          <div class="mt-10 flex flex-row flex-wrap">
-            <div class="lg:w-4/12 px-4">
-              <div class="relative w-full mb-3">
-                <label
-                  class="block uppercase text-blueGray-600 text-xs text-left font-bold mb-2"
-                  htmlFor="search-city"
-                >
-                  City
-                </label>
-                <select
-                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  id="search-city"
-                >
-                  <option value="0">Aveiro</option>
-                  <option value="1">Coimbra</option>
-                  <option value="2">Porto</option>
-                </select>
-              </div>
-            </div>
-            <div class="lg:w-4/12 px-4">
-              <div class="relative w-full mb-3">
-                <label
-                  class="block uppercase text-blueGray-600 text-xs text-left font-bold mb-2"
-                  htmlFor="search-city"
-                >
-                  Budget
-                </label>
-                <select
-                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  id="search-city"
-                >
-                  <option value="0">10€</option>
-                  <option value="1">25€</option>
-                  <option value="2">150€</option>
-                </select>
-              </div>
-            </div>
-            <div class="lg:w-4/12 px-4">
-              <div class="relative w-full mb-3">
-                <label
-                  class="block uppercase text-blueGray-600 text-xs text-left font-bold mb-2"
-                  htmlFor="search-city"
-                >
-                  Category
-                </label>
-                <select
-                  class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  id="search-city"
-                >
-                  <option value="0">Leak</option>
-                  <option value="1">Maintenance</option>
-                </select>
-              </div>
-            </div>
-            <a href="/services" class="w-full mx-4">
-              <button
-                class="w-full bg-lightBlue-600 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
-                type="button"
-              >
-                <i class="fas fa-search mr-1"></i> Search
-              </button>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="container mx-auto overflow-hidden pb-20">
     <div class="flex flex-wrap items-center pt-32">
       <div class="w-full md:w-6/12 px-4 mr-auto ml-auto ">
         <div class="justify-center flex flex-wrap relative">
           <div class="my-4 w-full lg:w-6/12 px-4">
-            <a
-              href="/services"
-            >
-              <div class="bg-lightBlue-600 shadow-lg rounded-lg text-center p-8">
-                <div
-                  class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
-                >
-                  <i class="fas fa-shower text-xl"></i>
-                </div>
-                <p class="text-lg text-white mt-4 font-semibold">Bathroom</p>
+            <div class="bg-lightBlue-600 shadow-lg rounded-lg text-center p-8">
+              <div
+                class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
+              >
+                <i class="fas fa-shower text-xl"></i>
               </div>
-            </a>
-            <a
-              href="/services"
+              <p class="text-lg text-white mt-4 font-semibold">Bathroom</p>
+            </div>
+            <div
+              class="bg-lightBlue-500 shadow-lg rounded-lg text-center p-8 mt-8"
             >
               <div
-                class="bg-lightBlue-500 shadow-lg rounded-lg text-center p-8 mt-8"
+                class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
               >
-                <div
-                  class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
-                >
-                  <i class="fas fa-tint-slash text-xl"></i>
-                </div>
-                <p class="text-lg text-white mt-4 font-semibold">Water shortages</p>
+                <i class="fas fa-tint-slash text-xl"></i>
               </div>
-            </a>
-            <a
-              href="/services"
+              <p class="text-lg text-white mt-4 font-semibold">Water shortages</p>
+            </div>
+            <div
+              class="bg-lightBlue-400 shadow-lg rounded-lg text-center p-8 mt-8"
             >
               <div
-                class="bg-lightBlue-400 shadow-lg rounded-lg text-center p-8 mt-8"
+                class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
               >
-                <div
-                  class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
-                >
-                  <i class="fas fa-faucet text-xl"></i>
-                </div>
-                <p class="text-lg text-white mt-4 font-semibold">Tap instalation</p>
+                <i class="fas fa-faucet text-xl"></i>
               </div>
-            </a>
+              <p class="text-lg text-white mt-4 font-semibold">Tap instalation</p>
+            </div>
           </div>
           <div class="my-4 w-full lg:w-6/12 px-4 lg:mt-16">
-            <a
-              href="/services"
-            >
-              <div class="bg-lightBlue-300 shadow-lg rounded-lg text-center p-8">
-                <div
-                  class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
-                >
-                  <i class="fas fa-water text-xl"></i>
-                </div>
-                <p class="text-lg text-white mt-4 font-semibold">Water drill</p>
+            <div class="bg-lightBlue-300 shadow-lg rounded-lg text-center p-8">
+              <div
+                class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
+              >
+                <i class="fas fa-water text-xl"></i>
               </div>
-            </a>
-            <a
-              href="/services"
+              <p class="text-lg text-white mt-4 font-semibold">Water drill</p>
+            </div>
+          
+            <div
+              class="bg-lightBlue-200 shadow-lg rounded-lg text-center p-8 mt-8"
             >
               <div
-                class="bg-lightBlue-200 shadow-lg rounded-lg text-center p-8 mt-8"
+                class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
               >
-                <div
-                  class="text-blueGray-500 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-white"
-                >
-                  <i class="fas fa-swimming-pool text-xl"></i>
-                </div>
-                <p class="text-lg text-white mt-4 font-semibold">Swimming pool maintenance</p>
+                <i class="fas fa-swimming-pool text-xl"></i>
               </div>
-            </a>
+              <p class="text-lg text-white mt-4 font-semibold">Swimming pool maintenance</p>
+            </div>
           </div>
         </div>
       </div>
@@ -241,37 +144,6 @@
         points="2560 0 2560 100 0 100"
       ></polygon>
     </svg>
-  </div>
-</section>
-
-<section class="pt-20 pb-48">
-  
-
-  <div class="container mx-auto px-4">
-    <div class="flex flex-wrap justify-center text-center mb-24">
-      <div class="w-full lg:w-6/12 px-4">
-        <h2 class="text-4xl font-semibold">Get to know our experts!</h2>
-      </div>
-    </div>
-    <div class="flex flex-wrap">
-      <div class="w-full md:w-6/12 lg:w-3/12 lg:mb-0 mb-12 px-4" *ngFor="let a of [1,2,3,4]">
-        <div class="flex flex-row flex-wrap px-6">
-          <a href="/provider">
-            <div
-              class="mx-auto text-white p-14 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400 -m-16 max-w-150-px"
-            >
-              <h1><i class="text-4xl fas fa-user"></i></h1>
-            </div>
-            <div class="w-full pt-6 text-center">
-              <h5 class="text-xl font-bold">Professional 1</h5>
-              <p class="mt-1 text-sm text-blueGray-400 uppercase font-semibold">
-                Plumber
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 

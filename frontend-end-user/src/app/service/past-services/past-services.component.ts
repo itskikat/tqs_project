@@ -87,7 +87,8 @@ var servicesList:Service[] = [
 @Component({
   selector: 'app-past-services',
   templateUrl: './past-services.component.html',
-  styleUrls: ['./past-services.component.css']
+  styleUrls: ['./past-services.component.css'],
+  host: {'class': 'w-full flex flex-column flex-wrap'}
 })
 export class PastServicesComponent implements OnInit {
 

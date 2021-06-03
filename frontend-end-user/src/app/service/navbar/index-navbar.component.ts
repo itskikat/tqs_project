@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 @Component({
   selector: "service-navbar",
   templateUrl: "./index-navbar.component.html",
+  host: {'class': 'w-full flex-self-start'}
 })
 export class ServiceNavbarComponent implements OnInit {
   navbarOpen = false;

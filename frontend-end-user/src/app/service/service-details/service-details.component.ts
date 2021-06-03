@@ -26,7 +26,8 @@ var service:Service =
 @Component({
   selector: 'app-service-details',
   templateUrl: './service-details.component.html',
-  styleUrls: ['./service-details.component.css']
+  styleUrls: ['./service-details.component.css'],
+  host: {'class': 'w-full flex flex-column flex-wrap'}
 })
 
 export class ServiceDetailsComponent implements OnInit {

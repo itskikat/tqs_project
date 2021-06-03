@@ -1,5 +1,5 @@
 <service-navbar></service-navbar>
-<main class="profile-page">
+<main class="profile-page flex-self-stretch">
   <section class="relative block h-500-px">
     <div
       class="absolute top-0 w-full h-full bg-center bg-cover"
@@ -90,86 +90,7 @@
               Plumber
             </div>
           </div>
-          <div class="flex flex-row flex-wrap mt-10 py-10 border-t border-blueGray-200 text-center">
-            <div class="flex w-full md:w-4/12 px-4 text-center" *ngFor="let service of services">
-              <div
-                class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
-              >
-                <div class="flex flex-column flex-grow flex-wrap px-4 py-5">
-                  <div
-                    [class]="'mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color"
-                  >
-                    <i [class]="service.icon"></i>
-                  </div>
-                  <h6 class="w-full text-center text-xl font-semibold">{{service.name}}</h6>
-                  <p class="w-full text-center text-blueGray-400 small">
-                    <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br/>
-                    <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
-                    <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                    <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                    <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                    <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                    <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                    ({{service.number_reviews}} reviews) <br/>
-                  </p>
-                  <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
-                  <div class="w-full text-center mb-4">
-                    <h5 class="text-xl font-semibold">{{service.price}}€</h5>
-                    <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
-                  </div>
-                  <button
-                      [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
-                      type="button"
-                      style="margin-top: auto;"
-                      (click) ="details(service.id)"
-                    >
-                      <i class="fas fa-plus mr-1"></i> Service details
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="py-2 text-center ml-auto mr-auto">
-            <nav class="flex block text-center">
-              <ul class="flex pl-0 rounded list-none flex-wrap text-center ml-auto mr-auto">
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    <i class="fas fa-chevron-left -ml-px"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 text-white bg-lightBlue-600">
-                    1
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    2
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    3
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    4
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    5
-                  </a>
-                </li>
-                <li>
-                  <a href="/services" class="first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1 p-0 rounded-full items-center justify-center leading-tight relative border border-solid border-lightBlue-600 bg-white text-lightBlue-600">
-                    <i class="fas fa-chevron-right -mr-px"></i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          
           <br/>
         </div>
       </div>
