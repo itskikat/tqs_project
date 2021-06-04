@@ -1,8 +1,7 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
-import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.repository.BusinessServiceRepository;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ public class BusinessRestController {
     @Autowired
     private ServiceService serviceService;
 
+
     @PostMapping("/services")
     public ResponseEntity<?> createBusinessService(@RequestBody(required = false) BusinessService bs){
         if(bs != null){
@@ -32,7 +32,7 @@ public class BusinessRestController {
     }
 
     @PutMapping("/services/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long businessServiceId, @RequestBody(required = false) BusinessService bs){
+    public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @RequestBody(required = false) BusinessService bs){
         if(bs != null){
             Optional<BusinessService> optBs = serviceService.updateBusinessService(businessServiceId, bs);
             if(optBs.isPresent()){
@@ -41,5 +41,14 @@ public class BusinessRestController {
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Business Service!", HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/services/delete/{id}")
+    public ResponseEntity<?> deleteBusinessService(@PathVariable(value = "id") Long businessServiceId){
+        if(businessServiceId != null) {
+            serviceService.deleteBusinessService(businessServiceId);
+            return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+        }
+        return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }
 }

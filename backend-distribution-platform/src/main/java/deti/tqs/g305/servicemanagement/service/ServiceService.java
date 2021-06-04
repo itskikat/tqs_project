@@ -18,6 +18,7 @@ public interface ServiceService {
     public Optional<List<ServiceContract>> getProviderServiceContracts(long providerId);
 
     public BusinessService saveBusinessService(BusinessService businessService);
+    public String deleteBusinessService(long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId);
 }

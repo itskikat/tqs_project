@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 
 
@@ -87,5 +88,18 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(0)).updateBusinessService(anyLong(),any());
     }
 
+
+    @Test
+    void whenDeleteValidBusinessService_thenDeleteBusinessService() throws Exception {
+        BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
+        bs.setId(2);
+
+        when(serviceService.deleteBusinessService(anyLong())).thenReturn(anyString());
+
+        mvc.perform(delete("/api/businesses/services/delete/{id}", bs.getId()))
+                .andExpect(status().isFound());
+
+        verify(serviceService, times(1)).deleteBusinessService(anyLong());
+    }
 
 }

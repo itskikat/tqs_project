@@ -14,7 +14,7 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
  */
 @Service
 @Transactional
-public class ServiceServiceImpl  implements ServiceService{
+public class ServiceServiceImpl implements ServiceService{
 
     @Override
     public ServiceContract saveServiceContract(ServiceContract serviceContract) {
@@ -44,6 +44,11 @@ public class ServiceServiceImpl  implements ServiceService{
     }
 
     @Override
+    public String deleteBusinessService(long businessServiceId) {
+        return null;
+    }
+
+    @Override
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
         return null;
     }
@@ -52,6 +57,8 @@ public class ServiceServiceImpl  implements ServiceService{
     public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId) {
         return null;
     }
+
+
 
 
 }
