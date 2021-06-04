@@ -14,11 +14,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 
 
@@ -57,6 +60,31 @@ class BusinessRestControllerUnitTest {
                 .andExpect(status().isBadRequest());
 
         verify(serviceService, times(0)).saveBusinessService(any());
+    }
+
+
+    @Test
+    void whenPutValidBusinessService_thenUpdateBusinessService() throws Exception {
+        BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
+        bs.setId(2);
+        bs.setPrice(10000);
+
+        when(serviceService.updateBusinessService(anyLong(),any())).thenReturn(Optional.of(bs));
+
+        mvc.perform(put("/api/businesses/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.price", is(10000)));
+
+        verify(serviceService, times(1)).updateBusinessService(anyLong(),any());
+    }
+
+    @Test
+    void whenPutInvalidBusinessService_thenReturnBadRequest() throws Exception {
+
+        mvc.perform(put("/api/businesses/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("another bad service")))
+                .andExpect(status().isBadRequest());
+
+        verify(serviceService, times(0)).updateBusinessService(anyLong(),any());
     }
 
 
