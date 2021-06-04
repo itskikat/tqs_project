@@ -1,23 +1,16 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
-import org.mockito.Mockito;
-import org.mockito.Mock;  
+import static org.mockito.Mockito.*;;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Optional;
-
-import org.mockito.internal.verification.VerificationModeFactory;
 
 import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

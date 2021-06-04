@@ -1,7 +1,6 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.repository.BusinessServiceRepository;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
