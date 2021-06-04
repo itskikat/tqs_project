@@ -2,6 +2,8 @@ package deti.tqs.g305.servicemanagement.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import deti.tqs.g305.servicemanagement.model.BusinessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
@@ -33,5 +35,23 @@ public class ServiceServiceImpl  implements ServiceService{
     public Optional<List<ServiceContract>> getProviderServiceContracts(long providerId) {
         return null;
     }
+
+
+    // BusinessService
+    @Override
+    public BusinessService saveBusinessService(BusinessService businessService) {
+        return null;
+    }
+
+    @Override
+    public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
+        return null;
+    }
+
+    @Override
+    public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId) {
+        return null;
+    }
+
 
 }
