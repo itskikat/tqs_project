@@ -118,24 +118,24 @@ public class ClientRestControllerUnitTest {
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         
-        when( serviceService.getServiceContract(anyLong())).thenReturn(Optional.of(sc));
+        when( serviceService.getServiceContract(anyLong(),anyLong())).thenReturn(Optional.of(sc));
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status", is("Waiting")));
        
-        verify(serviceService, times(1)).getServiceContract(anyLong());
+        verify(serviceService, times(1)).getServiceContract(anyLong(), anyLong());
     }
 
     @Test
     public void whenGetInValidServiceContractId_thenReturnNotFound() throws IOException, Exception {
                
-        when( serviceService.getServiceContract(anyLong())).thenReturn(Optional.empty());
+        when( serviceService.getServiceContract(anyLong(), anyLong())).thenReturn(Optional.empty());
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isNotFound());
        
-        verify(serviceService, times(1)).getServiceContract(anyLong());
+        verify(serviceService, times(1)).getServiceContract(anyLong(),anyLong());
     }
 
 

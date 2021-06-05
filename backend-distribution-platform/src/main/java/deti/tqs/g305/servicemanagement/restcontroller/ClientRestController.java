@@ -48,9 +48,13 @@ public class ClientRestController {
     }
 
     @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long businessServiceId){
-        //TODO
-        return new ResponseEntity<String>("", HttpStatus.OK);
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
+        Optional<ServiceContract> sc = serviceService.getServiceContract(0, serviceContractId);
+
+        if( sc.isPresent()){
+            return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Invalid id! Could not find contract.", HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/contracts/{id}")

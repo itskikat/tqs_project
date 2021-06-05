@@ -39,12 +39,6 @@ public class BusinessRestController {
         return new ResponseEntity<List<ServiceContract>>(scList, HttpStatus.OK);
     }
 
-    @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long businessServiceId){
-        //TODO
-        return new ResponseEntity<String>("", HttpStatus.OK);
-    }
-
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @RequestBody(required = false) BusinessService bs){
         if(bs != null){
