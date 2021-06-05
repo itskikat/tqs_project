@@ -2,7 +2,7 @@ package deti.tqs.g305.servicemanagement.restcontroller;
 
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;;
+import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -89,6 +89,14 @@ public class ClientRestControllerUnitTest {
         verify(serviceService, times(0)).updateServiceContract(anyLong(),any());
     }
 
+    @Test
+    public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
+        //TODO
+    }
 
+    @Test
+    public void whenGetAllServiceContractsInvaildId_thenReturnNotFound() throws IOException, Exception {
+        //TODO
+    }
 
 }

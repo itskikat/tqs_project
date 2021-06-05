@@ -102,4 +102,14 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(1)).deleteBusinessService(anyLong());
     }
 
+    @Test
+    public void whenGetAllServiceContracts_thenReturnBusinessServiceContracts() throws  Exception {
+        //TODO
+    }
+
+    @Test
+    public void whenGetAllServiceContractsInvaildId_thenReturnNotFound() throws  Exception {
+        //TODO
+    }
+
 }
