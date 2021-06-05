@@ -1,4 +1,4 @@
-FROM node:current-alpine
+FROM node:current-alpine as build
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -12,4 +12,10 @@ RUN npm install -g @angular/cli@latest
 
 COPY . /usr/src/app
 
-CMD [ "ng", "serve", "--host", "0.0.0.0" , "--port", "4201"] 
+RUN npm run build
+
+FROM nginx:latest
+
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+
+EXPOSE 80

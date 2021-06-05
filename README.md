@@ -43,4 +43,12 @@ API Documentation - tbd
 
 Static Analysis - [Frontend Distribution Platform](https://sonarcloud.io/dashboard?id=frontend-distribution-platform) + [Frontend End User](https://sonarcloud.io/dashboard?id=frontend-end-user) + [Backend Distribution Platform](https://sonarcloud.io/dashboard?id=backend-distribution-platform) + [Backend End User](https://sonarcloud.io/dashboard?id=backend-end-user) 
 
-CI/CD Environment - tbd
+CI/CD Environment - [Deployment](#Deployment)
+
+
+
+## Deployment
+
+We have deployed our project at Amazon Web Services using the student program.
+
+The VM has IP 3.208.54.174 and the public DNS [ec2-3-208-54-174.compute-1.amazonaws.com](ec2-3-208-54-174.compute-1.amazonaws.com).
