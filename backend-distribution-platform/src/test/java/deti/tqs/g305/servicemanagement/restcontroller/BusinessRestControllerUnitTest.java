@@ -4,6 +4,10 @@ import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 import deti.tqs.g305.servicemanagement.model.ServiceType;
+import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.model.ServiceStatus;
+import deti.tqs.g305.servicemanagement.model.Client;
+import deti.tqs.g305.servicemanagement.model.ProviderService;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 
@@ -15,12 +19,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
@@ -101,5 +109,30 @@ class BusinessRestControllerUnitTest {
 
         verify(serviceService, times(1)).deleteBusinessService(anyLong());
     }
+
+    @Test
+    public void whenGetAllServiceContracts_thenReturnBusinessServiceContracts() throws  Exception {
+
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+
+        List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
+        listServiceContract.add(sc);
+        listServiceContract.add(sc1);
+        listServiceContract.add(sc2);
+
+        Optional<List<ServiceContract>> optServiceContracts = Optional.of(listServiceContract);
+
+        when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/businesses/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(optServiceContracts)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(3)));
+       
+        verify(serviceService, times(1)).getServiceContracts(anyLong());
+    }
+
+
 
 }

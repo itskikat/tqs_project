@@ -21,28 +21,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * ClientRestController
+ * ProviderRestController
  */
 
 @RestController
-@RequestMapping("/api/clients")
-public class ClientRestController {
+@RequestMapping("/api/provider")
+public class ProviderRestController {
 
     @Autowired
     private ServiceService serviceService;
 
-    @PostMapping("/contracts")
-    public ResponseEntity<?> createServiceContract( @RequestBody(required = false) ServiceContract sc){
-        if(sc != null){
-            sc = serviceService.saveServiceContract(sc);
-            return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
-        }
-        return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
-    }
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(){
-        //TODO Client login
+        //TODO Provider login
         List<ServiceContract> scList = serviceService.getServiceContracts(0).get();
         return new ResponseEntity<List<ServiceContract>>(scList, HttpStatus.OK);
     }

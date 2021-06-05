@@ -27,14 +27,16 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
-    public Optional<List<ServiceContract>> getClientServiceContracts(long clientId) {
+    public Optional<List<ServiceContract>> getServiceContracts(long Id) {
         return null;
     }
 
     @Override
-    public Optional<List<ServiceContract>> getProviderServiceContracts(long providerId) {
+    public Optional<ServiceContract> getServiceContract(long userId,long serviceContractId) {
         return null;
     }
+
+
 
 
     // BusinessService

@@ -14,8 +14,9 @@ public interface ServiceService {
 
     public ServiceContract saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
-    public Optional<List<ServiceContract>> getClientServiceContracts(long clientId);
-    public Optional<List<ServiceContract>> getProviderServiceContracts(long providerId);
+    public Optional<List<ServiceContract>> getServiceContracts(long Id);
+    public Optional<ServiceContract> getServiceContract(long userId,long serviceContractId);
+
 
     public BusinessService saveBusinessService(BusinessService businessService);
     public String deleteBusinessService(long businessServiceId);

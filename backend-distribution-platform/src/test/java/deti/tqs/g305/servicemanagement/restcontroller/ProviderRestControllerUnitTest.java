@@ -33,39 +33,16 @@ import static org.hamcrest.Matchers.*;
 
 
 /**
- * ClientRestControllerUnitTest
+ * ProviderRestControllerUnitTest
  */
-@WebMvcTest(ClientRestController.class)
-public class ClientRestControllerUnitTest {
+@WebMvcTest(ProviderRestController.class)
+public class ProviderRestControllerUnitTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
     private ServiceService serviceService;
-
-    @Test
-    public void whenPostValidServiceContract_thenCreateServiceContract( ) throws IOException, Exception {
-        
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        when( serviceService.saveServiceContract(sc)).thenReturn(sc);
-
-        mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
-
-        verify(serviceService, times(1)).saveServiceContract(any());
-    }
-
-    @Test
-    public void whenPostInvalidServiceContract_thenReturnBadRequest( ) throws IOException, Exception {
-
-        mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("ups")))
-        .andExpect(status().isBadRequest());
-
-        verify(serviceService, times(0)).saveServiceContract(any());
-    }
-
 
     @Test
     public void whenPutValidServiceContract_thenUpdateServiceContract( ) throws IOException, Exception {
@@ -76,7 +53,7 @@ public class ClientRestControllerUnitTest {
 
         when( serviceService.updateServiceContract(anyLong(),any())).thenReturn(Optional.of(sc));
         
-        mvc.perform(put("/api/clients/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
+        mvc.perform(put("/api/provider/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.review", is(2)));
         
@@ -86,7 +63,7 @@ public class ClientRestControllerUnitTest {
     @Test
     public void whenPutIValidServiceContract_thenReturnBadRequest( ) throws IOException, Exception {
 
-        mvc.perform(put("/api/clients/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("upsie")))
+        mvc.perform(put("/api/provider/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("upsie")))
         .andExpect(status().isBadRequest());
        
         verify(serviceService, times(0)).updateServiceContract(anyLong(),any());
@@ -107,7 +84,7 @@ public class ClientRestControllerUnitTest {
 
         when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
 
-        mvc.perform(get("/api/clients/contracts"))
+        mvc.perform(get("/api/provider/contracts"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", hasSize(3)));
        
@@ -120,7 +97,7 @@ public class ClientRestControllerUnitTest {
         
         when( serviceService.getServiceContract(anyLong(),anyLong())).thenReturn(Optional.of(sc));
 
-        mvc.perform(get("/api/clients/contracts/1"))
+        mvc.perform(get("/api/provider/contracts/1"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status", is("Waiting")));
        
@@ -132,11 +109,10 @@ public class ClientRestControllerUnitTest {
                
         when( serviceService.getServiceContract(anyLong(), anyLong())).thenReturn(Optional.empty());
 
-        mvc.perform(get("/api/clients/contracts/1"))
+        mvc.perform(get("/api/provider/contracts/1"))
         .andExpect(status().isNotFound());
        
         verify(serviceService, times(1)).getServiceContract(anyLong(),anyLong());
     }
-
 
 }
