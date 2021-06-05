@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,19 @@ public class ClientRestController {
             return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
         }
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/contracts")
+    public ResponseEntity<?> getServiceContracts(){
+        //TODO Client login
+        List<ServiceContract> scList = serviceService.getServiceContracts(0).get();
+        return new ResponseEntity<List<ServiceContract>>(scList, HttpStatus.OK);
+    }
+
+    @GetMapping("/contracts/{id}")
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long businessServiceId){
+        //TODO
+        return new ResponseEntity<String>("", HttpStatus.OK);
     }
 
     @PutMapping("/contracts/{id}")

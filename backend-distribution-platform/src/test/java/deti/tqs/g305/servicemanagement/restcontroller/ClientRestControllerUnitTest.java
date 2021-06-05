@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,12 +94,49 @@ public class ClientRestControllerUnitTest {
 
     @Test
     public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
-        //TODO
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+
+        List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
+        listServiceContract.add(sc);
+        listServiceContract.add(sc1);
+        listServiceContract.add(sc2);
+
+        Optional<List<ServiceContract>> optServiceContracts = Optional.of(listServiceContract);
+
+        when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/clients/contracts"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(3)));
+       
+        verify(serviceService, times(1)).getServiceContracts(anyLong());
     }
 
     @Test
-    public void whenGetAllServiceContractsInvaildId_thenReturnNotFound() throws IOException, Exception {
-        //TODO
+    public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        
+        when( serviceService.getServiceContract(anyLong())).thenReturn(Optional.of(sc));
+
+        mvc.perform(get("/api/clients/contracts/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status", is("Waiting")));
+       
+        verify(serviceService, times(1)).getServiceContract(anyLong());
     }
+
+    @Test
+    public void whenGetInValidServiceContractId_thenReturnNotFound() throws IOException, Exception {
+               
+        when( serviceService.getServiceContract(anyLong())).thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/clients/contracts/1"))
+        .andExpect(status().isNotFound());
+       
+        verify(serviceService, times(1)).getServiceContract(anyLong());
+    }
+
 
 }

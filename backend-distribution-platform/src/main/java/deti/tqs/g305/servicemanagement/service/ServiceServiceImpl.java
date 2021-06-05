@@ -31,6 +31,11 @@ public class ServiceServiceImpl implements ServiceService{
         return null;
     }
 
+    @Override
+    public Optional<ServiceContract> getServiceContract(long Id) {
+        return null;
+    }
+
 
 
 

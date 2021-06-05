@@ -59,9 +59,5 @@ public class ProviderRestControllerUnitTest {
         //TODO
     }
 
-    @Test
-    public void whenGetAllServiceContractsInvaildId_thenReturnNotFound() throws IOException, Exception {
-        //TODO
-    }
 
 }
