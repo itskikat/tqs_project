@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,7 +19,7 @@ public class Client extends User {
     private Date birthdate;
 
     @OneToMany(mappedBy="client")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public Client() {
 

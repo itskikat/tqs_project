@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +27,7 @@ public class BusinessService{
     private int price;
 
     @OneToMany(mappedBy="businessService")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public BusinessService(){
 

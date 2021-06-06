@@ -8,7 +8,7 @@ package deti.tqs.g305.servicemanagement.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -31,7 +31,7 @@ public class ProviderService {
     private String description;
 
     @OneToMany(mappedBy="providerService")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public ProviderService(){
 

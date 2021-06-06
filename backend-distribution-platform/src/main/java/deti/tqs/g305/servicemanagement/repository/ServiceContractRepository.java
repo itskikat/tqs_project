@@ -12,5 +12,5 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 @Repository
 public interface ServiceContractRepository extends JpaRepository<ServiceContract, Long>{
 
-    
+    public ServiceContract findById(long id);
 }

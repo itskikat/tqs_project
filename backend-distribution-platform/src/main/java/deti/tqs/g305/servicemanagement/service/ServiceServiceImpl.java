@@ -7,6 +7,9 @@ import deti.tqs.g305.servicemanagement.model.BusinessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -16,14 +19,21 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 @Transactional
 public class ServiceServiceImpl implements ServiceService{
 
+    @Autowired
+    private ServiceContractRepository serviceContractRepository;
+
     @Override
     public ServiceContract saveServiceContract(ServiceContract serviceContract) {
-        return null;
+        return serviceContractRepository.save(serviceContract);
     }
 
     @Override
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract) {
-        return null;
+        ServiceContract sc = serviceContractRepository.findById(serviceContractId);
+        if(sc ==null){
+            return Optional.of(serviceContractRepository.save(serviceContract));
+        }
+        return Optional.empty();
     }
 
     @Override
