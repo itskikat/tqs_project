@@ -3,8 +3,9 @@ package deti.tqs.g305.servicemanagement.model;
 import javax.persistence.*;
 
 import java.util.Set;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 
 @Embeddable
@@ -20,6 +21,8 @@ public class District{
     @Column(name = "name")
     public String name;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(targetEntity=City.class)
     private Set<City> cities;
 

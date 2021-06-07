@@ -32,6 +32,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 
 
 /**
@@ -122,15 +127,16 @@ class BusinessRestControllerUnitTest {
         listServiceContract.add(sc1);
         listServiceContract.add(sc2);
 
-        Optional<List<ServiceContract>> optServiceContracts = Optional.of(listServiceContract);
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
-        when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Business"))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/businesses/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(optServiceContracts)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(3)));
+        .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(anyLong());
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Business"));
     }
 
 

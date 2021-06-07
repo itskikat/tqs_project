@@ -1,8 +1,10 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import lombok.Data;
+import lombok.ToString;
 import java.util.Set;
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -22,6 +24,8 @@ public class Business extends User {
     @Column(name = "nif")
     private String nif;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="business")
     private Set<BusinessService> businessServices;
 

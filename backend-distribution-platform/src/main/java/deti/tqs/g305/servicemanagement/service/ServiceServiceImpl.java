@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
+import deti.tqs.g305.servicemanagement.model.Client;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.model.ServiceStatus;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
 import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +66,19 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
-    public Optional<List<ServiceContract>> getServiceContracts(long Id, Pageable page) {
-        return null;
+    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType) {
+
+        switch (userType) {
+            case "Client":
+                return serviceContractRepository.findByClient_Username(username, page);
+            case "Provider":
+                return serviceContractRepository.findByProviderService_Provider_Username(username, page);
+            case "Business":
+                return serviceContractRepository.findByBusinessService_Business_Username(username,page);
+            default:
+                return null;
+        }
+        
     }
 
     @Override

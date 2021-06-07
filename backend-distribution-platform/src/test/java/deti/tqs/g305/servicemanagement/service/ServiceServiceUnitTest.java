@@ -14,9 +14,14 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.repository.*;
 import deti.tqs.g305.servicemanagement.model.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,15 +30,6 @@ public class ServiceServiceUnitTest {
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
-
-    @Mock( lenient = true)
-    private ProviderServiceRepository providerServiceRepository;
-
-    @Mock( lenient = true)
-    private BusinessServiceRepository businessServiceRepository;
-
-    @Mock( lenient = true)
-    private ClientRepository clientRepository;
 
     @InjectMocks
     private ServiceServiceImpl serviceService;
@@ -174,24 +170,29 @@ public class ServiceServiceUnitTest {
     
     @Test
     public void givenServiceContracts_whenGetServiceContracts_thenReturnServiceContracts( ){
-        /*
+
         List<ServiceContract> scs = new ArrayList<ServiceContract>();
         scs.add(sc_wait);
         scs.add(sc_accept);
         scs.add(sc_fin);
 
-        Mockito.when(businessServiceRepository.findByBusiness(1)).thenReturn(scs);
-        Mockito.when(providerServiceRepository.findByProvider(2)).thenReturn(scs);
-        Mockito.when(clientRepository.findById(3)).thenReturn(scs);
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
 
-        List<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts(1);
-        List<ServiceContract> scProviderfromDB = serviceService.getServiceContracts(2);
-        List<ServiceContract> scClientfromDB = serviceService.getServiceContracts(3);    
+        Mockito.when(serviceContractRepository.findByClient_Username(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByProviderService_Provider_Username(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByBusinessService_Business_Username(eq("hello"),any())).thenReturn(page);
+
         
-        assertThat(scBusinessfromDB).isEqualTo(scs);
-        assertThat(scProviderfromDB).isEqualTo(scs);
-        assertThat(scClientfromDB).isEqualTo(scs);   
-        */   
+
+        Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business");
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider");
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");    
+        
+        assertThat(scBusinessfromDB.getContent()).isEqualTo(scs);
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);   
+
     } 
 
     @Test

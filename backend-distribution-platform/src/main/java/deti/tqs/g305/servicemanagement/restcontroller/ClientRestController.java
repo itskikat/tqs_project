@@ -52,7 +52,7 @@ public class ClientRestController {
     @RequestParam(defaultValue = "10") int size){
         //TODO Client login
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts(1, paging);
+        Page<ServiceContract> scPage = serviceService.getServiceContracts("xpto", paging, "Client");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();

@@ -27,6 +27,11 @@ import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.JsonUtil;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.*;
@@ -80,15 +85,16 @@ public class ProviderRestControllerUnitTest {
         listServiceContract.add(sc1);
         listServiceContract.add(sc2);
 
-        Optional<List<ServiceContract>> optServiceContracts = Optional.of(listServiceContract);
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
-        when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Provider"))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/provider/contracts"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(3)));
+        .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(anyLong());
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Provider"));
     }
 
     @Test

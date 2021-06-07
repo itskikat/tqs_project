@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 
 import java.util.Set;
 
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 
@@ -28,17 +30,20 @@ public class ServiceType{
     @Column(name="extras")
     public boolean hasExtras;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="service")
     public Set<BusinessService> businessServices;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="service")
     public Set<ProviderService> providerServices;
 
     public ServiceType(){
 
     }
-    public ServiceType(long id, String name, boolean hasExtras){
-        this.id=id;
+    public ServiceType( String name, boolean hasExtras){
         this.name=name;
         this.hasExtras= hasExtras;
     }

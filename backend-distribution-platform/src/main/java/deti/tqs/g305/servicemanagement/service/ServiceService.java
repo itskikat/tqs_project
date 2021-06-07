@@ -4,6 +4,9 @@ import deti.tqs.g305.servicemanagement.model.BusinessService;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
 import java.util.Optional;
 import java.util.List;
 
@@ -14,7 +17,7 @@ public interface ServiceService {
 
     public ServiceContract saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
-    public Optional<List<ServiceContract>> getServiceContracts(long Id);
+    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType);
     public Optional<ServiceContract> getServiceContract(long userId,long serviceContractId);
 
 
