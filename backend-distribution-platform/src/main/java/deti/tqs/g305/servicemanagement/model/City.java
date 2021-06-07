@@ -12,7 +12,7 @@ import lombok.Data;
 public class City{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
     @Column(name = "name")

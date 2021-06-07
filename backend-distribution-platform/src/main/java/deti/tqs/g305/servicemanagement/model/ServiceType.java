@@ -21,7 +21,7 @@ import lombok.Data;
 public class ServiceType{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
     @Column(name = "name")

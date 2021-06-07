@@ -215,8 +215,23 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
+        //load service contract with client, business and provider usernames
+        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
+        ProviderService p = new ProviderService();
+        Provider p1 = new Provider();
+        p1.setUsername("valid");
+        p.setProvider(p1);
+        BusinessService b = new BusinessService();
+        Business b1 = new Business();
+        b1.setUsername("valid");
+        b.setBusiness(b1);
+        sc_wait.setProviderService(p);
+        sc_wait.setBusinessService(b);
+            
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("invalid", sc_wait.getId());
         
-
+        assertThat(optSc).isEqualTo(Optional.empty());
+        verify(serviceContractRepository, times(1)).findById(anyLong());
     } 
 
 

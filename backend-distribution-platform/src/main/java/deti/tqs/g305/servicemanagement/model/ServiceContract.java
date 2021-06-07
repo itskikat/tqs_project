@@ -1,4 +1,5 @@
 package deti.tqs.g305.servicemanagement.model;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  * ServiceContract
@@ -7,7 +8,7 @@ package deti.tqs.g305.servicemanagement.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -16,12 +17,12 @@ import java.util.Set;
 public class ServiceContract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name="contract_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    @CreationTimestamp
+    private LocalDateTime date;
 
     @ManyToOne()
     @JoinColumn(name = "provider_service")
