@@ -21,7 +21,7 @@ public interface ServiceService {
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);
 
 
-    public BusinessService saveBusinessService(BusinessService businessService);
+    public Optional<BusinessService> saveBusinessService(BusinessService businessService);
     public String deleteBusinessService(long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId);

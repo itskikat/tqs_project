@@ -36,8 +36,11 @@ public class BusinessRestController {
     @PostMapping("/services")
     public ResponseEntity<?> createBusinessService( @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
-            bs = serviceService.saveBusinessService(bs);
-            return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
+            Optional<BusinessService> optbs = serviceService.saveBusinessService(bs);
+            if(optbs.isPresent()){
+                return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
+            }
+            return new ResponseEntity<String>("Bad Business Service!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Business Service!", HttpStatus.BAD_REQUEST);
     }

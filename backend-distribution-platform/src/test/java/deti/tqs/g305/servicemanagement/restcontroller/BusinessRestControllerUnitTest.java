@@ -56,7 +56,7 @@ class BusinessRestControllerUnitTest {
     void whenPostValidBusinessService_thenCreateBusinessService() throws Exception {
         BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
 
-        when(serviceService.saveBusinessService(any())).thenReturn(bs);
+        when(serviceService.saveBusinessService(any())).thenReturn(Optional.of(bs));
 
         mvc.perform(post("/api/businesses/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
                 .andExpect(status().isOk())

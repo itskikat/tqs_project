@@ -47,30 +47,30 @@ public class ServiceServiceImpl implements ServiceService{
     @Override
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
-        if(sc == null){
-            if(serviceContract.getProviderService()!= null ){
-                ProviderService ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
-                if(ps== null){
-                    return Optional.empty();
-                }
-                serviceContract.setProviderService(ps);
+
+        if(sc == null && serviceContract.getProviderService()!= null && serviceContract.getBusinessService()!= null 
+            && serviceContract.getClient()!= null ){
+
+            ProviderService ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
+            if(ps== null){
+                return Optional.empty();
             }
-            if(serviceContract.getBusinessService()!= null ){
-                BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
-                if(bs== null){
-                    return Optional.empty();
-                }
-                serviceContract.setBusinessService(bs);
+            serviceContract.setProviderService(ps);
+        
+            BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+            if(bs== null){
+                return Optional.empty();
             }
-            if(serviceContract.getClient()!= null ){
-                Client c = clientRepository.findByUsername(serviceContract.getClient().getUsername());
-                if(c== null){
-                    return Optional.empty();
-                }
-                serviceContract.setClient(c);
+            serviceContract.setBusinessService(bs);
+
+            Client c = clientRepository.findByUsername(serviceContract.getClient().getUsername());
+            if(c== null){
+                return Optional.empty();
             }
+            serviceContract.setClient(c);
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
+        
         return Optional.empty();
     }
 
@@ -140,7 +140,7 @@ public class ServiceServiceImpl implements ServiceService{
 
     // BusinessService
     @Override
-    public BusinessService saveBusinessService(BusinessService businessService) {
+    public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
         return null;
     }
 
