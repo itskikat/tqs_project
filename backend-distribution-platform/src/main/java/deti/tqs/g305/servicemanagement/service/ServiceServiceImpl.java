@@ -82,8 +82,16 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
-    public Optional<ServiceContract> getServiceContract(long userId,long serviceContractId) {
-        return null;
+    public Optional<ServiceContract> getServiceContract(String username,long serviceContractId) {
+        ServiceContract sc = serviceContractRepository.findById(serviceContractId);
+        
+        if(sc!=null){
+            if(sc.getClient().getUsername().equals(username) || sc.getProviderService().getProvider().getUsername().equals(username)
+             || sc.getBusinessService().getBusiness().getUsername().equals(username)){
+                return Optional.of(sc);
+            }
+        }
+        return Optional.empty();
     }
 
 

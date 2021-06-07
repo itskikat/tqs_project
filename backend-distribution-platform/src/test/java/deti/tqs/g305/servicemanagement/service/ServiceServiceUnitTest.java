@@ -17,6 +17,7 @@ import deti.tqs.g305.servicemanagement.model.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
@@ -196,18 +197,26 @@ public class ServiceServiceUnitTest {
     } 
 
     @Test
-    public void givenNoServiceContracts_whenGetServiceContracts_thenReturnEmptyList( ){
-        
-    } 
-
-    @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        
+        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", sc_wait.getId());
+        assertThat(optSc.get()).isEqualTo(sc_wait);
+
+        verify(serviceContractRepository, times(1)).findById(anyLong());
     } 
 
     @Test
     public void whenGetServiceContractInvalidContractId_thenServiceContractShouldBeEmpty( ){
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", -99L);
         
+        assertThat(optSc).isEqualTo(Optional.empty());
+        verify(serviceContractRepository, times(1)).findById(anyLong());
+    } 
+
+    @Test
+    public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
+        
+
     } 
 
 

@@ -68,7 +68,7 @@ public class ClientRestController {
 
     @GetMapping("/contracts/{id}")
     public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
-        Optional<ServiceContract> sc = serviceService.getServiceContract(0, serviceContractId);
+        Optional<ServiceContract> sc = serviceService.getServiceContract("xpto", serviceContractId);
 
         if( sc.isPresent()){
             return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);
