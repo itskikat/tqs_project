@@ -27,6 +27,11 @@ import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.JsonUtil;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.Matchers.*;
@@ -103,39 +108,41 @@ public class ClientRestControllerUnitTest {
         listServiceContract.add(sc1);
         listServiceContract.add(sc2);
 
-        Optional<List<ServiceContract>> optServiceContracts = Optional.of(listServiceContract);
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
-        when( serviceService.getServiceContracts(anyLong())).thenReturn(optServiceContracts);
+
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/clients/contracts"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(3)));
+        .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(anyLong());
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"));
     }
 
     @Test
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         
-        when( serviceService.getServiceContract(anyLong(),anyLong())).thenReturn(Optional.of(sc));
+        when( serviceService.getServiceContract(any(),anyLong())).thenReturn(Optional.of(sc));
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status", is("Waiting")));
        
-        verify(serviceService, times(1)).getServiceContract(anyLong(), anyLong());
+        verify(serviceService, times(1)).getServiceContract(any(), anyLong());
     }
 
     @Test
     public void whenGetInValidServiceContractId_thenReturnNotFound() throws IOException, Exception {
                
-        when( serviceService.getServiceContract(anyLong(), anyLong())).thenReturn(Optional.empty());
+        when( serviceService.getServiceContract(any(), anyLong())).thenReturn(Optional.empty());
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isNotFound());
        
-        verify(serviceService, times(1)).getServiceContract(anyLong(),anyLong());
+        verify(serviceService, times(1)).getServiceContract(any(),anyLong());
     }
 
 

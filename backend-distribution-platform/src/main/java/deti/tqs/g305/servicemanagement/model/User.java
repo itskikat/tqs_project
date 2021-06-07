@@ -2,6 +2,7 @@ package deti.tqs.g305.servicemanagement.model;
 
 import lombok.Data;
 
+
 import javax.persistence.*;
 
 @Entity

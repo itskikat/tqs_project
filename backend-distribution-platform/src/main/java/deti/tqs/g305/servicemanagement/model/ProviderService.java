@@ -6,9 +6,9 @@ package deti.tqs.g305.servicemanagement.model;
 
 
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,7 +16,7 @@ import java.util.Set;
 public class ProviderService {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne()
@@ -30,8 +30,10 @@ public class ProviderService {
     @Column(name="description")
     private String description;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="providerService")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public ProviderService(){
 

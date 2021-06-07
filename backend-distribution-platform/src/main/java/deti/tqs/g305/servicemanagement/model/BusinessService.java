@@ -1,10 +1,11 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import lombok.Data;
-
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -12,7 +13,7 @@ import java.util.Set;
 public class BusinessService{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne()
@@ -26,8 +27,10 @@ public class BusinessService{
     @Column(name = "price")
     private int price;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="businessService")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public BusinessService(){
 

@@ -6,16 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +48,27 @@ public class ClientRestController {
     }
 
     @GetMapping("/contracts")
-    public ResponseEntity<?> getServiceContracts(){
+    public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "10") int size){
         //TODO Client login
-        List<ServiceContract> scList = serviceService.getServiceContracts(0).get();
-        return new ResponseEntity<List<ServiceContract>>(scList, HttpStatus.OK);
+        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
+        Page<ServiceContract> scPage = serviceService.getServiceContracts("xpto", paging, "Client");
+        List <ServiceContract> scList;
+
+        scList = scPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", scList);
+        response.put("currentPage", scPage.getNumber());
+        response.put("totalItems", scPage.getTotalElements());
+        response.put("totalPages", scPage.getTotalPages());
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
     @GetMapping("/contracts/{id}")
     public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
-        Optional<ServiceContract> sc = serviceService.getServiceContract(0, serviceContractId);
+        Optional<ServiceContract> sc = serviceService.getServiceContract("xpto", serviceContractId);
 
         if( sc.isPresent()){
             return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);

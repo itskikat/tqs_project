@@ -1,12 +1,12 @@
 package deti.tqs.g305.servicemanagement.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 
@@ -31,15 +31,16 @@ public class Provider extends User {
     @Column(name = "location_district")
     private List<District> location_district;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="provider")
     private Set<ProviderService> providerServices;
 
     @Column(name = "nif")
-    private Integer nif;
+    private String nif;
 
     @Column(name = "birthdate")
-    @Temporal(TemporalType.DATE)
-    private Date birthdate;
+    private LocalDate birthdate;
 
 
     public Provider() {
@@ -47,7 +48,7 @@ public class Provider extends User {
     }
 
     public Provider(String google_id, String username, String email, String full_name,
-                    Map<Integer, String> working_hours, List<City> location_city, List<District> location_district, int nif, Date birthdate) {
+                    Map<Integer, String> working_hours, List<City> location_city, List<District> location_district, String nif, LocalDate birthdate) {
         super(google_id, username, email, full_name);
         this.working_hours = working_hours;
         this.location_city = location_city;

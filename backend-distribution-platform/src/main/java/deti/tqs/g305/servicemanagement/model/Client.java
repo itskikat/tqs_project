@@ -1,10 +1,11 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import lombok.Data;
-
+import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,17 +16,18 @@ public class Client extends User {
     private String address;
 
     @Column(name = "birthdate")
-    @Temporal(TemporalType.DATE)
-    private Date birthdate;
+    private LocalDate birthdate;
 
+    @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy="client")
-    private Set<ServiceContract> serviceContract;
+    private List<ServiceContract> serviceContract;
 
     public Client() {
 
     }
 
-    public Client(String google_id, String username, String email, String full_name, String address, Date birthdate) {
+    public Client(String google_id, String username, String email, String full_name, String address, LocalDate birthdate) {
         super(google_id, username, email, full_name);
         this.address = address;
         this.birthdate = birthdate;
