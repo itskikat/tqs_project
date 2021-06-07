@@ -6,7 +6,11 @@ import java.util.Optional;
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.data.domain.Pageable;
+
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +34,35 @@ public class ServiceServiceImpl implements ServiceService{
     @Override
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
-        if(sc ==null){
+        
+        if(sc !=null){
+            ServiceStatus scStatus= sc.getStatus();
+            ServiceStatus sc1Status = serviceContract.getStatus();
+            if(serviceContract.getReview() != 0){
+
+                // in order to add review the contract has to have finished and can't have a review
+                if(sc.getReview()!=0 || scStatus!= ServiceStatus.Finnished){
+                    return Optional.empty();
+                }
+            }
+            else{
+                if(scStatus==ServiceStatus.Finnished || scStatus==ServiceStatus.Rejected){
+                    return Optional.empty();
+                }
+                else if(scStatus==ServiceStatus.Waiting && sc1Status==ServiceStatus.Finnished){
+                    return Optional.empty();
+                }
+                else if(scStatus==ServiceStatus.Accepted && (sc1Status==ServiceStatus.Waiting || sc1Status==ServiceStatus.Rejected)){
+                    return Optional.empty();
+                }
+            }
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
         return Optional.empty();
     }
 
     @Override
-    public Optional<List<ServiceContract>> getServiceContracts(long Id) {
+    public Optional<List<ServiceContract>> getServiceContracts(long Id, Pageable page) {
         return null;
     }
 

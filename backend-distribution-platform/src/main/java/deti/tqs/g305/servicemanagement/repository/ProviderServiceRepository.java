@@ -11,5 +11,7 @@ import deti.tqs.g305.servicemanagement.model.ProviderService;
 @Repository
 public interface ProviderServiceRepository extends JpaRepository<ProviderService, Long>{
 
+    public ProviderService findByProvider();
+
     
 }
