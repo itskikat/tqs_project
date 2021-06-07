@@ -3,7 +3,7 @@ package deti.tqs.g305.servicemanagement.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -25,7 +25,7 @@ public class Client extends User {
 
     }
 
-    public Client(String google_id, String username, String email, String full_name, String address, Date birthdate) {
+    public Client(String google_id, String username, String email, String full_name, String address, LocalDate birthdate) {
         super(google_id, username, email, full_name);
         this.address = address;
         this.birthdate = birthdate;
