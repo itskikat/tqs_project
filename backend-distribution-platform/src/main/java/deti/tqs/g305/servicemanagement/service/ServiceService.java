@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ServiceService {
 
-    public ServiceContract saveServiceContract(ServiceContract serviceContract);
+    public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
     public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType);
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);

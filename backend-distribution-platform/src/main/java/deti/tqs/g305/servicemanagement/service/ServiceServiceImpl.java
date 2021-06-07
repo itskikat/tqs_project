@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 import deti.tqs.g305.servicemanagement.model.Client;
+import deti.tqs.g305.servicemanagement.model.ProviderService;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,10 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
 import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
+import deti.tqs.g305.servicemanagement.repository.ProviderServiceRepository;
+import deti.tqs.g305.servicemanagement.repository.BusinessServiceRepository;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,9 +35,43 @@ public class ServiceServiceImpl implements ServiceService{
     @Autowired
     private ServiceContractRepository serviceContractRepository;
 
+    @Autowired
+    private ProviderServiceRepository providerServiceRepository;
+
+    @Autowired
+    private BusinessServiceRepository businessServiceRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
     @Override
-    public ServiceContract saveServiceContract(ServiceContract serviceContract) {
-        return serviceContractRepository.save(serviceContract);
+    public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
+        ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
+        if(sc == null){
+            if(serviceContract.getProviderService()!= null ){
+                ProviderService ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
+                if(ps== null){
+                    return Optional.empty();
+                }
+                serviceContract.setProviderService(ps);
+            }
+            if(serviceContract.getBusinessService()!= null ){
+                BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+                if(bs== null){
+                    return Optional.empty();
+                }
+                serviceContract.setBusinessService(bs);
+            }
+            if(serviceContract.getClient()!= null ){
+                Client c = clientRepository.findByUsername(serviceContract.getClient().getUsername());
+                if(c== null){
+                    return Optional.empty();
+                }
+                serviceContract.setClient(c);
+            }
+            return Optional.of(serviceContractRepository.save(serviceContract));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -60,7 +99,9 @@ public class ServiceServiceImpl implements ServiceService{
                     return Optional.empty();
                 }
             }
-            return Optional.of(serviceContractRepository.save(serviceContract));
+            sc.setReview(serviceContract.getReview());
+            sc.setStatus(serviceContract.getStatus());
+            return Optional.of(serviceContractRepository.save(sc));
         }
         return Optional.empty();
     }

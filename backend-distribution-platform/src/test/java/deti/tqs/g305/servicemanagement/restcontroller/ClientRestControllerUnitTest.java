@@ -53,7 +53,7 @@ public class ClientRestControllerUnitTest {
     public void whenPostValidServiceContract_thenCreateServiceContract( ) throws IOException, Exception {
         
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        when( serviceService.saveServiceContract(sc)).thenReturn(sc);
+        when( serviceService.saveServiceContract(sc)).thenReturn(Optional.of(sc));
 
         mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
         .andExpect(status().isOk())

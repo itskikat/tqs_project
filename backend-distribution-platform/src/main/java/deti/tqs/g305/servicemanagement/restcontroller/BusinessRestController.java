@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import javax.validation.Valid;
+
 /**
  * BusinessRestController
  */
@@ -32,7 +34,7 @@ public class BusinessRestController {
 
 
     @PostMapping("/services")
-    public ResponseEntity<?> createBusinessService(@RequestBody(required = false) BusinessService bs){
+    public ResponseEntity<?> createBusinessService( @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
             bs = serviceService.saveBusinessService(bs);
             return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
@@ -61,7 +63,7 @@ public class BusinessRestController {
     }
 
     @PutMapping("/services/{id}")
-    public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @RequestBody(required = false) BusinessService bs){
+    public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
             Optional<BusinessService> optBs = serviceService.updateBusinessService(businessServiceId, bs);
             if(optBs.isPresent()){

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -69,7 +71,7 @@ public class ProviderRestController {
     }
 
     @PutMapping("/contracts/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @Valid @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
             Optional<ServiceContract>  optSc= serviceService.updateServiceContract(serviceContractId, sc);
             if(optSc.isPresent()){

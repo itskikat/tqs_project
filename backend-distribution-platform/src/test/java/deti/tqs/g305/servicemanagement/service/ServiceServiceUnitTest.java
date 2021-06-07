@@ -32,6 +32,15 @@ public class ServiceServiceUnitTest {
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
 
+    @Mock( lenient = true)
+    private ProviderServiceRepository providerServiceRepository;
+
+    @Mock( lenient = true)
+    private BusinessServiceRepository businessServiceRepository;
+
+    @Mock( lenient = true)
+    private ClientRepository clientRepository;
+
     @InjectMocks
     private ServiceServiceImpl serviceService;
 
@@ -60,8 +69,16 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void whenCreateServiceContract_thenServiceContractShouldBeStored( ){
-        
-        ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait);
+        sc_wait.getClient().setUsername("username has to be present to work");
+        sc_wait.getProviderService().setId(1L);
+        sc_wait.getBusinessService().setId(1L);
+
+        Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(null);
+        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(sc_wait.getProviderService());
+        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(sc_wait.getBusinessService());
+        Mockito.when(clientRepository.findByUsername(any())).thenReturn(sc_wait.getClient());
+
+        ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait).get();
 
         assertThat(sc_wait).isEqualTo(scfromDB);
         verify(serviceContractRepository, times(1)).save(any());
