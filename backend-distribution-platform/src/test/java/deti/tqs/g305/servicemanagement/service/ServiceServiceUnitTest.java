@@ -19,15 +19,20 @@ import java.util.List;
 import java.util.Optional;
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
+
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
@@ -197,9 +202,9 @@ public class ServiceServiceUnitTest {
         Pageable pageReq = PageRequest.of(10,10);
         Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
 
-        Mockito.when(serviceContractRepository.findByClient_Username(eq("hello"),any())).thenReturn(page);
-        Mockito.when(serviceContractRepository.findByProviderService_Provider_Username(eq("hello"),any())).thenReturn(page);
-        Mockito.when(serviceContractRepository.findByBusinessService_Business_Username(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByClient_Email(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByProviderService_Provider_Email(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(eq("hello"),any())).thenReturn(page);
 
         
 
@@ -215,7 +220,7 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
+        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
         Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", sc_wait.getId());
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
@@ -233,14 +238,14 @@ public class ServiceServiceUnitTest {
     @Test
     public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
         //load service contract with client, business and provider usernames
-        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
+        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
         ProviderService p = new ProviderService();
         Provider p1 = new Provider();
-        p1.setUsername("valid");
+        p1.setEmail("p1@email.pt");
         p.setProvider(p1);
         BusinessService b = new BusinessService();
         Business b1 = new Business();
-        b1.setUsername("valid");
+        b1.setEmail("p2@email.pt");
         b.setBusiness(b1);
         sc_wait.setProviderService(p);
         sc_wait.setBusinessService(b);

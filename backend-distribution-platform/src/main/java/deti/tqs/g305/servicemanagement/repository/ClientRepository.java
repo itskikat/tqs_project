@@ -1,8 +1,11 @@
 package deti.tqs.g305.servicemanagement.repository;
 
+import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.model.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 /**
  * ClientRepository
@@ -11,6 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, String> {
 
-    public Client findByUsername(String name);
+    Optional<Client> findByEmail(String email);
 
 }

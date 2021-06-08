@@ -111,11 +111,11 @@ public class ServiceServiceImpl implements ServiceService{
 
         switch (userType) {
             case "Client":
-                return serviceContractRepository.findByClient_Username(username, page);
+                return serviceContractRepository.findByClient_Email(username, page);
             case "Provider":
-                return serviceContractRepository.findByProviderService_Provider_Username(username, page);
+                return serviceContractRepository.findByProviderService_Provider_Email(username, page);
             case "Business":
-                return serviceContractRepository.findByBusinessService_Business_Username(username,page);
+                return serviceContractRepository.findByBusinessService_Business_Email(username,page);
             default:
                 return null;
         }
@@ -127,8 +127,8 @@ public class ServiceServiceImpl implements ServiceService{
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
         
         if(sc!=null){
-            if(sc.getClient().getUsername().equals(username) || sc.getProviderService().getProvider().getUsername().equals(username)
-             || sc.getBusinessService().getBusiness().getUsername().equals(username)){
+            if(sc.getClient().getEmail().equals(username) || sc.getProviderService().getProvider().getEmail().equals(username)
+             || sc.getBusinessService().getBusiness().getEmail().equals(username)){
                 return Optional.of(sc);
             }
         }

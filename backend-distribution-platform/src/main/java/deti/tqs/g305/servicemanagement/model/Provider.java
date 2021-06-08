@@ -47,9 +47,9 @@ public class Provider extends User {
 
     }
 
-    public Provider(String google_id, String username, String email, String full_name,
+    public Provider(String email, String full_name,String password,
                     Map<Integer, String> working_hours, List<City> location_city, List<District> location_district, String nif, LocalDate birthdate) {
-        super(google_id, username, email, full_name);
+        super(email, full_name, password);
         this.working_hours = working_hours;
         this.location_city = location_city;
         this.location_district = location_district;
