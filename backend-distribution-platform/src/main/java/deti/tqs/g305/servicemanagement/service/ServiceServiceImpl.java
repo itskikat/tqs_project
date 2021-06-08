@@ -51,23 +51,23 @@ public class ServiceServiceImpl implements ServiceService{
         if(sc == null && serviceContract.getProviderService()!= null && serviceContract.getBusinessService()!= null 
             && serviceContract.getClient()!= null ){
 
-            ProviderService ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
-            if(ps== null){
+            Optional<ProviderService> ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
+            if(!ps.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setProviderService(ps);
+            serviceContract.setProviderService(ps.get());
         
-            BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
-            if(bs== null){
+            Optional<BusinessService> bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+            if(!bs.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setBusinessService(bs);
+            serviceContract.setBusinessService(bs.get());
 
-            Client c = clientRepository.findByUsername(serviceContract.getClient().getUsername());
-            if(c== null){
+            Optional<Client> c = clientRepository.findByEmail(serviceContract.getClient().getEmail());
+            if(!c.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setClient(c);
+            serviceContract.setClient(c.get());
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
         

@@ -61,7 +61,7 @@ public class ProviderRestController {
     }
 
     @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") long serviceContractId){
         Optional<ServiceContract> sc = serviceService.getServiceContract("xptp", serviceContractId);
 
         if( sc.isPresent()){
@@ -71,7 +71,7 @@ public class ProviderRestController {
     }
 
     @PutMapping("/contracts/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @Valid @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") long serviceContractId, @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
             Optional<ServiceContract>  optSc= serviceService.updateServiceContract(serviceContractId, sc);
             if(optSc.isPresent()){

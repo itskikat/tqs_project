@@ -31,8 +31,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
 
-    @Autowired
-    private PasswordEncoder bcryptEncoder;
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
@@ -74,14 +72,14 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void whenCreateServiceContract_thenServiceContractShouldBeStored( ){
-        sc_wait.getClient().setUsername("username has to be present to work");
+        sc_wait.getClient().setEmail("username has to be present to work");
         sc_wait.getProviderService().setId(1L);
         sc_wait.getBusinessService().setId(1L);
 
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(null);
-        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(sc_wait.getProviderService());
-        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(sc_wait.getBusinessService());
-        Mockito.when(clientRepository.findByUsername(any())).thenReturn(sc_wait.getClient());
+        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getProviderService()));
+        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getBusinessService()));
+        Mockito.when(clientRepository.findByEmail(any())).thenReturn(Optional.of(sc_wait.getClient()));
 
         ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait).get();
 
@@ -220,8 +218,8 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
-        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", sc_wait.getId());
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto@ua.pt", sc_wait.getId());
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
         verify(serviceContractRepository, times(1)).findById(anyLong());
@@ -238,7 +236,7 @@ public class ServiceServiceUnitTest {
     @Test
     public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
         //load service contract with client, business and provider usernames
-        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
         ProviderService p = new ProviderService();
         Provider p1 = new Provider();
         p1.setEmail("p1@email.pt");
