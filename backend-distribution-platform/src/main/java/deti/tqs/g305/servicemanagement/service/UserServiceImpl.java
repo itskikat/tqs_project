@@ -1,6 +1,10 @@
 package deti.tqs.g305.servicemanagement.service;
 
 import deti.tqs.g305.servicemanagement.model.User;
+import deti.tqs.g305.servicemanagement.model.UserAuthority;
+import deti.tqs.g305.servicemanagement.repository.BusinessRepository;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
+import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
 import deti.tqs.g305.servicemanagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +25,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BusinessRepository businessRepository;
+
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
     @Override
     public UserDetails getDetails(String username) throws UsernameNotFoundException {
         return null;
@@ -28,10 +41,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        // Get user
         User user = userRepository.findByEmail(s).orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + s));
 
+        // Get authority
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("User"));
+        if (businessRepository.findByEmail(s).isPresent()) {
+            authorities.add(new SimpleGrantedAuthority(UserAuthority.BUSINESS.name()));
+        } else if (providerRepository.findByEmail(s).isPresent()) {
+            authorities.add(new SimpleGrantedAuthority(UserAuthority.PROVIDER.name()));
+        } else if (clientRepository.findByEmail(s).isPresent()) {
+            authorities.add(new SimpleGrantedAuthority(UserAuthority.CLIENT.name()));
+        }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 }

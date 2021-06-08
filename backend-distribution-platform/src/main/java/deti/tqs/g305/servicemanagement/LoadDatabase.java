@@ -36,7 +36,7 @@ class LoadDatabase {
       Client c = new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now());
       clientRepository.save(c);
 
-      Business b = new Business("plumber.com", "Plumber.com, LDA", bcryptEncoder.encode("abc"), "lala", "lele", "lili","lulu");
+      Business b = new Business("plumber@plumber.com", "Plumber.com, LDA", bcryptEncoder.encode("abc"), "lala", "lele", "lili","lulu");
       businessRepository.save(b);
 
       ServiceType st = new ServiceType("canalização", true);
