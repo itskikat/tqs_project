@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +41,14 @@ public class ClientRestController {
     private ServiceService serviceService;
 
     @PostMapping("/contracts")
-    public ResponseEntity<?> createServiceContract( @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> createServiceContract( @Valid @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
-            sc = serviceService.saveServiceContract(sc);
-            return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
+
+            Optional<ServiceContract> optSc = serviceService.saveServiceContract(sc);
+            if(optSc.isPresent()){
+                return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
+            }
+            return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
     }
@@ -77,7 +83,7 @@ public class ClientRestController {
     }
 
     @PutMapping("/contracts/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @Valid @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
             Optional<ServiceContract>  optSc= serviceService.updateServiceContract(serviceContractId, sc);
             if(optSc.isPresent()){
