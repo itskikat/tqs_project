@@ -11,5 +11,6 @@ import deti.tqs.g305.servicemanagement.model.ServiceType;
 @Repository
 public interface ServiceTypeRepository extends JpaRepository<ServiceType, Long>{
 
+    public ServiceType findById(long id);
     
 }

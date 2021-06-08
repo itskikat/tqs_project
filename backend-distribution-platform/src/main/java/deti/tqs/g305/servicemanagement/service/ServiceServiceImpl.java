@@ -3,22 +3,15 @@ package deti.tqs.g305.servicemanagement.service;
 import java.util.List;
 import java.util.Optional;
 
-import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.Client;
-import deti.tqs.g305.servicemanagement.model.ProviderService;
+import deti.tqs.g305.servicemanagement.model.*;
 
+import deti.tqs.g305.servicemanagement.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
-import deti.tqs.g305.servicemanagement.repository.ClientRepository;
-import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
-import deti.tqs.g305.servicemanagement.repository.ProviderServiceRepository;
-import deti.tqs.g305.servicemanagement.repository.BusinessServiceRepository;
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
 
 
@@ -43,6 +36,9 @@ public class ServiceServiceImpl implements ServiceService{
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepository;
 
     @Override
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
@@ -77,7 +73,7 @@ public class ServiceServiceImpl implements ServiceService{
     @Override
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
-        
+
         if(sc !=null){
             ServiceStatus scStatus= sc.getStatus();
             ServiceStatus sc1Status = serviceContract.getStatus();
@@ -141,25 +137,59 @@ public class ServiceServiceImpl implements ServiceService{
     // BusinessService
     @Override
     public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
-        return null;
+        BusinessService bs = businessServiceRepository.findById(businessService.getId());
+
+        if(bs == null && businessService.getService() != null && businessService.getServiceContract() != null ) {
+
+            ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
+            if (st == null) {
+                return Optional.empty();
+            }
+            businessService.setService(st);
+
+            List<ServiceContract> scList = serviceContractRepository.findByBusinessServiceId(businessService.getId());
+            if (scList.isEmpty()) {
+                return Optional.empty();
+            }
+            businessService.setServiceContract(scList);
+            return Optional.of(businessServiceRepository.save(businessService));
+        }
+        return Optional.empty();
     }
 
     @Override
     public String deleteBusinessService(long businessServiceId) {
+        BusinessService bs = businessServiceRepository.findById(businessServiceId);
+        if (bs != null) {
+            businessServiceRepository.delete(bs);
+            return "BusinessService deleted!";
+        }
         return null;
     }
 
     @Override
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
-        return null;
+        BusinessService bs = businessServiceRepository.findById(businessServiceId);
+        if(bs != null) {
+            if (businessService.getService() != null) {
+                bs.setService(businessService.getService());
+            }
+            if (businessService.getServiceContract() != null) {
+                bs.setServiceContract(businessService.getServiceContract());
+            }
+            if (businessService.getBusiness() != null) {
+                bs.setBusiness(businessService.getBusiness());
+            }
+            bs.setPrice(businessService.getPrice());
+
+            return Optional.of(businessServiceRepository.save(bs));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId) {
-        return null;
+    public Page<BusinessService> getBusinessBusinessServices(long businessId, Pageable page) {
+        return businessServiceRepository.findByBusiness_Id(businessId, page);
     }
-
-
-
 
 }

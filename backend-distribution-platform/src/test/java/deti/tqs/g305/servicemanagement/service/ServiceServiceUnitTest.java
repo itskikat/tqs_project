@@ -41,6 +41,9 @@ public class ServiceServiceUnitTest {
     @Mock( lenient = true)
     private ClientRepository clientRepository;
 
+    @Mock( lenient = true)
+    private ServiceTypeRepository serviceTypeRepository;
+
     @InjectMocks
     private ServiceServiceImpl serviceService;
 
@@ -48,6 +51,10 @@ public class ServiceServiceUnitTest {
     ServiceContract sc_accept;
     ServiceContract sc_fin;
     ServiceContract sc_rej;
+
+    BusinessService bs_free;
+    BusinessService bs_saved;
+    BusinessService bs_withId;
     
 
     @BeforeEach
@@ -65,6 +72,18 @@ public class ServiceServiceUnitTest {
         Mockito.when(serviceContractRepository.save(sc_accept)).thenReturn(sc_accept);
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(sc_wait);
         Mockito.when(serviceContractRepository.findById(-99L)).thenReturn(null);
+
+        // BusinessService
+        bs_free = new BusinessService(0, new ServiceType(), new Business());
+
+        Mockito.when(businessServiceRepository.save(bs_free)).thenReturn(bs_free);
+
+        bs_withId = new BusinessService(0, new ServiceType(), new Business());
+        bs_withId.setId(2L);
+        Mockito.when(businessServiceRepository.save(bs_withId)).thenReturn(bs_withId);
+        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
+
+        Mockito.when(businessServiceRepository.findById(-999L)).thenReturn(null);
     }
 
     @Test
@@ -252,5 +271,49 @@ public class ServiceServiceUnitTest {
     } 
 
 
+    // BUSINESS SERVICE
+    @Test
+    void whenCreateBusinessService_thenBusinessServiceShouldBeStored( ){
+        bs_free.getService().setId(1L);
+
+        ServiceContract sc1 = new ServiceContract();
+        ServiceContract sc2 = new ServiceContract();
+        List<ServiceContract> scList = new ArrayList<>();
+        scList.add(sc1);
+        scList.add(sc2);
+
+        bs_free.setServiceContract(scList);
+
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(bs_free.getService());
+        Mockito.when(serviceContractRepository.findByBusinessServiceId(anyLong())).thenReturn(scList);
+
+        BusinessService bsFromDB = serviceService.saveBusinessService(bs_free).get();
+
+        assertThat(bs_free).isEqualTo(bsFromDB);
+        verify(businessServiceRepository, times(1)).save(any());
+
+    }
+
+    @Test
+    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated( ){
+        BusinessService bsFromDB = serviceService.updateBusinessService(bs_withId.getId(), bs_withId).get();
+
+        assertThat(bs_withId).isEqualTo(bsFromDB);
+
+        verify(businessServiceRepository, times(1)).save(any());
+        verify(businessServiceRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty( ){
+        Optional<BusinessService> invalidBsFromDB = serviceService.updateBusinessService(-99L, bs_withId);
+
+        assertThat(invalidBsFromDB).isEqualTo(Optional.empty());
+
+        verify(businessServiceRepository, times(0)).save(any());
+        verify(businessServiceRepository, times(1)).findById(anyLong());
+    }
+
     
+
 }
