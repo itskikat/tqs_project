@@ -15,13 +15,13 @@ import java.util.List;
  */
 public interface ServiceService {
 
-    public ServiceContract saveServiceContract(ServiceContract serviceContract);
+    public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
     public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType);
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);
 
 
-    public BusinessService saveBusinessService(BusinessService businessService);
+    public Optional<BusinessService> saveBusinessService(BusinessService businessService);
     public String deleteBusinessService(long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId);
