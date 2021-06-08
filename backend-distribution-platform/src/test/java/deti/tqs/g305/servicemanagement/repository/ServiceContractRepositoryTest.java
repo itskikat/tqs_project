@@ -33,4 +33,31 @@ public class ServiceContractRepositoryTest {
         assertThat( found ).isEqualTo(sc);
     }
 
+    @Test
+    public void whenFindSCByIdInvalid_thenReturnNull() {
+        ServiceContract sc = new ServiceContract();
+        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
+
+        ServiceContract found = serviceContractRepository.findById(sc.getId()-1);
+        assertThat( found ).isNull();
+    }
+
+    @Test
+    public void whenFindSCById_thenReturnSC() {
+        ServiceContract sc = new ServiceContract();
+        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
+
+        ServiceContract found = serviceContractRepository.findById(sc.getId());
+        assertThat( found ).isEqualTo(sc);
+    }
+
+    @Test
+    public void whenFindSCById_thenReturnSC() {
+        ServiceContract sc = new ServiceContract();
+        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
+
+        ServiceContract found = serviceContractRepository.findById(sc.getId());
+        assertThat( found ).isEqualTo(sc);
+    }
+
 }
