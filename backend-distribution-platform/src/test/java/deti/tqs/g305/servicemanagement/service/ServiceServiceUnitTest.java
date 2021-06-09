@@ -53,7 +53,6 @@ public class ServiceServiceUnitTest {
     ServiceContract sc_rej;
 
     BusinessService bs_free;
-    BusinessService bs_saved;
     BusinessService bs_withId;
     
 
@@ -220,17 +219,17 @@ public class ServiceServiceUnitTest {
         Mockito.when(serviceContractRepository.findByProviderService_Provider_Username(eq("hello"),any())).thenReturn(page);
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Username(eq("hello"),any())).thenReturn(page);
 
-        
+
 
         Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business");
         Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider");
-        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");    
-        
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");
+
         assertThat(scBusinessfromDB.getContent()).isEqualTo(scs);
         assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
-        assertThat(scClientfromDB.getContent()).isEqualTo(scs);   
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
 
-    } 
+    }
 
     @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
@@ -314,6 +313,24 @@ public class ServiceServiceUnitTest {
         verify(businessServiceRepository, times(1)).findById(anyLong());
     }
 
-    
+    @Test
+    void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices(){
+
+        Business b = new Business();
+        b.setGoogle_id("samplegoogleid");
+
+        List<BusinessService> bss = new ArrayList<BusinessService>();
+        bss.add(bs_free);
+        bss.add(bs_withId);
+
+        Pageable mypage = PageRequest.of(10,10);
+        Page<BusinessService> page = new PageImpl(bss, mypage, 1L);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Id(eq("samplegoogleid") ,any())).thenReturn(page);
+
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getGoogle_id(), mypage);
+
+        assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
 
 }

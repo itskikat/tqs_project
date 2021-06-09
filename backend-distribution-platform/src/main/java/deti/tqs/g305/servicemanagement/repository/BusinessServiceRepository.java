@@ -14,6 +14,6 @@ import deti.tqs.g305.servicemanagement.model.BusinessService;
 public interface BusinessServiceRepository extends JpaRepository<BusinessService, Long>{
     
     public BusinessService findById(long id);
-    public Page<BusinessService> findByBusiness_Id(long business_id, Pageable page);
+    public Page<BusinessService> findByBusiness_Id(String business_id, Pageable page);
 
 }

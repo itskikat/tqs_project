@@ -188,7 +188,7 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
-    public Page<BusinessService> getBusinessBusinessServices(long businessId, Pageable page) {
+    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page) {
         return businessServiceRepository.findByBusiness_Id(businessId, page);
     }
 
