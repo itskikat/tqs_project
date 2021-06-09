@@ -22,7 +22,7 @@ public interface ServiceService {
 
 
     public Optional<BusinessService> saveBusinessService(BusinessService businessService);
-    public String deleteBusinessService(long businessServiceId);
+    public void deleteBusinessService(long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page);
 }

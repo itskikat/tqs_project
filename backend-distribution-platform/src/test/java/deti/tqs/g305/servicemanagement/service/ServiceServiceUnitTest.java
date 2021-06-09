@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +18,7 @@ import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.time.LocalDate;
 
@@ -294,7 +297,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated( ){
+    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated(){
         BusinessService bsFromDB = serviceService.updateBusinessService(bs_withId.getId(), bs_withId).get();
 
         assertThat(bs_withId).isEqualTo(bsFromDB);
@@ -304,7 +307,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty( ){
+    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty(){
         Optional<BusinessService> invalidBsFromDB = serviceService.updateBusinessService(-99L, bs_withId);
 
         assertThat(invalidBsFromDB).isEqualTo(Optional.empty());
@@ -331,6 +334,26 @@ public class ServiceServiceUnitTest {
         Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getGoogle_id(), mypage);
 
         assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
+
+    @Test
+    void whenDeleteValidBusinessServiceID_thenBusinessServiceShouldBeDeleted() throws Exception{
+
+        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
+
+        serviceService.deleteBusinessService(bs_withId.getId());
+
+        verify(businessServiceRepository, times(1)).delete(bs_withId);
+
+    }
+
+    @Test
+    void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() throws Exception {
+        assertThrows(NoSuchElementException.class, () -> {
+            serviceService.deleteBusinessService(-99L);
+        });
+        verify(businessServiceRepository, times(0)).delete(any());
+
     }
 
 }

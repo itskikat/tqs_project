@@ -1,11 +1,14 @@
 package deti.tqs.g305.servicemanagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import deti.tqs.g305.servicemanagement.model.*;
 
 import deti.tqs.g305.servicemanagement.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 @Transactional
-public class ServiceServiceImpl implements ServiceService{
+public class ServiceServiceImpl implements ServiceService {
+
+    Logger logger = LoggerFactory.getLogger(ServiceService.class); // to log everything
 
     @Autowired
     private ServiceContractRepository serviceContractRepository;
@@ -158,13 +163,14 @@ public class ServiceServiceImpl implements ServiceService{
     }
 
     @Override
-    public String deleteBusinessService(long businessServiceId) {
+    public void deleteBusinessService(long businessServiceId) throws NoSuchElementException {
         BusinessService bs = businessServiceRepository.findById(businessServiceId);
         if (bs != null) {
             businessServiceRepository.delete(bs);
-            return "BusinessService deleted!";
+            logger.info("BusinessService successfully deleted!");
+        } else {
+            throw new NoSuchElementException();
         }
-        return null;
     }
 
     @Override
