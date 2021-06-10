@@ -23,16 +23,19 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
+
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
@@ -85,21 +88,21 @@ public class ServiceServiceUnitTest {
         bs_withId = new BusinessService(0, new ServiceType(), new Business());
         bs_withId.setId(2L);
         Mockito.when(businessServiceRepository.save(bs_withId)).thenReturn(bs_withId);
-        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
+        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
 
         Mockito.when(businessServiceRepository.findById(-999L)).thenReturn(null);
     }
 
     @Test
     public void whenCreateServiceContract_thenServiceContractShouldBeStored( ){
-        sc_wait.getClient().setUsername("username has to be present to work");
+        sc_wait.getClient().setEmail("username has to be present to work");
         sc_wait.getProviderService().setId(1L);
         sc_wait.getBusinessService().setId(1L);
 
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(null);
-        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(sc_wait.getProviderService());
-        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(sc_wait.getBusinessService());
-        Mockito.when(clientRepository.findByUsername(any())).thenReturn(sc_wait.getClient());
+        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getProviderService()));
+        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getBusinessService()));
+        Mockito.when(clientRepository.findByEmail(any())).thenReturn(Optional.of(sc_wait.getClient()));
 
         ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait).get();
 
@@ -220,9 +223,9 @@ public class ServiceServiceUnitTest {
         Pageable pageReq = PageRequest.of(10,10);
         Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
 
-        Mockito.when(serviceContractRepository.findByClient_Username(eq("hello"),any())).thenReturn(page);
-        Mockito.when(serviceContractRepository.findByProviderService_Provider_Username(eq("hello"),any())).thenReturn(page);
-        Mockito.when(serviceContractRepository.findByBusinessService_Business_Username(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByClientEmail(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByProviderService_Provider_Email(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(eq("hello"),any())).thenReturn(page);
 
 
 
@@ -238,8 +241,8 @@ public class ServiceServiceUnitTest {
 
     @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
-        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", sc_wait.getId());
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto@ua.pt", sc_wait.getId());
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
         verify(serviceContractRepository, times(1)).findById(anyLong());
@@ -256,14 +259,14 @@ public class ServiceServiceUnitTest {
     @Test
     public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
         //load service contract with client, business and provider usernames
-        sc_wait.setClient(new Client("String google_id", "xpto", "xpto@ua.pt", "xpto xpta", "lala", LocalDate.now()));
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
         ProviderService p = new ProviderService();
         Provider p1 = new Provider();
-        p1.setUsername("valid");
+        p1.setEmail("p1@email.pt");
         p.setProvider(p1);
         BusinessService b = new BusinessService();
         Business b1 = new Business();
-        b1.setUsername("valid");
+        b1.setEmail("p2@email.pt");
         b.setBusiness(b1);
         sc_wait.setProviderService(p);
         sc_wait.setBusinessService(b);
@@ -322,7 +325,7 @@ public class ServiceServiceUnitTest {
     void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices(){
 
         Business b = new Business();
-        b.setGoogle_id("samplegoogleid");
+        b.setEmail("samplegoogleid");
 
         List<BusinessService> bss = new ArrayList<BusinessService>();
         bss.add(bs_free);
@@ -331,9 +334,9 @@ public class ServiceServiceUnitTest {
         Pageable mypage = PageRequest.of(10,10);
         Page<BusinessService> page = new PageImpl(bss, mypage, 1L);
 
-        Mockito.when(businessServiceRepository.findByBusiness_Id(eq("samplegoogleid") ,any())).thenReturn(page);
+        Mockito.when(businessServiceRepository.findByBusiness_Email(eq("samplegoogleid") ,any())).thenReturn(page);
 
-        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getGoogle_id(), mypage);
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage);
 
         assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
     }
@@ -341,7 +344,7 @@ public class ServiceServiceUnitTest {
     @Test
     void whenDeleteValidBusinessServiceID_thenBusinessServiceShouldBeDeleted() throws Exception{
 
-        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
+        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
 
         serviceService.deleteBusinessService(bs_withId.getId());
 

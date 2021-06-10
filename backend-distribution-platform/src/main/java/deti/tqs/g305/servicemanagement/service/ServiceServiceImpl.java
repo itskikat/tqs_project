@@ -52,23 +52,23 @@ public class ServiceServiceImpl implements ServiceService {
         if(sc == null && serviceContract.getProviderService()!= null && serviceContract.getBusinessService()!= null 
             && serviceContract.getClient()!= null ){
 
-            ProviderService ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
-            if(ps== null){
+            Optional<ProviderService> ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
+            if(!ps.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setProviderService(ps);
+            serviceContract.setProviderService(ps.get());
         
-            BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
-            if(bs== null){
+            Optional<BusinessService> bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+            if(!bs.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setBusinessService(bs);
+            serviceContract.setBusinessService(bs.get());
 
-            Client c = clientRepository.findByUsername(serviceContract.getClient().getUsername());
-            if(c== null){
+            Optional<Client> c = clientRepository.findByEmail(serviceContract.getClient().getEmail());
+            if(!c.isPresent()){
                 return Optional.empty();
             }
-            serviceContract.setClient(c);
+            serviceContract.setClient(c.get());
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
         
@@ -112,11 +112,11 @@ public class ServiceServiceImpl implements ServiceService {
 
         switch (userType) {
             case "Client":
-                return serviceContractRepository.findByClient_Username(username, page);
+                return serviceContractRepository.findByClientEmail(username, page);
             case "Provider":
-                return serviceContractRepository.findByProviderService_Provider_Username(username, page);
+                return serviceContractRepository.findByProviderService_Provider_Email(username, page);
             case "Business":
-                return serviceContractRepository.findByBusinessService_Business_Username(username,page);
+                return serviceContractRepository.findByBusinessService_Business_Email(username,page);
             default:
                 return null;
         }
@@ -128,8 +128,8 @@ public class ServiceServiceImpl implements ServiceService {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
         
         if(sc!=null){
-            if(sc.getClient().getUsername().equals(username) || sc.getProviderService().getProvider().getUsername().equals(username)
-             || sc.getBusinessService().getBusiness().getUsername().equals(username)){
+            if(sc.getClient().getEmail().equals(username) || sc.getProviderService().getProvider().getEmail().equals(username)
+             || sc.getBusinessService().getBusiness().getEmail().equals(username)){
                 return Optional.of(sc);
             }
         }
@@ -142,9 +142,9 @@ public class ServiceServiceImpl implements ServiceService {
     // BusinessService
     @Override
     public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
-        BusinessService bs = businessServiceRepository.findById(businessService.getId());
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessService.getId());
 
-        if(bs == null && businessService.getService() != null && businessService.getServiceContract() != null ) {
+        if(bs.isEmpty() && businessService.getService() != null && businessService.getServiceContract() != null ) {
 
             ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
             if (st == null) {
@@ -164,9 +164,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public boolean deleteBusinessService(long businessServiceId){
-        BusinessService bs = businessServiceRepository.findById(businessServiceId);
-        if (bs != null) {
-            businessServiceRepository.delete(bs);
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
+        if (bs.isPresent()) {
+            businessServiceRepository.delete(bs.get());
             logger.info("BusinessService successfully deleted!");
             return true;
         } else {
@@ -176,8 +176,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
-        BusinessService bs = businessServiceRepository.findById(businessServiceId);
-        if(bs != null) {
+        Optional<BusinessService> optbs = businessServiceRepository.findById(businessServiceId);
+        if(optbs.isPresent()) {
+            BusinessService bs = optbs.get();
             if (businessService.getService() != null) {
                 bs.setService(businessService.getService());
             }
@@ -196,7 +197,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page) {
-        return businessServiceRepository.findByBusiness_Id(businessId, page);
+        return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
 
 }

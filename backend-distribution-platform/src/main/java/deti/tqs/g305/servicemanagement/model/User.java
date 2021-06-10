@@ -1,5 +1,6 @@
 package deti.tqs.g305.servicemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 
@@ -13,26 +14,24 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @Column(name = "googleID", unique = true)
-    private String google_id;
-
-    @Column(name = "username", unique = true)
-    private String username;
-
-    @Column(name = "email", unique = true)
+    @Column(name="email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "full_name")
     private String full_name;
 
+    @JsonIgnore
+    @Column(name = "password", nullable = false)
+    private String password;
+
     public User() {
 
     }
 
-    public User(String google_id, String username, String email, String full_name) {
-        this.google_id = google_id;
-        this.username = username;
+    public User(String email, String full_name, String password) {
         this.email = email;
         this.full_name = full_name;
+        this.password = password;
     }
+
 }

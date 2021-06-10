@@ -17,9 +17,11 @@ import org.springframework.data.domain.Sort;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
+import java.security.Principal;
 import java.util.HashMap;
 
 import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * BusinessRestController
@@ -47,11 +49,12 @@ public class BusinessRestController {
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size){
+    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
         
-        //TODO Business login
+        Principal principal = request.getUserPrincipal();
+
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts("xptb", paging, "Business");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Business");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();

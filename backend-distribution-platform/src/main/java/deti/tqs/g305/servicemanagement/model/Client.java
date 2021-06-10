@@ -27,8 +27,8 @@ public class Client extends User {
 
     }
 
-    public Client(String google_id, String username, String email, String full_name, String address, LocalDate birthdate) {
-        super(google_id, username, email, full_name);
+    public Client(String email, String password, String full_name, String address, LocalDate birthdate) {
+        super(email, full_name, password);
         this.address = address;
         this.birthdate = birthdate;
     }

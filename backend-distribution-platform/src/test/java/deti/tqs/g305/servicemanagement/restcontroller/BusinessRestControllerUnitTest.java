@@ -9,13 +9,17 @@ import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.model.ProviderService;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
+import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 
+import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.http.MediaType;
 
 import java.util.Optional;
@@ -37,7 +41,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-
+import org.springframework.security.test.context.support.WithMockUser;
 
 /**
  * BusinessRestControllerUnitTest
@@ -52,7 +56,17 @@ class BusinessRestControllerUnitTest {
     @MockBean
     private ServiceService serviceService;
 
+    @MockBean
+    private UserServiceImpl userService;
+
+    @MockBean
+    private JwtTokenUtil jwtToken;
+
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuth;
+
     @Test
+    @WithMockUser("duke")
     void whenPostValidBusinessService_thenCreateBusinessService() throws Exception {
         BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
 
@@ -68,6 +82,7 @@ class BusinessRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     void whenPostInvalidBusinessService_thenReturnBadRequest() throws Exception {
 
         mvc.perform(post("/api/businesses/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("bad service")))
@@ -78,6 +93,7 @@ class BusinessRestControllerUnitTest {
 
 
     @Test
+    @WithMockUser("duke")
     void whenPutValidBusinessService_thenUpdateBusinessService() throws Exception {
         BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
         bs.setId(2);
@@ -93,6 +109,7 @@ class BusinessRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     void whenPutInvalidBusinessService_thenReturnBadRequest() throws Exception {
 
         mvc.perform(put("/api/businesses/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("another bad service")))
@@ -103,19 +120,21 @@ class BusinessRestControllerUnitTest {
 
 
     @Test
+    @WithMockUser("duke")
     void whenDeleteValidBusinessService_thenDeleteBusinessService() throws Exception {
         BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
         bs.setId(2);
 
         when(serviceService.deleteBusinessService(anyLong())).thenReturn(true);
 
-        mvc.perform(delete("/api/businesses/services/delete/{id}", bs.getId()))
+        mvc.perform(delete("/api/businesses/services/delete/"+ String.valueOf(bs.getId())))
                 .andExpect(status().isFound());
 
         verify(serviceService, times(1)).deleteBusinessService(anyLong());
     }
 
     @Test
+    @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnBusinessServiceContracts() throws  Exception {
 
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
