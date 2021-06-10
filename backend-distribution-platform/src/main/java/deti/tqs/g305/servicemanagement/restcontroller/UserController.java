@@ -1,10 +1,9 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.configuration.WebSecurityConfig;
 import deti.tqs.g305.servicemanagement.exception.ResourceNotFoundException;
-import deti.tqs.g305.servicemanagement.model.JwtRequest;
-import deti.tqs.g305.servicemanagement.model.JwtResponse;
-import deti.tqs.g305.servicemanagement.model.User;
+import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.UserRepository;
 import deti.tqs.g305.servicemanagement.service.UserService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
@@ -16,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,9 +32,6 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -49,7 +46,7 @@ public class UserController {
 
         log.info("USER AUTHENTICATED, finding user...");
 
-        User u = userRepository.findById(authenticationRequest.getUsername()).orElseThrow(() -> new ResourceNotFoundException("Person not found for this email: " + authenticationRequest.getUsername()));;
+        User u = userService.getUserByEmail(authenticationRequest.getUsername()).get();
 
         log.info("Getting UserDetails for {}", u);
 
@@ -61,7 +58,7 @@ public class UserController {
 
         log.info("Token generated! {} // Returning", token);
 
-        return ResponseEntity.ok(new JwtResponse(token, userDetails.getAuthorities().iterator().next(), u.getFull_name(), u.getEmail()));
+        return ResponseEntity.ok(new JwtResponse(token, (UserAuthority) userDetails.getAuthorities().iterator().next(), u.getFull_name(), u.getEmail()));
     }
 
     private void authenticate(String username, String password) throws Exception {
