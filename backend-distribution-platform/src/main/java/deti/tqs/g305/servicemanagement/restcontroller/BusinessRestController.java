@@ -83,8 +83,11 @@ public class BusinessRestController {
     @DeleteMapping("/services/delete/{id}")
     public ResponseEntity<?> deleteBusinessService(@PathVariable(value = "id") Long businessServiceId){
         if(businessServiceId != null) {
-            serviceService.deleteBusinessService(businessServiceId);
-            return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+            boolean exists = serviceService.deleteBusinessService(businessServiceId);
+            if(exists){
+                return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+            }
+            return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }

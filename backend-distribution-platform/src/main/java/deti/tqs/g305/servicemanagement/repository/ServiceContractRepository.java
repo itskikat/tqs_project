@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 
+import java.util.List;
+
 
 /**
  * ServiceContractRepository
@@ -25,4 +27,6 @@ public interface ServiceContractRepository extends JpaRepository<ServiceContract
     public Page<ServiceContract> findByProviderService_Provider_Email(String Username, Pageable page);
 
     public Page<ServiceContract> findByBusinessService_Business_Email(String Username, Pageable page);
+
+    public List<ServiceContract> findByBusinessServiceId(long id);
 }
