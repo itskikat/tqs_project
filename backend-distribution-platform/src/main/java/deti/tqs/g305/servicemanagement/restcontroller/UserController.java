@@ -6,6 +6,7 @@ import deti.tqs.g305.servicemanagement.model.JwtRequest;
 import deti.tqs.g305.servicemanagement.model.JwtResponse;
 import deti.tqs.g305.servicemanagement.model.User;
 import deti.tqs.g305.servicemanagement.repository.UserRepository;
+import deti.tqs.g305.servicemanagement.service.UserService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class UserController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {

@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,11 +33,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private ClientRepository clientRepository;
-
-    @Override
-    public UserDetails getDetails(String username) throws UsernameNotFoundException {
-        return null;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
