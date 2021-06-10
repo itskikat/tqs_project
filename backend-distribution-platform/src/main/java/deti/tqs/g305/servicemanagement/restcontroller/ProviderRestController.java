@@ -21,11 +21,16 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * ProviderRestController
@@ -41,10 +46,10 @@ public class ProviderRestController {
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size){
-        //TODO Provider login
+    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts("xptp", paging, "Provider");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Provider");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();
@@ -59,8 +64,9 @@ public class ProviderRestController {
     }
 
     @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
-        Optional<ServiceContract> sc = serviceService.getServiceContract("xptp", serviceContractId);
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") long serviceContractId, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+        Optional<ServiceContract> sc = serviceService.getServiceContract(principal.getName(), serviceContractId);
 
         if( sc.isPresent()){
             return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);
@@ -69,7 +75,7 @@ public class ProviderRestController {
     }
 
     @PutMapping("/contracts/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") long serviceContractId, @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
             Optional<ServiceContract>  optSc= serviceService.updateServiceContract(serviceContractId, sc);
             if(optSc.isPresent()){

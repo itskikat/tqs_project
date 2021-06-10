@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +25,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
 import java.util.Map;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -39,20 +43,25 @@ public class ClientRestController {
     private ServiceService serviceService;
 
     @PostMapping("/contracts")
-    public ResponseEntity<?> createServiceContract( @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> createServiceContract( @Valid @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
-            sc = serviceService.saveServiceContract(sc);
-            return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
+
+            Optional<ServiceContract> optSc = serviceService.saveServiceContract(sc);
+            if(optSc.isPresent()){
+                return new ResponseEntity<ServiceContract>(sc, HttpStatus.OK);
+            }
+            return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size){
-        //TODO Client login
+    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts("xpto", paging, "Client");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Client");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();
@@ -67,8 +76,10 @@ public class ClientRestController {
     }
 
     @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
-        Optional<ServiceContract> sc = serviceService.getServiceContract("xpto", serviceContractId);
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Optional<ServiceContract> sc = serviceService.getServiceContract(principal.getName(), serviceContractId);
 
         if( sc.isPresent()){
             return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);
@@ -77,7 +88,7 @@ public class ClientRestController {
     }
 
     @PutMapping("/contracts/{id}")
-    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @RequestBody(required = false) ServiceContract sc){
+    public ResponseEntity<?> updateServiceContract(@PathVariable(value = "id") Long serviceContractId, @Valid @RequestBody(required = false) ServiceContract sc){
         if(sc != null){
             Optional<ServiceContract>  optSc= serviceService.updateServiceContract(serviceContractId, sc);
             if(optSc.isPresent()){

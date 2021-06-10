@@ -6,6 +6,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +19,7 @@ import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.time.LocalDate;
 
@@ -28,14 +32,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
 
-    @Autowired
-    private PasswordEncoder bcryptEncoder;
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
+
+    @Mock( lenient = true)
+    private ProviderServiceRepository providerServiceRepository;
+
+    @Mock( lenient = true)
+    private BusinessServiceRepository businessServiceRepository;
+
+    @Mock( lenient = true)
+    private ClientRepository clientRepository;
+
+    @Mock( lenient = true)
+    private ServiceTypeRepository serviceTypeRepository;
 
     @InjectMocks
     private ServiceServiceImpl serviceService;
@@ -44,6 +59,9 @@ public class ServiceServiceUnitTest {
     ServiceContract sc_accept;
     ServiceContract sc_fin;
     ServiceContract sc_rej;
+
+    BusinessService bs_free;
+    BusinessService bs_withId;
     
 
     @BeforeEach
@@ -61,12 +79,32 @@ public class ServiceServiceUnitTest {
         Mockito.when(serviceContractRepository.save(sc_accept)).thenReturn(sc_accept);
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(sc_wait);
         Mockito.when(serviceContractRepository.findById(-99L)).thenReturn(null);
+
+        // BusinessService
+        bs_free = new BusinessService(0, new ServiceType(), new Business());
+
+        Mockito.when(businessServiceRepository.save(bs_free)).thenReturn(bs_free);
+
+        bs_withId = new BusinessService(0, new ServiceType(), new Business());
+        bs_withId.setId(2L);
+        Mockito.when(businessServiceRepository.save(bs_withId)).thenReturn(bs_withId);
+        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
+
+        Mockito.when(businessServiceRepository.findById(-999L)).thenReturn(null);
     }
 
     @Test
     public void whenCreateServiceContract_thenServiceContractShouldBeStored( ){
-        
-        ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait);
+        sc_wait.getClient().setEmail("username has to be present to work");
+        sc_wait.getProviderService().setId(1L);
+        sc_wait.getBusinessService().setId(1L);
+
+        Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(null);
+        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getProviderService()));
+        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getBusinessService()));
+        Mockito.when(clientRepository.findByEmail(any())).thenReturn(Optional.of(sc_wait.getClient()));
+
+        ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait).get();
 
         assertThat(sc_wait).isEqualTo(scfromDB);
         verify(serviceContractRepository, times(1)).save(any());
@@ -185,26 +223,26 @@ public class ServiceServiceUnitTest {
         Pageable pageReq = PageRequest.of(10,10);
         Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
 
-        Mockito.when(serviceContractRepository.findByClient_Email(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByClientEmail(eq("hello"),any())).thenReturn(page);
         Mockito.when(serviceContractRepository.findByProviderService_Provider_Email(eq("hello"),any())).thenReturn(page);
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(eq("hello"),any())).thenReturn(page);
 
-        
+
 
         Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business");
         Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider");
-        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");    
-        
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");
+
         assertThat(scBusinessfromDB.getContent()).isEqualTo(scs);
         assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
-        assertThat(scClientfromDB.getContent()).isEqualTo(scs);   
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
 
-    } 
+    }
 
     @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
-        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto", sc_wait.getId());
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
+        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto@ua.pt", sc_wait.getId());
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
         verify(serviceContractRepository, times(1)).findById(anyLong());
@@ -221,7 +259,7 @@ public class ServiceServiceUnitTest {
     @Test
     public void whenGetServiceContractInvalidUser_thenServiceContractShouldBeEmpty( ){
         //load service contract with client, business and provider usernames
-        sc_wait.setClient(new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now()));
+        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
         ProviderService p = new ProviderService();
         Provider p1 = new Provider();
         p1.setEmail("p1@email.pt");
@@ -240,5 +278,85 @@ public class ServiceServiceUnitTest {
     } 
 
 
-    
+    // BUSINESS SERVICE
+    @Test
+    void whenCreateBusinessService_thenBusinessServiceShouldBeStored( ){
+        bs_free.getService().setId(1L);
+
+        ServiceContract sc1 = new ServiceContract();
+        ServiceContract sc2 = new ServiceContract();
+        List<ServiceContract> scList = new ArrayList<>();
+        scList.add(sc1);
+        scList.add(sc2);
+
+        bs_free.setServiceContract(scList);
+
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(bs_free.getService());
+        Mockito.when(serviceContractRepository.findByBusinessServiceId(anyLong())).thenReturn(scList);
+
+        BusinessService bsFromDB = serviceService.saveBusinessService(bs_free).get();
+
+        assertThat(bs_free).isEqualTo(bsFromDB);
+        verify(businessServiceRepository, times(1)).save(any());
+
+    }
+
+    @Test
+    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated(){
+        BusinessService bsFromDB = serviceService.updateBusinessService(bs_withId.getId(), bs_withId).get();
+
+        assertThat(bs_withId).isEqualTo(bsFromDB);
+
+        verify(businessServiceRepository, times(1)).save(any());
+        verify(businessServiceRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty(){
+        Optional<BusinessService> invalidBsFromDB = serviceService.updateBusinessService(-99L, bs_withId);
+
+        assertThat(invalidBsFromDB).isEqualTo(Optional.empty());
+
+        verify(businessServiceRepository, times(0)).save(any());
+        verify(businessServiceRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices(){
+
+        Business b = new Business();
+        b.setEmail("samplegoogleid");
+
+        List<BusinessService> bss = new ArrayList<BusinessService>();
+        bss.add(bs_free);
+        bss.add(bs_withId);
+
+        Pageable mypage = PageRequest.of(10,10);
+        Page<BusinessService> page = new PageImpl(bss, mypage, 1L);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email(eq("samplegoogleid") ,any())).thenReturn(page);
+
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage);
+
+        assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
+
+    @Test
+    void whenDeleteValidBusinessServiceID_thenBusinessServiceShouldBeDeleted() throws Exception{
+
+        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
+
+        serviceService.deleteBusinessService(bs_withId.getId());
+
+        verify(businessServiceRepository, times(1)).delete(bs_withId);
+
+    }
+
+    @Test
+    void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() throws Exception {
+        assertTrue(!serviceService.deleteBusinessService(-99L));
+        verify(businessServiceRepository, times(0)).delete(any());
+
+    }
+
 }

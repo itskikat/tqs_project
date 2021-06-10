@@ -1,21 +1,22 @@
 package deti.tqs.g305.servicemanagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.Client;
+import deti.tqs.g305.servicemanagement.model.*;
 
+import deti.tqs.g305.servicemanagement.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
-import deti.tqs.g305.servicemanagement.repository.ServiceContractRepository;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,20 +26,59 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 @Transactional
-public class ServiceServiceImpl implements ServiceService{
+public class ServiceServiceImpl implements ServiceService {
+
+    Logger logger = LoggerFactory.getLogger(ServiceService.class); // to log everything
 
     @Autowired
     private ServiceContractRepository serviceContractRepository;
 
+    @Autowired
+    private ProviderServiceRepository providerServiceRepository;
+
+    @Autowired
+    private BusinessServiceRepository businessServiceRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepository;
+
     @Override
-    public ServiceContract saveServiceContract(ServiceContract serviceContract) {
-        return serviceContractRepository.save(serviceContract);
+    public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
+        ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
+
+        if(sc == null && serviceContract.getProviderService()!= null && serviceContract.getBusinessService()!= null 
+            && serviceContract.getClient()!= null ){
+
+            Optional<ProviderService> ps = providerServiceRepository.findById(serviceContract.getProviderService().getId());
+            if(!ps.isPresent()){
+                return Optional.empty();
+            }
+            serviceContract.setProviderService(ps.get());
+        
+            Optional<BusinessService> bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+            if(!bs.isPresent()){
+                return Optional.empty();
+            }
+            serviceContract.setBusinessService(bs.get());
+
+            Optional<Client> c = clientRepository.findByEmail(serviceContract.getClient().getEmail());
+            if(!c.isPresent()){
+                return Optional.empty();
+            }
+            serviceContract.setClient(c.get());
+            return Optional.of(serviceContractRepository.save(serviceContract));
+        }
+        
+        return Optional.empty();
     }
 
     @Override
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
-        
+
         if(sc !=null){
             ServiceStatus scStatus= sc.getStatus();
             ServiceStatus sc1Status = serviceContract.getStatus();
@@ -60,7 +100,9 @@ public class ServiceServiceImpl implements ServiceService{
                     return Optional.empty();
                 }
             }
-            return Optional.of(serviceContractRepository.save(serviceContract));
+            sc.setReview(serviceContract.getReview());
+            sc.setStatus(serviceContract.getStatus());
+            return Optional.of(serviceContractRepository.save(sc));
         }
         return Optional.empty();
     }
@@ -70,7 +112,7 @@ public class ServiceServiceImpl implements ServiceService{
 
         switch (userType) {
             case "Client":
-                return serviceContractRepository.findByClient_Email(username, page);
+                return serviceContractRepository.findByClientEmail(username, page);
             case "Provider":
                 return serviceContractRepository.findByProviderService_Provider_Email(username, page);
             case "Business":
@@ -99,26 +141,63 @@ public class ServiceServiceImpl implements ServiceService{
 
     // BusinessService
     @Override
-    public BusinessService saveBusinessService(BusinessService businessService) {
-        return null;
+    public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessService.getId());
+
+        if(bs.isEmpty() && businessService.getService() != null && businessService.getServiceContract() != null ) {
+
+            ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
+            if (st == null) {
+                return Optional.empty();
+            }
+            businessService.setService(st);
+
+            List<ServiceContract> scList = serviceContractRepository.findByBusinessServiceId(businessService.getId());
+            if (scList.isEmpty()) {
+                return Optional.empty();
+            }
+            businessService.setServiceContract(scList);
+            return Optional.of(businessServiceRepository.save(businessService));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public String deleteBusinessService(long businessServiceId) {
-        return null;
+    public boolean deleteBusinessService(long businessServiceId){
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
+        if (bs.isPresent()) {
+            businessServiceRepository.delete(bs.get());
+            logger.info("BusinessService successfully deleted!");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
-        return null;
+        Optional<BusinessService> optbs = businessServiceRepository.findById(businessServiceId);
+        if(optbs.isPresent()) {
+            BusinessService bs = optbs.get();
+            if (businessService.getService() != null) {
+                bs.setService(businessService.getService());
+            }
+            if (businessService.getServiceContract() != null) {
+                bs.setServiceContract(businessService.getServiceContract());
+            }
+            if (businessService.getBusiness() != null) {
+                bs.setBusiness(businessService.getBusiness());
+            }
+            bs.setPrice(businessService.getPrice());
+
+            return Optional.of(businessServiceRepository.save(bs));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Optional<List<BusinessService>> getBusinessBusinessServices(long businessId) {
-        return null;
+    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page) {
+        return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
-
-
-
 
 }

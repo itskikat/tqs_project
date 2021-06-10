@@ -25,7 +25,11 @@ import deti.tqs.g305.servicemanagement.model.ProviderService;
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
+import deti.tqs.g305.servicemanagement.service.UserService;
+import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import deti.tqs.g305.servicemanagement.JsonUtil;
+import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
@@ -33,7 +37,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.test.context.support.WithMockUser;
 import static org.hamcrest.Matchers.*;
 
 
@@ -49,16 +53,26 @@ public class ProviderRestControllerUnitTest {
     @MockBean
     private ServiceService serviceService;
 
+    @MockBean
+    private UserServiceImpl userService;
+
+    @MockBean
+    private JwtTokenUtil jwtToken;
+
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuth;
+    
+
     @Test
+    @WithMockUser("duke")
     public void whenPutValidServiceContract_thenUpdateServiceContract( ) throws IOException, Exception {
 
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         sc.setReview(2);
-        sc.setId(1);
 
         when( serviceService.updateServiceContract(anyLong(),any())).thenReturn(Optional.of(sc));
         
-        mvc.perform(put("/api/provider/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
+        mvc.perform(put("/api/provider/contracts/"+ String.valueOf( sc.getId() )).contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.review", is(2)));
         
@@ -66,6 +80,7 @@ public class ProviderRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     public void whenPutIValidServiceContract_thenReturnBadRequest( ) throws IOException, Exception {
 
         mvc.perform(put("/api/provider/contracts/1").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("upsie")))
@@ -75,6 +90,7 @@ public class ProviderRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
@@ -98,6 +114,7 @@ public class ProviderRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
         ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
         
@@ -111,6 +128,7 @@ public class ProviderRestControllerUnitTest {
     }
 
     @Test
+    @WithMockUser("duke")
     public void whenGetInValidServiceContractId_thenReturnNotFound() throws IOException, Exception {
                
         when( serviceService.getServiceContract(any(), anyLong())).thenReturn(Optional.empty());

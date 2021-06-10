@@ -17,7 +17,11 @@ import org.springframework.data.domain.Sort;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
+import java.security.Principal;
 import java.util.HashMap;
+
+import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * BusinessRestController
@@ -32,21 +36,25 @@ public class BusinessRestController {
 
 
     @PostMapping("/services")
-    public ResponseEntity<?> createBusinessService(@RequestBody(required = false) BusinessService bs){
+    public ResponseEntity<?> createBusinessService( @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
-            bs = serviceService.saveBusinessService(bs);
-            return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
+            Optional<BusinessService> optbs = serviceService.saveBusinessService(bs);
+            if(optbs.isPresent()){
+                return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
+            }
+            return new ResponseEntity<String>("Bad Business Service!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Business Service!", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size){
+    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
         
-        //TODO Business login
+        Principal principal = request.getUserPrincipal();
+
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts("xptb", paging, "Business");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Business");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();
@@ -61,7 +69,7 @@ public class BusinessRestController {
     }
 
     @PutMapping("/services/{id}")
-    public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @RequestBody(required = false) BusinessService bs){
+    public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
             Optional<BusinessService> optBs = serviceService.updateBusinessService(businessServiceId, bs);
             if(optBs.isPresent()){
@@ -75,8 +83,11 @@ public class BusinessRestController {
     @DeleteMapping("/services/delete/{id}")
     public ResponseEntity<?> deleteBusinessService(@PathVariable(value = "id") Long businessServiceId){
         if(businessServiceId != null) {
-            serviceService.deleteBusinessService(businessServiceId);
-            return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+            boolean exists = serviceService.deleteBusinessService(businessServiceId);
+            if(exists){
+                return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+            }
+            return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }
