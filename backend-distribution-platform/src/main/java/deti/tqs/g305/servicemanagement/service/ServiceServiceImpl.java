@@ -163,13 +163,14 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public void deleteBusinessService(long businessServiceId) throws NoSuchElementException {
+    public boolean deleteBusinessService(long businessServiceId){
         BusinessService bs = businessServiceRepository.findById(businessServiceId);
         if (bs != null) {
             businessServiceRepository.delete(bs);
             logger.info("BusinessService successfully deleted!");
+            return true;
         } else {
-            throw new NoSuchElementException();
+            return false;
         }
     }
 

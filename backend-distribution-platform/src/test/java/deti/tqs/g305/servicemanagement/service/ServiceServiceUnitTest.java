@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
@@ -349,9 +351,7 @@ public class ServiceServiceUnitTest {
 
     @Test
     void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() throws Exception {
-        assertThrows(NoSuchElementException.class, () -> {
-            serviceService.deleteBusinessService(-99L);
-        });
+        assertTrue(!serviceService.deleteBusinessService(-99L));
         verify(businessServiceRepository, times(0)).delete(any());
 
     }
