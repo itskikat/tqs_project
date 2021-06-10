@@ -32,13 +32,16 @@ public class ServiceContractRepositoryTest {
     @Autowired
     private ServiceContractRepository serviceContractRepository;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
     ServiceContract sc;
     Pageable page;
 
     @BeforeEach
     public void setUp() {
         sc = new ServiceContract();
-        page = PageRequest.of(10,10);
+        page = PageRequest.of(0,10);
 
     }
 
@@ -61,12 +64,13 @@ public class ServiceContractRepositoryTest {
     @Test
     public void whenFindSCByClient_thenReturnSC() {
         Client c1 = new Client("teste@ua.pt", "s", "s", "c", LocalDate.now()) ;
+        
+        c1 = entityManager.persistAndFlush(c1);
         sc.setClient(c1);
-        entityManager.persistAndFlush(c1);
         entityManager.persistAndFlush(sc); //ensure data is persisted at this point
 
-        List<ServiceContract> found = serviceContractRepository.findByClient_Email("teste@ua.pt", page).getContent();
-        assertThat( found ).isEqualTo(sc);
+        List<ServiceContract> found = serviceContractRepository.findByClientEmail("teste@ua.pt",page).getContent();
+        assertThat( found.get(0) ).isEqualTo(sc);
     }
 
     @Test
@@ -76,7 +80,7 @@ public class ServiceContractRepositoryTest {
         entityManager.persistAndFlush(c1);
         entityManager.persistAndFlush(sc); //ensure data is persisted at this point
 
-        List<ServiceContract> found = serviceContractRepository.findByClient_Email("Invalid", page).getContent();
+        List<ServiceContract> found = serviceContractRepository.findByClientEmail("Invalid", page).getContent();
         assertThat( found ).isEqualTo(Collections.emptyList());
     }
 
@@ -95,7 +99,7 @@ public class ServiceContractRepositoryTest {
 
         Page<ServiceContract> page1 = serviceContractRepository.findByProviderService_Provider_Email(p1.getEmail(), page);
         List<ServiceContract> found = page1.getContent();
-        assertThat( found ).isEqualTo(sc);
+        assertThat( found.get(0) ).isEqualTo(sc);
     }
 
     @Test
@@ -131,7 +135,7 @@ public class ServiceContractRepositoryTest {
         entityManager.persistAndFlush(sc); //ensure data is persisted at this point
 
         List<ServiceContract>  found = serviceContractRepository.findByBusinessService_Business_Email(b1.getEmail(), page).getContent();
-        assertThat( found ).isEqualTo(sc);
+        assertThat( found.get(0) ).isEqualTo(sc);
     }
 
     @Test

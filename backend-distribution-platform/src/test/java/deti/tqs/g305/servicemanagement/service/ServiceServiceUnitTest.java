@@ -200,7 +200,7 @@ public class ServiceServiceUnitTest {
         Pageable pageReq = PageRequest.of(10,10);
         Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
 
-        Mockito.when(serviceContractRepository.findByClient_Email(eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByClientEmail(eq("hello"),any())).thenReturn(page);
         Mockito.when(serviceContractRepository.findByProviderService_Provider_Email(eq("hello"),any())).thenReturn(page);
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(eq("hello"),any())).thenReturn(page);
 

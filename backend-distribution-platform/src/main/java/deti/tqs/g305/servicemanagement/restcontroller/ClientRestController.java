@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
 import java.util.Map;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -55,10 +57,11 @@ public class ClientRestController {
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size){
-        //TODO Client login
+    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts("xpto", paging, "Client");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Client");
         List <ServiceContract> scList;
 
         scList = scPage.getContent();
@@ -73,8 +76,10 @@ public class ClientRestController {
     }
 
     @GetMapping("/contracts/{id}")
-    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId){
-        Optional<ServiceContract> sc = serviceService.getServiceContract("xpto", serviceContractId);
+    public ResponseEntity<?> getServiceContract(@PathVariable(value = "id") Long serviceContractId, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Optional<ServiceContract> sc = serviceService.getServiceContract(principal.getName(), serviceContractId);
 
         if( sc.isPresent()){
             return new ResponseEntity<ServiceContract>(sc.get(), HttpStatus.OK);

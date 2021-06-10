@@ -111,7 +111,7 @@ public class ServiceServiceImpl implements ServiceService{
 
         switch (userType) {
             case "Client":
-                return serviceContractRepository.findByClient_Email(username, page);
+                return serviceContractRepository.findByClientEmail(username, page);
             case "Provider":
                 return serviceContractRepository.findByProviderService_Provider_Email(username, page);
             case "Business":

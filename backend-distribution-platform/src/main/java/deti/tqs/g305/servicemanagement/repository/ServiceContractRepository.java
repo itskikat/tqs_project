@@ -17,10 +17,12 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 public interface ServiceContractRepository extends JpaRepository<ServiceContract, Long>{
 
     public ServiceContract findById(long id);
+
+    public Page<ServiceContract> findAll(Pageable page);
     
-    public Page<ServiceContract> findByClient_Email(String email, Pageable page);
+    public Page<ServiceContract> findByClientEmail(String email, Pageable page);
 
-    public Page<ServiceContract> findByProviderService_Provider_Email(String email, Pageable page);
+    public Page<ServiceContract> findByProviderService_Provider_Email(String Username, Pageable page);
 
-    public Page<ServiceContract> findByBusinessService_Business_Email(String email, Pageable page);
+    public Page<ServiceContract> findByBusinessService_Business_Email(String Username, Pageable page);
 }
