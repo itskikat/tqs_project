@@ -58,11 +58,11 @@ public class ServiceServiceImpl implements ServiceService {
             }
             serviceContract.setProviderService(ps.get());
         
-            Optional<BusinessService> bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
-            if(!bs.isPresent()){
+            BusinessService bs = businessServiceRepository.findById(serviceContract.getBusinessService().getId());
+            if(bs == null){
                 return Optional.empty();
             }
-            serviceContract.setBusinessService(bs.get());
+            serviceContract.setBusinessService(bs);
 
             Optional<Client> c = clientRepository.findByEmail(serviceContract.getClient().getEmail());
             if(!c.isPresent()){
@@ -142,9 +142,9 @@ public class ServiceServiceImpl implements ServiceService {
     // BusinessService
     @Override
     public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
-        Optional<BusinessService> bs = businessServiceRepository.findById(businessService.getId());
+        BusinessService bs = businessServiceRepository.findById(businessService.getId());
 
-        if(bs.isEmpty() && businessService.getService() != null && businessService.getServiceContract() != null ) {
+        if(bs == null && businessService.getService() != null && businessService.getServiceContract() != null ) {
 
             ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
             if (st == null) {
@@ -164,9 +164,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public boolean deleteBusinessService(long businessServiceId){
-        Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
-        if (bs.isPresent()) {
-            businessServiceRepository.delete(bs.get());
+        BusinessService bs = businessServiceRepository.findById(businessServiceId);
+        if (bs != null) {
+            businessServiceRepository.delete(bs);
             logger.info("BusinessService successfully deleted!");
             return true;
         } else {
@@ -176,9 +176,8 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService) {
-        Optional<BusinessService> optbs = businessServiceRepository.findById(businessServiceId);
-        if(optbs.isPresent()) {
-            BusinessService bs = optbs.get();
+        BusinessService bs = businessServiceRepository.findById(businessServiceId);
+        if(bs != null) {
             if (businessService.getService() != null) {
                 bs.setService(businessService.getService());
             }

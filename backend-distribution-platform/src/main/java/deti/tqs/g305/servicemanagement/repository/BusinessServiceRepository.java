@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface BusinessServiceRepository extends JpaRepository<BusinessService, Long>{
     
-    public Optional<BusinessService> findById(long id); 
+    public BusinessService findById(long id);
     public Page<BusinessService> findByBusiness_Email(String business_id, Pageable page);
 
 }

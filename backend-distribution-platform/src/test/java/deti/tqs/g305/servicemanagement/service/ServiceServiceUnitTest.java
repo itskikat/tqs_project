@@ -7,10 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import org.mockito.internal.verification.VerificationModeFactory;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
@@ -19,16 +17,13 @@ import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -88,7 +83,7 @@ public class ServiceServiceUnitTest {
         bs_withId = new BusinessService(0, new ServiceType(), new Business());
         bs_withId.setId(2L);
         Mockito.when(businessServiceRepository.save(bs_withId)).thenReturn(bs_withId);
-        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
+        Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
 
         Mockito.when(businessServiceRepository.findById(-999L)).thenReturn(null);
     }
@@ -101,7 +96,7 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(null);
         Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getProviderService()));
-        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(Optional.of(sc_wait.getBusinessService()));
+        Mockito.when(businessServiceRepository.findById(anyLong())).thenReturn(sc_wait.getBusinessService());
         Mockito.when(clientRepository.findByEmail(any())).thenReturn(Optional.of(sc_wait.getClient()));
 
         ServiceContract scfromDB = serviceService.saveServiceContract(sc_wait).get();
@@ -342,9 +337,9 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenDeleteValidBusinessServiceID_thenBusinessServiceShouldBeDeleted() throws Exception{
+    void whenDeleteValidBusinessServiceID_thenBusinessServiceShouldBeDeleted() {
 
-        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(Optional.of(bs_withId));
+        when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
 
         serviceService.deleteBusinessService(bs_withId.getId());
 
@@ -353,7 +348,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() throws Exception {
+    void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() {
         assertTrue(!serviceService.deleteBusinessService(-99L));
         verify(businessServiceRepository, times(0)).delete(any());
 
