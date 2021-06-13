@@ -1,18 +1,22 @@
 package deti.tqs.g305.servicemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
 
 public class JwtResponse implements Serializable {
 
     private static final long serialVersionUID = -8091879091924046844L;
+    @JsonProperty("token")
     private final String jwttoken;
-    private final GrantedAuthority type;
+    @JsonProperty("type")
+    private final UserAuthority type;
     private final String name;
     private final String email;
 
-    public JwtResponse(String jwttoken, GrantedAuthority type, String name, String email) {
+    public JwtResponse(String jwttoken, UserAuthority type, String name, String email) {
         this.jwttoken = jwttoken;
         this.type = type;
         this.name = name;
@@ -23,7 +27,7 @@ public class JwtResponse implements Serializable {
         return this.jwttoken;
     }
 
-    public GrantedAuthority getType() {
+    public UserAuthority getType() {
         return type;
     }
 
