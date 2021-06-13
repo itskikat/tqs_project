@@ -36,7 +36,6 @@ import {
   NbCheckboxModule,
   NbTagModule,
 } from '@nebular/theme';
-import { LoginComponent } from './login/login.component';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider-service-list/provider-service-list.component';
@@ -71,7 +70,6 @@ import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent, 
-    LoginComponent, 
     RegisterProviderComponent, 
     ProviderServiceListComponent,
     ProviderRequestsListComponent,

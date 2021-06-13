@@ -1,6 +1,5 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { LoginComponent } from './login/login.component';
 import {RegisterProviderComponent} from './register-provider/register-provider.component';
 import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
 import {ProviderServiceFormComponent} from './provider-service-form/provider-service-form.component';
@@ -50,9 +49,6 @@ export const routes: Routes = [
     path: 'regist/business', component: RegisterBusinessComponent
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  {
-    path: 'loginoriginal', component: LoginComponent,
-  },
   // { path: '**', redirectTo: 'login' },
 ];
 
