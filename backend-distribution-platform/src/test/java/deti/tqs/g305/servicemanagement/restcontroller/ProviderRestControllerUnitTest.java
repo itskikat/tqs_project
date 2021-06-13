@@ -122,7 +122,7 @@ public class ProviderRestControllerUnitTest {
 
         mvc.perform(get("/api/provider/contracts/1"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
+        .andExpect(jsonPath("$.status", is("WAITING")));
        
         verify(serviceService, times(1)).getServiceContract(any(), anyLong());
     }

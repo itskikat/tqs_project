@@ -71,7 +71,7 @@ public class ClientRestControllerUnitTest {
 
         mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
+        .andExpect(jsonPath("$.status", is("WAITING")));
 
         verify(serviceService, times(1)).saveServiceContract(any());
     }
@@ -148,7 +148,7 @@ public class ClientRestControllerUnitTest {
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
+        .andExpect(jsonPath("$.status", is("WAITING")));
        
         verify(serviceService, times(1)).getServiceContract(any(), anyLong());
     }
