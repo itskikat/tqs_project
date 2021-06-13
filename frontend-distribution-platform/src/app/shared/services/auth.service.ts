@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { apiUrl } from '../../../environments/environment';
@@ -50,6 +50,17 @@ export class AuthService {
       'name': localStorage.getItem("name"),
       'email': localStorage.getItem("email"),
       'role': localStorage.getItem("role")
+    }
+  }
+
+  // Helpers
+  getOptions() {
+    // Call this method to get HttpClient options
+    // Example: this.http.get<Hero[]>(this.heroesUrl, authService.getOptions())
+    return {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem("token")
+      })
     }
   }
 }
