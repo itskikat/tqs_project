@@ -48,7 +48,5 @@ public interface ServiceContractRepository extends JpaRepository<ServiceContract
     public Page<ServiceContract> findByBusinessService_Business_Email(String Username, Pageable page);
 
     public List<ServiceContract> findByBusinessServiceId(long id);
-
-
-               
+       
 }

@@ -240,13 +240,75 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
+    public void givenServiceContracts_whenGetServiceContractsWithStatus_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByStatusAndClientEmail(eq(ServiceStatus.WAITING),eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Provider_Email(eq(ServiceStatus.WAITING),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.of(ServiceStatus.WAITING),Optional.empty());
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.of(ServiceStatus.WAITING),Optional.empty());
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
+    }
+
+    @Test
+    public void givenServiceContracts_whenGetServiceContractsWithType_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByProviderService_Service_IdAndProviderService_Provider_Email(anyLong(),eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByProviderService_Service_IdAndClientEmail(anyLong(),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider",Optional.empty(), Optional.of(1L));
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client",Optional.empty(), Optional.of(1L));
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
+ 
+    }
+
+    @Test
+    public void givenServiceContracts_whenGetServiceContractsWithTypeAndStatus_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Service_IdAndClientEmail(eq(ServiceStatus.WAITING),anyLong(), eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Service_IdAndProviderService_Provider_Email(eq(ServiceStatus.WAITING),anyLong(),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.of(ServiceStatus.WAITING),Optional.of(1L));
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.of(ServiceStatus.WAITING),Optional.of(1L));
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
+    }
+
+    @Test
     public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
         sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
         Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto@ua.pt", sc_wait.getId());
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
         verify(serviceContractRepository, times(1)).findById(anyLong());
-    } 
+    }
+
 
     @Test
     public void whenGetServiceContractInvalidContractId_thenServiceContractShouldBeEmpty( ){
