@@ -67,7 +67,7 @@ public class ProviderRestControllerUnitTest {
     @WithMockUser("duke")
     public void whenPutValidServiceContract_thenUpdateServiceContract( ) throws IOException, Exception {
 
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         sc.setReview(2);
 
         when( serviceService.updateServiceContract(anyLong(),any())).thenReturn(Optional.of(sc));
@@ -92,9 +92,9 @@ public class ProviderRestControllerUnitTest {
     @Test
     @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
 
         List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
         listServiceContract.add(sc);
@@ -116,7 +116,7 @@ public class ProviderRestControllerUnitTest {
     @Test
     @WithMockUser("duke")
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         
         when( serviceService.getServiceContract(any(),anyLong())).thenReturn(Optional.of(sc));
 

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class ProviderRestController {
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String status, @RequestParam(required=false) String type, 
+    @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String status, @RequestParam(required=false) Long type, 
     @RequestParam(defaultValue = "date") String sort,@RequestParam(defaultValue = "ASC") String order,HttpServletRequest request){
         Principal principal = request.getUserPrincipal();
 
@@ -65,10 +66,20 @@ public class ProviderRestController {
             return new ResponseEntity<String>("Invalid order and sort parameters!", HttpStatus.BAD_REQUEST);
         }
         if(status != null && type!=null){
-            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(status), Optional.of(type));
+            try {
+                ServiceStatus sv = ServiceStatus.valueOf(status.toUpperCase());
+                scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(sv), Optional.of(type));
+            } catch (Exception e) {
+                return new ResponseEntity<String>("Invalid Status", HttpStatus.BAD_REQUEST);
+            }   
         }
         else if(status!=null){
-            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(status), Optional.empty());
+            try {
+                ServiceStatus sv = ServiceStatus.valueOf(status.toUpperCase());
+                scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(sv), Optional.empty());
+            } catch (Exception e) {
+                return new ResponseEntity<String>("Invalid Status", HttpStatus.BAD_REQUEST);
+            } 
         }
         else if(type!=null){
             scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.empty(), Optional.of(type));
@@ -76,7 +87,7 @@ public class ProviderRestController {
         else{
             scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.empty(), Optional.empty());
         }
-
+        
         List <ServiceContract> scList;
 
         scList = scPage.getContent();

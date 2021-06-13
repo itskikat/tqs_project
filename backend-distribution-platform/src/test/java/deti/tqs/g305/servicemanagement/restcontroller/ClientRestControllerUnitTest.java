@@ -66,7 +66,7 @@ public class ClientRestControllerUnitTest {
     @WithMockUser("duke")
     public void whenPostValidServiceContract_thenCreateServiceContract( ) throws IOException, Exception {
         
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         when( serviceService.saveServiceContract(sc)).thenReturn(Optional.of(sc));
 
         mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
@@ -91,7 +91,7 @@ public class ClientRestControllerUnitTest {
     @WithMockUser("duke")
     public void whenPutValidServiceContract_thenUpdateServiceContract( ) throws IOException, Exception {
 
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         sc.setReview(2);
         sc.setId(1);
 
@@ -117,9 +117,9 @@ public class ClientRestControllerUnitTest {
     @Test
     @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
 
         List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
         listServiceContract.add(sc);
@@ -142,7 +142,7 @@ public class ClientRestControllerUnitTest {
     @Test
     @WithMockUser("duke")
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         
         when( serviceService.getServiceContract(any(),anyLong())).thenReturn(Optional.of(sc));
 

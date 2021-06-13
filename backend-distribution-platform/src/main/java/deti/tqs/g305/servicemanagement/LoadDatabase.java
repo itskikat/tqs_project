@@ -51,7 +51,7 @@ class LoadDatabase {
       ProviderService ps = new ProviderService("bla bla", p, st);
       providerServiceRepository.save(ps);
 
-      ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.Waiting, c, 0);
+      ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.WAITING, c, 0);
       serviceContractRepository.save(sc);
 
       ServiceType st1 = new ServiceType("eletricidade", true);
@@ -63,10 +63,10 @@ class LoadDatabase {
       BusinessService bs1 = new BusinessService(10, st1, b);
       businessServiceRepository.save(bs1);
 
-      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.Finnished, c, 0);
+      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc1);
 
-      ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.Finnished, c, 2);
+      ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 2);
       serviceContractRepository.save(sc2);
       
     };

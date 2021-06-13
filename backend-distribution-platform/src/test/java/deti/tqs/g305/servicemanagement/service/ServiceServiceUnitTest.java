@@ -66,12 +66,12 @@ public class ServiceServiceUnitTest {
 
     @BeforeEach
     public void setUp() {
-        sc_wait = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        sc_wait = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         Mockito.when(serviceContractRepository.save(sc_wait)).thenReturn(sc_wait);
 
-        sc_accept = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Accepted, new Client(),0);
-        sc_fin = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Finnished, new Client(),0);
-        sc_rej = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Rejected, new Client(),0);
+        sc_accept = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.ACCEPTED, new Client(),0);
+        sc_fin = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.FINNISHED, new Client(),0);
+        sc_rej = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.REJECTED, new Client(),0);
         sc_accept.setId(sc_wait.getId());
         sc_fin.setId(sc_accept.getId());
         sc_rej.setId(sc_accept.getId());
@@ -192,7 +192,7 @@ public class ServiceServiceUnitTest {
         //should not be able to update review when there is already a review
         sc_fin.setReview(4);
         Mockito.when(serviceContractRepository.findById(id)).thenReturn(sc_fin);
-        ServiceContract sc_rev = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Finnished, new Client(),3);
+        ServiceContract sc_rev = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.FINNISHED, new Client(),3);
         sc_rev.setId(id);
 
         Optional<ServiceContract> invalidfromDB = serviceService.updateServiceContract(id,sc_rev);
