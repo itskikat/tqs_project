@@ -6,7 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FormsModule } from '@angular/forms';
-import { NbCardModule, NbLayoutModule } from '@nebular/theme';
+import { NbCardModule, NbInputModule, NbLayoutModule } from '@nebular/theme';
 
 
 @NgModule({
@@ -18,6 +18,7 @@ import { NbCardModule, NbLayoutModule } from '@nebular/theme';
     // Nebular
     NbLayoutModule,
     NbCardModule,
+    NbInputModule
   ],
   exports: [
     LoginComponent, 
