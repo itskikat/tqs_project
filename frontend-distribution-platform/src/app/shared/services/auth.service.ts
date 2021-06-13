@@ -59,7 +59,8 @@ export class AuthService {
     // Example: this.http.get<Hero[]>(this.heroesUrl, authService.getOptions())
     return {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem("token")
+        'Authorization': 'Bearer ' + localStorage.getItem("token"),
+        'Access-Control-Allow-Origin': '*'
       })
     }
   }
