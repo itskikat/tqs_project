@@ -12,6 +12,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  // Operations
   login(model: any) {
     return this.http.post(this.authUrl + "/login", model).pipe(
       map((response:any) => {
@@ -32,14 +33,23 @@ export class AuthService {
     return token!=null;
   }
 
-  role() {
-    return localStorage.getItem("role");
-  }
-
   logOut() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("name");
     localStorage.removeItem("email");
+  }
+
+  // Getters
+    role() {
+    return localStorage.getItem("role");
+  }
+
+  user() {
+    return {
+      'name': localStorage.getItem("name"),
+      'email': localStorage.getItem("email"),
+      'role': localStorage.getItem("role")
+    }
   }
 }

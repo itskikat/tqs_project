@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AuthService } from '../../../shared/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-header',
@@ -16,17 +18,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [{ title: 'Profile' }, { title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private breakpointService: NbMediaBreakpointsService) {
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private breakpointService: NbMediaBreakpointsService,
+    private authService: AuthService,
+    private router: Router) {
   }
 
   ngOnInit() {
+    // Get user data
+    this.user = this.authService.user();
 
-    
+    // Subscribe to menu service, to handle user clicks
+    this.menuService.onItemClick()
+      .subscribe(obj => {
+        if (obj.item.title == "Log out") {
+          this.authService.logOut();
+          this.router.navigate(['/login']);
+        } else if (obj.item.title == "Profile") {
+          var role = this.authService.role();
+          if (role == "BUSINESS") {
+            this.router.navigate(['/business/profile']);
+          } else if (role == "PROVIDER") {
+            alert("Page available soon!");
+          }
+        }
+      });
+
+    // Do stuff template already did
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
       .pipe(
