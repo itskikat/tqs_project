@@ -6,6 +6,8 @@
                 <h1 id="title" class="title">Login</h1>
                 <p class="sub-title">Hello! Log in with your email.</p>
 
+                <nb-alert *ngIf="invalid" status="danger">{{invalid}}</nb-alert>
+
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)">
                     <div class="form-group">
                         <label for="username">Email</label>

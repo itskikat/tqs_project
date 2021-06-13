@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SharedRoutingModule } from './shared-routing.module';
 import { LoginComponent } from './components/login/login.component';
-import { NbButtonModule, NbCardModule, NbInputModule, NbLayoutModule } from '@nebular/theme';
+import { NbAlertModule, NbButtonModule, NbCardModule, NbInputModule, NbLayoutModule } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -19,7 +19,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     NbLayoutModule,
     NbCardModule,
     NbInputModule,
-    NbButtonModule
+    NbButtonModule,
+    NbAlertModule
   ],
   exports: [LoginComponent]
 })

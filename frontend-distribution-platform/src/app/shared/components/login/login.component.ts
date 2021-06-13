@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  invalid: String = "";
 
 
   constructor(
@@ -20,6 +21,8 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.redirect();
+
     this.loginForm = this.fb.group({
       username: ['', Validators.email],
       password: ['', Validators.minLength(3)]
@@ -27,13 +30,35 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(f: FormGroup) {
+    this.invalid = "";
     // Create observer to login
     const loginObserver = {
-      next: x => console.log("User logged in!"),
-      error: err => console.log(err)
+      next: x => {
+        this.redirect();
+        this.loginForm.reset();
+      },
+      error: err => {
+        this.invalid = "Invalid username/password";
+      }
     }
 
     this.authService.login(this.loginForm.value).subscribe(loginObserver);
+  }
+
+  redirect() {
+    // If user is logged in and has valid role, redirect
+    if (this.authService.loggedIn()) {
+      let role = this.authService.role();
+      if (role == "BUSINESS") {
+        this.router.navigate(['/business/stats']);
+      } else if (role == "PROVIDER") {
+        this.router.navigate(['/services']);
+      } else {
+        // Invaid role (CLIENT), alert and log out!
+        this.invalid = "You don't have permission to access this portal!";
+        this.authService.logOut();
+      }
+    }
   }
 
 }
