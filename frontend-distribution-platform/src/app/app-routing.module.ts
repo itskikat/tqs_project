@@ -11,43 +11,48 @@ import { ProviderProfileComponent } from './provider-profile/provider-profile.co
 import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
+import { ProviderGuard } from './shared/guard/provider.guard';
+import { BusinessGuard } from './shared/guard/business.guard';
 
 
 export const routes: Routes = [
+  // Provider
   {
-    path: 'loginoriginal', component: LoginComponent
+    path:'services/add', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
   },
   {
-    path:'services/add', component: ProviderServiceFormComponent
+    path:'services', component: ProviderServiceListComponent, canActivate: [ProviderGuard]
   },
   {
-    path:'services', component: ProviderServiceListComponent
+    path:'requests', component: ProviderRequestsListComponent, canActivate: [ProviderGuard]
   },
   {
-    path:'requests', component: ProviderRequestsListComponent
+    path: 'provider/stats', component: ProviderStatsComponent, canActivate: [ProviderGuard]
   },
   {
-    path: 'provider/stats', component: ProviderStatsComponent
+    path: 'profile/provider', component: ProviderProfileComponent, canActivate: [ProviderGuard]
+  },
+  // Business
+  {
+    path:'business/stats', component: BusinessStatsComponent, canActivate: [BusinessGuard]
   },
   {
-    path:'business/stats', component: BusinessStatsComponent
+    path:'business/profile', component: BusinessProfileComponent, canActivate: [BusinessGuard]
   },
   {
-    path:'business/profile', component: BusinessProfileComponent
+    path:'business/api', component: BusinessAPIComponent, canActivate: [BusinessGuard]
   },
-  {
-    path:'business/api', component: BusinessAPIComponent
-  },
+  // Public
   {
     path: 'regist/provider', component: RegisterProviderComponent
-  },
-  {
-    path: 'profile/provider', component: ProviderProfileComponent
   },
   {
     path: 'regist/business', component: RegisterBusinessComponent
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'loginoriginal', component: LoginComponent,
+  },
   // { path: '**', redirectTo: 'login' },
 ];
 
