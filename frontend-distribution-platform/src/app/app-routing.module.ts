@@ -48,7 +48,7 @@ export const routes: Routes = [
     path: 'regist/business', component: RegisterBusinessComponent
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
+  // { path: '**', redirectTo: 'login' },
 ];
 
 const config: ExtraOptions = {

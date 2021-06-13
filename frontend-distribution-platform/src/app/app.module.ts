@@ -66,6 +66,8 @@ import { ProviderStatsChartsChartPanelHeaderComponent } from './provider-stats/c
 import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts-panel/legend-chart/legend-chart.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
+import { AuthModule } from './auth/auth.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -139,7 +141,9 @@ import { BusinessAPIComponent } from './business/business-api/business-api.compo
     NbCheckboxModule,
     NbAlertModule,
     NbTagModule,
-    NbUserModule
+    NbUserModule,
+    // Authentication
+    AuthModule
   ],
   bootstrap: [AppComponent],
 })
