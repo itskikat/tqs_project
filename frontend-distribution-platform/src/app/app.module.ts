@@ -68,6 +68,7 @@ import { BusinessProfileComponent } from './business/business-profile/business-p
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
 import { AuthModule } from './auth/auth.module';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { RouterModule } from '@angular/router';
     NbTagModule,
     NbUserModule,
     // Authentication
-    AuthModule
+    AuthModule,
+    SharedModule
   ],
   bootstrap: [AppComponent],
 })

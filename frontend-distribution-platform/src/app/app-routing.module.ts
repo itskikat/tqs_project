@@ -15,7 +15,7 @@ import { BusinessAPIComponent } from './business/business-api/business-api.compo
 
 export const routes: Routes = [
   {
-    path: 'login', component: LoginComponent
+    path: 'loginoriginal', component: LoginComponent
   },
   {
     path:'services/add', component: ProviderServiceFormComponent
