@@ -66,8 +66,6 @@ import { ProviderStatsChartsChartPanelHeaderComponent } from './provider-stats/c
 import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts-panel/legend-chart/legend-chart.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
-import { AuthModule } from './auth/auth.module';
-import { RouterModule } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -144,7 +142,6 @@ import { SharedModule } from './shared/shared.module';
     NbTagModule,
     NbUserModule,
     // Authentication
-    AuthModule,
     SharedModule
   ],
   bootstrap: [AppComponent],
