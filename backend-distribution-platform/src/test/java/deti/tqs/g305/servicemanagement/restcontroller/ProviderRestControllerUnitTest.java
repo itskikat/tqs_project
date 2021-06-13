@@ -104,13 +104,13 @@ public class ProviderRestControllerUnitTest {
         Pageable page = PageRequest.of(10,10);
         Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
-        when( serviceService.getServiceContracts(any(),any(),eq("Provider"))).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Provider"),eq(Optional.empty()),eq(Optional.empty()))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/provider/contracts"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Provider"));
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Provider"),eq(Optional.empty()),eq(Optional.empty()));
     }
 
     @Test

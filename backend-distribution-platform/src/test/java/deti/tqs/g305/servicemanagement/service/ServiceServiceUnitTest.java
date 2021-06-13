@@ -229,9 +229,9 @@ public class ServiceServiceUnitTest {
 
 
 
-        Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business");
-        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider");
-        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");
+        Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business", Optional.empty(),Optional.empty());
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.empty(),Optional.empty());
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.empty(),Optional.empty());
 
         assertThat(scBusinessfromDB.getContent()).isEqualTo(scs);
         assertThat(scProviderfromDB.getContent()).isEqualTo(scs);

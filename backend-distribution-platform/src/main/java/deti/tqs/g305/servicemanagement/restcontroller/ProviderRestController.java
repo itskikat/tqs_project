@@ -46,10 +46,37 @@ public class ProviderRestController {
 
     @GetMapping("/contracts")
     public ResponseEntity<?> getServiceContracts(@RequestParam(defaultValue = "0") int page,
-    @RequestParam(defaultValue = "10") int size, HttpServletRequest request){
+    @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String status, @RequestParam(required=false) String type, 
+    @RequestParam(defaultValue = "date") String sort,@RequestParam(defaultValue = "ASC") String order,HttpServletRequest request){
         Principal principal = request.getUserPrincipal();
-        Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Provider");
+
+        Pageable paging;
+        Page<ServiceContract> scPage;
+
+        if((order.equals("ASC") || order.equals("DESC")) && (sort.equals("date") || sort.equals("review"))){
+            if(order.equals("ASC")){
+                paging = PageRequest.of(page, size,Sort.by(Sort.Direction.ASC, sort));
+            }
+            else{
+                paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, sort));
+            }
+        }
+        else{
+            return new ResponseEntity<String>("Invalid order and sort parameters!", HttpStatus.BAD_REQUEST);
+        }
+        if(status != null && type!=null){
+            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(status), Optional.of(type));
+        }
+        else if(status!=null){
+            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.of(status), Optional.empty());
+        }
+        else if(type!=null){
+            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.empty(), Optional.of(type));
+        }
+        else{
+            scPage= serviceService.getServiceContracts(principal.getName(), paging, "Provider", Optional.empty(), Optional.empty());
+        }
+
         List <ServiceContract> scList;
 
         scList = scPage.getContent();

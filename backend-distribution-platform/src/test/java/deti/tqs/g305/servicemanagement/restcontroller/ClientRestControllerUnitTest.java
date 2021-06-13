@@ -130,13 +130,13 @@ public class ClientRestControllerUnitTest {
         Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
 
-        when( serviceService.getServiceContracts(any(),any(),eq("Client"))).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.empty()))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/clients/contracts"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"));
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.empty()));
     }
 
     @Test

@@ -108,7 +108,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType) {
+    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType, Optional<String> status, Optional<String> type) {
 
         switch (userType) {
             case "Client":
