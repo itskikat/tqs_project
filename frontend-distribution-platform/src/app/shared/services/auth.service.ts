@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { apiUrl } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  authUrl = "http://localhost:8080/api/users/";
+  authUrl = apiUrl + "/users";
 
   constructor(private http: HttpClient) { }
 
   login(model: any) {
-    return this.http.post(this.authUrl + "login", model).pipe(
+    return this.http.post(this.authUrl + "/login", model).pipe(
       map((response:any) => {
         const user = response;
         if (user.token) {
