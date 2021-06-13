@@ -1,1 +1,26 @@
-<p>login works!</p>
+
+<p>Username: {{username.value}}</p>
+<p>Password: {{password.value}}</p>
+<p>Username valid: {{username.valid}}</p>
+<p>Password valid: {{password.valid}}</p>
+<p>Form value: {{f.value|json}}</p>
+<p>Form valid?: {{f.valid}}</p>
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+    <input 
+        name="username"
+        type="username"
+        placeholder="Username" 
+        ngModel 
+        required 
+        #username="ngModel"
+    >
+    <input 
+        name="password"
+        type="password"
+        placeholder="Password"  
+        required
+        ngModel
+        #password="ngModel"
+    >
+    <button type="submit" [disabled]="f.invalid">Submit</button>
+</form>
