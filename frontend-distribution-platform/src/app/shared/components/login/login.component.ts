@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { convertCompilerOptionsFromJson } from 'typescript';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'ngx-login',
@@ -13,7 +13,11 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
 
-  constructor(private fb: FormBuilder, public router: Router) { }
+  constructor(
+    private fb: FormBuilder, 
+    private authService: AuthService,
+    public router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -23,7 +27,13 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(f: FormGroup) {
-    console.log("FORM SUBMITTED", f.value);
+    // Create observer to login
+    const loginObserver = {
+      next: x => console.log("User logged in!"),
+      error: err => console.log(err)
+    }
+
+    this.authService.login(this.loginForm.value).subscribe(loginObserver);
   }
 
 }

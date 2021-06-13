@@ -17,7 +17,9 @@ export class AuthService {
         const user = response;
         if (user.token) {
           localStorage.setItem('token', user.token);
-          
+          localStorage.setItem('role', user.type.authority);
+          localStorage.setItem('name', user.name);
+          localStorage.setItem('email', user.email);
         }
       })
     );
@@ -31,5 +33,8 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
   }
 }
