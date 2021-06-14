@@ -17,7 +17,7 @@ public interface ServiceService {
 
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
-    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType);
+    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType, Optional<ServiceStatus> status, Optional<Long> type);
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);
 
 

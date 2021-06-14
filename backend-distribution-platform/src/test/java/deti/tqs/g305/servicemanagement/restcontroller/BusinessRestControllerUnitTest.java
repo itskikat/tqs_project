@@ -137,9 +137,9 @@ class BusinessRestControllerUnitTest {
     @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnBusinessServiceContracts() throws  Exception {
 
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
 
         List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
         listServiceContract.add(sc);
@@ -149,13 +149,13 @@ class BusinessRestControllerUnitTest {
         Pageable page = PageRequest.of(10,10);
         Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
-        when( serviceService.getServiceContracts(any(),any(),eq("Business"))).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Business"),eq(Optional.empty()),eq(Optional.empty()))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/businesses/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(optServiceContracts)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Business"));
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Business"),eq(Optional.empty()),eq(Optional.empty()));
     }
 
 

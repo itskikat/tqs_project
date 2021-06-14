@@ -36,11 +36,43 @@ public class ServiceContractRepositoryTest {
     private ClientRepository clientRepository;
 
     ServiceContract sc;
+    ServiceType st1;
     Pageable page;
 
     @BeforeEach
     public void setUp() {
         sc = new ServiceContract();
+
+        Client c1 = new Client("teste@ua.pt", "s", "s", "c", LocalDate.now()) ;
+        sc.setClient(c1);
+        entityManager.persistAndFlush(c1);
+
+        ProviderService p = new ProviderService() ;
+        Provider p1 = new Provider();
+        st1= new ServiceType("canalização",false);
+        p1.setEmail("teste1@ua.pt");
+        p1.setPassword("test");
+        p.setProvider(p1);
+        p.setService(st1);
+        sc.setProviderService(p);
+
+        entityManager.persistAndFlush(st1);
+        entityManager.persistAndFlush(p1);
+        entityManager.persistAndFlush(p);
+        
+        BusinessService b = new BusinessService() ;
+        Business b1 = new Business();
+        b1.setEmail("teste2@ua.pt");
+        b1.setPassword("test");
+        b.setBusiness(b1);
+
+        sc.setBusinessService(b);
+        entityManager.persistAndFlush(b1);
+        entityManager.persistAndFlush(b);
+
+        sc.setStatus(ServiceStatus.WAITING);
+
+        entityManager.persistAndFlush(sc);
         page = PageRequest.of(0,10);
 
     }
@@ -63,11 +95,6 @@ public class ServiceContractRepositoryTest {
 
     @Test
     public void whenFindSCByClient_thenReturnSC() {
-        Client c1 = new Client("teste@ua.pt", "s", "s", "c", LocalDate.now()) ;
-        
-        c1 = entityManager.persistAndFlush(c1);
-        sc.setClient(c1);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
 
         List<ServiceContract> found = serviceContractRepository.findByClientEmail("teste@ua.pt",page).getContent();
         assertThat( found.get(0) ).isEqualTo(sc);
@@ -75,84 +102,100 @@ public class ServiceContractRepositoryTest {
 
     @Test
     public void whenFindSCByClientInvalidEmail_thenReturnSC() {
-        Client c1 = new Client("teste1@ua.pt", "s", "s", "c", LocalDate.now()) ;
-        sc.setClient(c1);
-        entityManager.persistAndFlush(c1);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
-
         List<ServiceContract> found = serviceContractRepository.findByClientEmail("Invalid", page).getContent();
         assertThat( found ).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void whenFindSCByProvider_thenReturnSC() {
-        ProviderService p = new ProviderService() ;
-        Provider p1 = new Provider();
-        p1.setEmail("teste@ua.pt");
-        p1.setPassword("test");
-        p.setProvider(p1);
-
-        sc.setProviderService(p);
-        entityManager.persistAndFlush(p1);
-        entityManager.persistAndFlush(p);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
-
-        Page<ServiceContract> page1 = serviceContractRepository.findByProviderService_Provider_Email(p1.getEmail(), page);
-        List<ServiceContract> found = page1.getContent();
+        List<ServiceContract> found  = serviceContractRepository.findByProviderService_Provider_Email("teste1@ua.pt", page).getContent();
         assertThat( found.get(0) ).isEqualTo(sc);
     }
 
     @Test
     public void whenFindSCByProviderInvalidName_thenReturnSC() {
-        ProviderService p = new ProviderService() ;
-        Provider p1 = new Provider();
-        p1.setEmail("teste1@ua.pt");
-        p1.setPassword("test");
-        p.setProvider(p1);
-
-        sc.setProviderService(p);
-        entityManager.persistAndFlush(p1);
-        entityManager.persistAndFlush(p);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
-
-        Page<ServiceContract> page1 = serviceContractRepository.findByProviderService_Provider_Email("lala", page);
-        List<ServiceContract> found = page1.getContent();
-
+        List<ServiceContract> found = serviceContractRepository.findByProviderService_Provider_Email("lala", page).getContent();
         assertThat( found ).isEqualTo(Collections.emptyList());
     }
 
     @Test
     public void whenFindSCByBusiness_thenReturnSC() {
-        BusinessService b = new BusinessService() ;
-        Business b1 = new Business();
-        b1.setEmail("teste@ua.pt");
-        b1.setPassword("test");
-        b.setBusiness(b1);
-
-        sc.setBusinessService(b);
-        entityManager.persistAndFlush(b1);
-        entityManager.persistAndFlush(b);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
-
-        List<ServiceContract>  found = serviceContractRepository.findByBusinessService_Business_Email(b1.getEmail(), page).getContent();
+        List<ServiceContract>  found = serviceContractRepository.findByBusinessService_Business_Email("teste2@ua.pt", page).getContent();
         assertThat( found.get(0) ).isEqualTo(sc);
     }
 
     @Test
     public void whenFindSCByBusinessInvalidEmail_thenReturnSC() {
-        BusinessService b = new BusinessService() ;
-        Business b1 = new Business();
-        b1.setEmail("teste1@ua.pt");
-        b1.setPassword("test");
-        b.setBusiness(b1);
-
-        sc.setBusinessService(b);
-        entityManager.persistAndFlush(b1);
-        entityManager.persistAndFlush(b);
-        entityManager.persistAndFlush(sc); //ensure data is persisted at this point
-
         List<ServiceContract> found = serviceContractRepository.findByBusinessService_Business_Email("Invalid", page).getContent();
         assertThat( found ).isEqualTo(Collections.emptyList());
+    }
+
+
+    @Test
+    public void whenFindSCByStatus_thenReturnSC() {
+
+        //Client
+        List<ServiceContract> found = serviceContractRepository.findByStatusAndClientEmail(ServiceStatus.WAITING,"teste@ua.pt", page).getContent();
+        assertThat( found.get(0) ).isEqualTo(sc);
+
+        //Provider
+        found = serviceContractRepository.findByStatusAndProviderService_Provider_Email(ServiceStatus.WAITING,"teste1@ua.pt", page).getContent();
+        assertThat( found.get(0) ).isEqualTo(sc);
+    }
+
+    @Test
+    public void whenFindSCByType_thenReturnSC() {
+        //Client
+        List<ServiceContract> found = serviceContractRepository.findByProviderService_Service_IdAndClientEmail(st1.getId(),"teste@ua.pt", page).getContent();
+        assertThat( found.get(0) ).isEqualTo(sc);
+
+        //Provider
+        found = serviceContractRepository.findByProviderService_Service_IdAndProviderService_Provider_Email(st1.getId(),"teste1@ua.pt", page).getContent();
+        assertThat( found.get(0) ).isEqualTo(sc);
+    }
+
+    @Test
+    public void whenFindSCByTypeAndStatus_thenReturnSC() {
+       //Client
+       List<ServiceContract> found = serviceContractRepository.findByStatusAndProviderService_Service_IdAndClientEmail(ServiceStatus.WAITING,st1.getId(),"teste@ua.pt", page).getContent();
+       assertThat( found.get(0) ).isEqualTo(sc);
+
+       //Provider
+       found = serviceContractRepository.findByStatusAndProviderService_Service_IdAndProviderService_Provider_Email(ServiceStatus.WAITING,st1.getId(),"teste1@ua.pt", page).getContent();
+       assertThat( found.get(0) ).isEqualTo(sc);
+    }
+
+    @Test
+    public void whenFindSCByStatusInvalid_thenReturnSC() {
+        //Client
+        List<ServiceContract> found = serviceContractRepository.findByStatusAndClientEmail(ServiceStatus.FINNISHED,"teste@ua.pt", page).getContent();
+        assertThat( found ).isEqualTo(Collections.emptyList());
+
+        //Provider
+        found = serviceContractRepository.findByStatusAndProviderService_Provider_Email(ServiceStatus.FINNISHED,"teste1@ua.pt", page).getContent();
+        assertThat( found ).isEqualTo(Collections.emptyList());
+    }
+
+    @Test
+    public void whenFindSCByTypeInvalid_thenReturnSC() {
+        //Client
+        List<ServiceContract> found = serviceContractRepository.findByProviderService_Service_IdAndClientEmail(-1L,"teste@ua.pt", page).getContent();
+        assertThat( found ).isEqualTo(Collections.emptyList());
+
+        //Provider
+        found = serviceContractRepository.findByProviderService_Service_IdAndProviderService_Provider_Email(-1L,"teste1@ua.pt", page).getContent();
+        assertThat( found ).isEqualTo(Collections.emptyList());
+    }
+
+    @Test
+    public void whenFindSCByTypeAndStatusInvalid_thenReturnSC() {
+        //Client
+       List<ServiceContract> found = serviceContractRepository.findByStatusAndProviderService_Service_IdAndClientEmail(ServiceStatus.REJECTED,-1L,"teste@ua.pt", page).getContent();
+       assertThat( found ).isEqualTo(Collections.emptyList());
+
+       //Provider
+       found = serviceContractRepository.findByStatusAndProviderService_Service_IdAndProviderService_Provider_Email(ServiceStatus.ACCEPTED,-10L,"teste1@ua.pt", page).getContent();
+       assertThat( found ).isEqualTo(Collections.emptyList());
     }
 
 }

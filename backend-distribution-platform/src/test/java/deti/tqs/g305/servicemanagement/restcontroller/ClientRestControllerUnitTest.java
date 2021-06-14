@@ -1,6 +1,7 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.*;
 import java.io.IOException;
@@ -62,16 +63,30 @@ public class ClientRestControllerUnitTest {
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
 
+    List<ServiceContract> listServiceContract;
+
+    @BeforeEach
+    public void setUp(){
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+
+        listServiceContract = new ArrayList<ServiceContract>();
+        listServiceContract.add(sc);
+        listServiceContract.add(sc1);
+        listServiceContract.add(sc2);
+    }
+
     @Test
     @WithMockUser("duke")
     public void whenPostValidServiceContract_thenCreateServiceContract( ) throws IOException, Exception {
         
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         when( serviceService.saveServiceContract(sc)).thenReturn(Optional.of(sc));
 
         mvc.perform(post("/api/clients/contracts").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
+        .andExpect(jsonPath("$.status", is("WAITING")));
 
         verify(serviceService, times(1)).saveServiceContract(any());
     }
@@ -91,7 +106,7 @@ public class ClientRestControllerUnitTest {
     @WithMockUser("duke")
     public void whenPutValidServiceContract_thenUpdateServiceContract( ) throws IOException, Exception {
 
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         sc.setReview(2);
         sc.setId(1);
 
@@ -117,38 +132,91 @@ public class ClientRestControllerUnitTest {
     @Test
     @WithMockUser("duke")
     public void whenGetAllServiceContracts_thenReturnClientServiceContracts() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc1 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-        ServiceContract sc2 = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
-
-        List<ServiceContract> listServiceContract = new ArrayList<ServiceContract>();
-        listServiceContract.add(sc);
-        listServiceContract.add(sc1);
-        listServiceContract.add(sc2);
-
         Pageable page = PageRequest.of(10,10);
         Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
 
 
-        when( serviceService.getServiceContracts(any(),any(),eq("Client"))).thenReturn(optServiceContracts);
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.empty()))).thenReturn(optServiceContracts);
 
         mvc.perform(get("/api/clients/contracts"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("data", hasSize(3)));
        
-        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"));
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.empty()));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServiceContractsWithStatusParameter_thenReturnClientServiceContracts() throws IOException, Exception {
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
+
+
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"),eq(Optional.of(ServiceStatus.ACCEPTED)),eq(Optional.empty()))).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/clients/contracts?status=ACCEPTED"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data", hasSize(3)));
+       
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"),eq(Optional.of(ServiceStatus.ACCEPTED)),eq(Optional.empty()));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServiceContractsWithTypeParameter_thenReturnClientServiceContracts() throws IOException, Exception {
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
+
+
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.of(1L)))).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/clients/contracts?type=1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data", hasSize(3)));
+       
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Client"),eq(Optional.empty()),eq(Optional.of(1L)));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServiceContractsWithTypeAndStatusParameter_thenReturnClientServiceContracts() throws IOException, Exception {
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
+
+        when( serviceService.getServiceContracts(any(),any(),eq("Client"),eq(Optional.of(ServiceStatus.REJECTED)),eq(Optional.of(1L)))).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/clients/contracts?type=1&status=Rejected"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("data", hasSize(3)));
+       
+        verify(serviceService, times(1)).getServiceContracts(any(),any(),any(),any(),any());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServiceContractsWithInvalidStatusParameter_thenReturnClientServiceContracts() throws IOException, Exception {
+        Pageable page = PageRequest.of(10,10);
+        Page<ServiceContract> optServiceContracts = new PageImpl(listServiceContract,page, 1L);
+
+
+        when( serviceService.getServiceContracts(any(),any(),any(),any(), any())).thenReturn(optServiceContracts);
+
+        mvc.perform(get("/api/clients/contracts?type=1&status=Invalid"))
+        .andExpect(status().isBadRequest());
+       
+        verify(serviceService, times(0)).getServiceContracts(any(),any(),any(),any(),any());
     }
 
     @Test
     @WithMockUser("duke")
     public void whenGetValidServiceContract_thenReturnSpesificServiceContract() throws IOException, Exception {
-        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        ServiceContract sc = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         
         when( serviceService.getServiceContract(any(),anyLong())).thenReturn(Optional.of(sc));
 
         mvc.perform(get("/api/clients/contracts/1"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status", is("Waiting")));
+        .andExpect(jsonPath("$.status", is("WAITING")));
        
         verify(serviceService, times(1)).getServiceContract(any(), anyLong());
     }

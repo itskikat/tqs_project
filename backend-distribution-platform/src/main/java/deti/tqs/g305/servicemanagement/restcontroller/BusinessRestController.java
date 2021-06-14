@@ -54,7 +54,7 @@ public class BusinessRestController {
         Principal principal = request.getUserPrincipal();
 
         Pageable paging = PageRequest.of(page, size,Sort.by(Sort.Direction.DESC, "date"));
-        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Business");
+        Page<ServiceContract> scPage = serviceService.getServiceContracts(principal.getName(), paging, "Business", Optional.empty(), Optional.empty());
         List <ServiceContract> scList;
 
         scList = scPage.getContent();

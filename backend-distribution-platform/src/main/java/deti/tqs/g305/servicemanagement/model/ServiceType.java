@@ -24,7 +24,7 @@ public class ServiceType{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     public String name;
 
     @Column(name="extras")

@@ -61,12 +61,12 @@ public class ServiceServiceUnitTest {
 
     @BeforeEach
     public void setUp() {
-        sc_wait = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Waiting, new Client(),0);
+        sc_wait = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
         Mockito.when(serviceContractRepository.save(sc_wait)).thenReturn(sc_wait);
 
-        sc_accept = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Accepted, new Client(),0);
-        sc_fin = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Finnished, new Client(),0);
-        sc_rej = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Rejected, new Client(),0);
+        sc_accept = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.ACCEPTED, new Client(),0);
+        sc_fin = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.FINNISHED, new Client(),0);
+        sc_rej = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.REJECTED, new Client(),0);
         sc_accept.setId(sc_wait.getId());
         sc_fin.setId(sc_accept.getId());
         sc_rej.setId(sc_accept.getId());
@@ -187,7 +187,7 @@ public class ServiceServiceUnitTest {
         //should not be able to update review when there is already a review
         sc_fin.setReview(4);
         Mockito.when(serviceContractRepository.findById(id)).thenReturn(sc_fin);
-        ServiceContract sc_rev = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.Finnished, new Client(),3);
+        ServiceContract sc_rev = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.FINNISHED, new Client(),3);
         sc_rev.setId(id);
 
         Optional<ServiceContract> invalidfromDB = serviceService.updateServiceContract(id,sc_rev);
@@ -224,14 +224,75 @@ public class ServiceServiceUnitTest {
 
 
 
-        Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business");
-        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider");
-        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client");
+        Page<ServiceContract> scBusinessfromDB = serviceService.getServiceContracts("hello",pageReq,"Business", Optional.empty(),Optional.empty());
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.empty(),Optional.empty());
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.empty(),Optional.empty());
 
         assertThat(scBusinessfromDB.getContent()).isEqualTo(scs);
         assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
         assertThat(scClientfromDB.getContent()).isEqualTo(scs);
 
+    }
+
+    @Test
+    public void givenServiceContracts_whenGetServiceContractsWithStatus_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByStatusAndClientEmail(eq(ServiceStatus.WAITING),eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Provider_Email(eq(ServiceStatus.WAITING),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.of(ServiceStatus.WAITING),Optional.empty());
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.of(ServiceStatus.WAITING),Optional.empty());
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
+    }
+
+    @Test
+    public void givenServiceContracts_whenGetServiceContractsWithType_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByProviderService_Service_IdAndProviderService_Provider_Email(anyLong(),eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByProviderService_Service_IdAndClientEmail(anyLong(),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider",Optional.empty(), Optional.of(1L));
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client",Optional.empty(), Optional.of(1L));
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
+ 
+    }
+
+    @Test
+    public void givenServiceContracts_whenGetServiceContractsWithTypeAndStatus_thenReturnServiceContracts( ){
+        List<ServiceContract> scs = new ArrayList<ServiceContract>();
+        scs.add(sc_wait);
+        scs.add(sc_accept);
+        scs.add(sc_fin);
+
+        Pageable pageReq = PageRequest.of(10,10);
+        Page<ServiceContract> page = new PageImpl(scs,pageReq, 1L);
+
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Service_IdAndClientEmail(eq(ServiceStatus.WAITING),anyLong(), eq("hello"),any())).thenReturn(page);
+        Mockito.when(serviceContractRepository.findByStatusAndProviderService_Service_IdAndProviderService_Provider_Email(eq(ServiceStatus.WAITING),anyLong(),eq("hello"),any())).thenReturn(page);
+
+        Page<ServiceContract> scProviderfromDB = serviceService.getServiceContracts("hello",pageReq, "Provider", Optional.of(ServiceStatus.WAITING),Optional.of(1L));
+        Page<ServiceContract> scClientfromDB = serviceService.getServiceContracts("hello",pageReq, "Client", Optional.of(ServiceStatus.WAITING),Optional.of(1L));
+
+        assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
+        assertThat(scClientfromDB.getContent()).isEqualTo(scs);
     }
 
     @Test
@@ -241,7 +302,8 @@ public class ServiceServiceUnitTest {
         assertThat(optSc.get()).isEqualTo(sc_wait);
 
         verify(serviceContractRepository, times(1)).findById(anyLong());
-    } 
+    }
+
 
     @Test
     public void whenGetServiceContractInvalidContractId_thenServiceContractShouldBeEmpty( ){
