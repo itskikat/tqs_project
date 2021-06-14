@@ -1,3 +1,4 @@
+import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MENU_ITEMS } from '../provider-menu';
@@ -15,12 +16,21 @@ export class ProviderRequestsListComponent implements OnInit {
   // DATA
   menu=MENU_ITEMS;
 
-  serviceStatus= ServiceStatus;
 
   serviceContracts: ServiceContract[];
 
-  options=[{id:'price', name:'price'},{id:'aaaa', name:'aaaa'}];
-  selected= this.options[0].id;
+  status=[{id: "ALL", name:"ALL"},{id:ServiceStatus.ACCEPTED , name:ServiceStatus.ACCEPTED},
+    {id:ServiceStatus.FINNISHED , name:ServiceStatus.FINNISHED},
+    {id:ServiceStatus.REJECTED , name:ServiceStatus.REJECTED},
+    {id:ServiceStatus.WAITING , name:ServiceStatus.WAITING}];
+  statusSelected= this.status[0].id;
+
+  order=[
+    {id:'date_DESC', name:'Newer'},
+    {id:'date_ASC', name:'Older'},
+    {id:'review_ASC', name:'Worst Reviews'},
+    {id:'review_DESC', name:'Best Reviews'}];
+  orderSelected= this.order[0].id;
 
   constructor(public router: Router, private serviceContractService: ServiceContractService) { }
 
@@ -28,9 +38,6 @@ export class ProviderRequestsListComponent implements OnInit {
     this.getContracts();
   }
 
-  optionSelected() :void{
-
-  }
   editService() :void{
     this.router.navigate(['/services/add']);
   }
@@ -42,8 +49,19 @@ export class ProviderRequestsListComponent implements OnInit {
     this.router.navigate(['/services/add']);
   }
   
+  acceptContract(scId: number): void{
+
+  }
+
   getContracts(): void{
-    this.serviceContractService.getServiceContracts("p").subscribe(data => {
+    let query="?page=0"
+    if(this.statusSelected!="ALL"){
+      query+="&status="+ this.statusSelected
+    }
+    let order= this.orderSelected.split("_")
+    query+="&order="+ order[1]+ "&sort="+order[0]
+    console.log(query)
+    this.serviceContractService.getServiceContracts("p",query).subscribe(data => {
       this.serviceContracts = data.data;
       console.log(data.data);
     });
