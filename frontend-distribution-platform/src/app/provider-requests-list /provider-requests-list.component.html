@@ -12,7 +12,7 @@
                     <p style="margin-bottom: 0; ">Status:</p>
                 </div>
                 <div class="col-sm-4">
-                    <nb-select class="w-100" id="orderSelect" (selectedChange)="getContracts()"  [(selected)]="statusSelected"> 
+                    <nb-select class="w-100" name="statusSelect" (selectedChange)="getContracts()"  [(ngModel)]="statusSelected"> 
                         <nb-option *ngFor="let s of  status"  [value]="s.id"> {{s.name}}</nb-option>
                     </nb-select>
                 </div>
@@ -21,7 +21,7 @@
                     <p style="margin-bottom: 0; ">Order:</p>
                 </div>
                 <div class=" col-sm-3">  
-                    <nb-select class="w-100" id="orderSelect" (selectedChange)="getContracts()"  [(selected)]="orderSelected"> 
+                    <nb-select class="w-100" name="orderSelect" (selectedChange)="getContracts()" [(ngModel)]="orderSelected"> 
                         <nb-option *ngFor="let o of order"  [value]="o.id"> {{o.name}}</nb-option>
                     </nb-select>
                 </div>
@@ -60,12 +60,31 @@
                         </dl>
                         <div class="d-flex flex-column mt-auto">
                             <button *ngIf="sc.status.valueOf()=='WAITING'" nbButton status="warning" (click)="acceptContract(sc.id)" class="mx-auto">Accept</button>
-                            <button *ngIf="sc.status.valueOf()=='ACCEPTED'" nbButton status="success" class="mx-auto">Mark as done and collect</button>
+                            <button *ngIf="sc.status.valueOf()=='ACCEPTED'" nbButton status="success" (click)="finnishContract(sc.id)" class="mx-auto">Mark as done and collect</button>
                         </div>
                     </nb-card-body>
                 </nb-card>
             </div>
         </div>
+        <div class="row" style="margin-top: 20px">
+            <div class="col align-self-center">
+              <ul class="pagination justify-content-center">
+                <div *ngIf="previous;else elsePrevious">
+                  <li class="page-item"> <a class="page-link" (click)="previousPage()"> Previous </a></li>
+                </div>
+                <ng-template #elsePrevious>
+                  <li class="page-item disabled"> <a class="page-link"> Previous </a></li>
+                </ng-template>
+                <li class="page-item"><a class="page-link"> {{currentPage}} </a> </li>
+                <div *ngIf="next;else elseNext">
+                  <li class="page-item"> <a class="page-link" (click)="nextPage()"> Next </a></li>
+                </div>
+                <ng-template #elseNext>
+                  <li class="page-item disabled"> <a class="page-link"> Next </a></li>
+                </ng-template>
+              </ul>
+            </div>
+          </div>
     </nb-layout-column>
     <nb-layout-footer></nb-layout-footer>
 </nb-layout>

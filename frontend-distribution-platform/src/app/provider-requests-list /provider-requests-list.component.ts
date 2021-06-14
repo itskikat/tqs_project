@@ -16,54 +16,84 @@ export class ProviderRequestsListComponent implements OnInit {
   // DATA
   menu=MENU_ITEMS;
 
+  previous: boolean;
+  next: boolean;
+  currentPage: number =0;
 
   serviceContracts: ServiceContract[];
 
-  status=[{id: "ALL", name:"ALL"},{id:ServiceStatus.ACCEPTED , name:ServiceStatus.ACCEPTED},
+  status=[{id: "ALL", name:"ALL"},
+    {id:ServiceStatus.ACCEPTED , name:ServiceStatus.ACCEPTED},
     {id:ServiceStatus.FINNISHED , name:ServiceStatus.FINNISHED},
     {id:ServiceStatus.REJECTED , name:ServiceStatus.REJECTED},
     {id:ServiceStatus.WAITING , name:ServiceStatus.WAITING}];
-  statusSelected= this.status[0].id;
+  
 
   order=[
     {id:'date_DESC', name:'Newer'},
     {id:'date_ASC', name:'Older'},
     {id:'review_ASC', name:'Worst Reviews'},
     {id:'review_DESC', name:'Best Reviews'}];
-  orderSelected= this.order[0].id;
+  
+  orderSelected: string;
+  statusSelected: string;
 
   constructor(public router: Router, private serviceContractService: ServiceContractService) { }
 
   ngOnInit(): void {
+    this.statusSelected= "ALL";
+    this.orderSelected= "date_DESC";
     this.getContracts();
   }
 
-  editService() :void{
-    this.router.navigate(['/services/add']);
-  }
-
-  deleteService(): void{
-  }
-
-  addService(): void{
-    this.router.navigate(['/services/add']);
-  }
   
   acceptContract(scId: number): void{
-
+    let sc= this.serviceContracts.find(x => x.id === scId);
+    sc.status= ServiceStatus.ACCEPTED;
+    this.serviceContractService.putServiceContract(scId, sc);
   }
 
+  finnishContract(scId: number): void{
+    let sc= this.serviceContracts.find(x => x.id === scId);
+    sc.status= ServiceStatus.FINNISHED;
+    this.serviceContractService.putServiceContract(scId, sc);
+  }
+
+
   getContracts(): void{
-    let query="?page=0"
+    console.log(this.statusSelected)
+    console.log(this.orderSelected)
+    let query="?page=" + this.currentPage.toString()
     if(this.statusSelected!="ALL"){
       query+="&status="+ this.statusSelected
     }
     let order= this.orderSelected.split("_")
     query+="&order="+ order[1]+ "&sort="+order[0]
-    console.log(query)
     this.serviceContractService.getServiceContracts("p",query).subscribe(data => {
       this.serviceContracts = data.data;
+      if(this.currentPage<1){
+        this.previous= false;
+      }
+      else{
+        this.previous=true;
+      }
+      if(this.currentPage==data.totalPages-1){
+        this.next= false;
+      }
+      else{
+        this.next=true;
+      }
       console.log(data.data);
     });
+  }
+
+  previousPage(): void{
+    this.currentPage-=1
+    this.getContracts()
+  }
+
+  nextPage(): void{
+    this.currentPage+=1
+    this.getContracts()
   }
 }

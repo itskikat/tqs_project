@@ -39,4 +39,9 @@ export class ServiceContractService {
     return this.http.get<ServiceContractPage>(url,this.authservice.getOptions());
   }
 
+  putServiceContract(id: number, sc: ServiceContract): Observable<ServiceContract> {
+    let url = apiUrl + "/provider/contracts" + id + "/";
+    return this.http.put<ServiceContract>(url,sc,this.authservice.getOptions());
+  }
+
 }
