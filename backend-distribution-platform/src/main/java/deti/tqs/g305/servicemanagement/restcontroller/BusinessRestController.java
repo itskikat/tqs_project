@@ -36,14 +36,14 @@ public class BusinessRestController {
 
     @GetMapping("/services")
     public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) Long type,
-                                                 @RequestParam(defaultValue = "date") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
+                                                 @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String name,
+                                                 @RequestParam(defaultValue = "service_name") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
         Principal principal = request.getUserPrincipal();
 
         Pageable paging;
         Page<BusinessService> bsPage;
 
-        if( (order.equals("ASC") || order.equals("DESC")) && (sort.equals("date") || sort.equals("review")) ) {
+        if( (order.equals("ASC") || order.equals("DESC")) && (sort.equals("service_name") || sort.equals("price")) ) {
             if (order.equals("ASC")) {
                 paging = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
             }
@@ -54,8 +54,8 @@ public class BusinessRestController {
         else {
             return new ResponseEntity<String>("Invalid order and sort parameters!", HttpStatus.BAD_REQUEST);
         }
-        if (type != null) {
-            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(type));
+        if (name != null) {
+            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(name));
         }
         else {
             bsPage= serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());

@@ -16,6 +16,6 @@ public interface BusinessServiceRepository extends JpaRepository<BusinessService
     
     public BusinessService findById(long id);
     public Page<BusinessService> findByBusiness_Email(String business_id, Pageable page);
-    public Page<BusinessService> findByBusiness_Email_AndServiceType(String business_id, Pageable page, long type);
+    public Page<BusinessService> findByBusiness_EmailAndService_NameContains(String business_id, Pageable page, String name);
 
 }

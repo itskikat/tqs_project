@@ -413,9 +413,9 @@ public class ServiceServiceUnitTest {
         Pageable mypage = PageRequest.of(10,10);
         Page<BusinessService> page = new PageImpl(bss, mypage, 1L);
 
-        Mockito.when(businessServiceRepository.findByBusiness_Email_AndServiceType(eq("samplegoogleid") ,any(), anyLong())).thenReturn(page);
+        Mockito.when(businessServiceRepository.findByBusiness_EmailAndService_NameContains(eq("samplegoogleid") ,any(), any())).thenReturn(page);
 
-        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage, Optional.of(st.getId()));
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage, Optional.of(st.getName()));
 
         assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
     }

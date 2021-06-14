@@ -212,9 +212,9 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<Long> type) {
-        if (type.isPresent()) {
-            return businessServiceRepository.findByBusiness_Email_AndServiceType(businessId, page, type.get());
+    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<String> name) {
+        if (name.isPresent()) {
+            return businessServiceRepository.findByBusiness_EmailAndService_NameContains(businessId, page, name.get());
         }
         return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
