@@ -6,6 +6,21 @@
         <nb-menu [items]="menu"></nb-menu>
     </nb-sidebar>
     <nb-layout-column>
+        <form>
+            <div class="form-group row" style="margin-bottom: 2%;">
+                <div class="col-sm-4">
+                    <button></button>
+                </div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-1" style="align-items: center; text-align: right; display: flex;">
+                    <p style="margin-bottom: 0; ">Order:</p>
+                </div>
+                <div class=" col-sm-3">
+                    
+                   
+                </div>
+            </div>
+        </form>
         <div class="d-flex flex-row flex-wrap">
             <div class="col-4 p-4 d-flex" *ngFor="let sc of serviceContracts">
                 <nb-card class="col-12" [accent]="sc.status!=serviceStatus.ACCEPTED ? 'warning' : (sc.status!=serviceStatus.FINNISHED ? 'success' : 'basic')">
