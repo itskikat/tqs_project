@@ -85,18 +85,18 @@ public class ServiceServiceImpl implements ServiceService {
             if(serviceContract.getReview() != 0){
 
                 // in order to add review the contract has to have finished and can't have a review
-                if(sc.getReview()!=0 || scStatus!= ServiceStatus.Finnished){
+                if(sc.getReview()!=0 || scStatus!= ServiceStatus.FINNISHED){
                     return Optional.empty();
                 }
             }
             else{
-                if(scStatus==ServiceStatus.Finnished || scStatus==ServiceStatus.Rejected){
+                if(scStatus==ServiceStatus.FINNISHED || scStatus==ServiceStatus.REJECTED){
                     return Optional.empty();
                 }
-                else if(scStatus==ServiceStatus.Waiting && sc1Status==ServiceStatus.Finnished){
+                else if(scStatus==ServiceStatus.WAITING && sc1Status==ServiceStatus.FINNISHED){
                     return Optional.empty();
                 }
-                else if(scStatus==ServiceStatus.Accepted && (sc1Status==ServiceStatus.Waiting || sc1Status==ServiceStatus.Rejected)){
+                else if(scStatus==ServiceStatus.ACCEPTED && (sc1Status==ServiceStatus.WAITING || sc1Status==ServiceStatus.REJECTED)){
                     return Optional.empty();
                 }
             }
@@ -108,15 +108,33 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType) {
+    public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType, Optional<ServiceStatus> status, Optional<Long> type) {
 
         switch (userType) {
             case "Client":
+                if(status.isPresent() && type.isPresent()){
+                    return serviceContractRepository.findByStatusAndProviderService_Service_IdAndClientEmail(status.get(), type.get(),username, page);
+                }
+                else if (status.isPresent()){
+                    return serviceContractRepository.findByStatusAndClientEmail(status.get(),username, page);
+                }
+                else if(type.isPresent()){
+                    return serviceContractRepository.findByProviderService_Service_IdAndClientEmail(type.get(),username, page);
+                }
                 return serviceContractRepository.findByClientEmail(username, page);
             case "Provider":
+                if(status.isPresent() && type.isPresent()){
+                    return serviceContractRepository.findByStatusAndProviderService_Service_IdAndProviderService_Provider_Email(status.get(), type.get(),username, page);
+                }
+                else if (status.isPresent()){
+                    return serviceContractRepository.findByStatusAndProviderService_Provider_Email(status.get(),username, page);
+                }
+                else if(type.isPresent()){
+                    return serviceContractRepository.findByProviderService_Service_IdAndProviderService_Provider_Email(type.get(),username, page);
+                }
                 return serviceContractRepository.findByProviderService_Provider_Email(username, page);
             case "Business":
-                return serviceContractRepository.findByBusinessService_Business_Email(username,page);
+                return serviceContractRepository.findByBusinessService_Business_Email(username, page);
             default:
                 return null;
         }
