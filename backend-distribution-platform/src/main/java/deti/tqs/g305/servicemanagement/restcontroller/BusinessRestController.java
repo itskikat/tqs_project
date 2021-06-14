@@ -34,6 +34,46 @@ public class BusinessRestController {
     @Autowired
     private ServiceService serviceService;
 
+    @GetMapping("/services")
+    public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) Long type,
+                                                 @RequestParam(defaultValue = "date") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Pageable paging;
+        Page<BusinessService> bsPage;
+
+        if( (order.equals("ASC") || order.equals("DESC")) && (sort.equals("date") || sort.equals("review")) ) {
+            if (order.equals("ASC")) {
+                paging = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
+            }
+            else {
+                paging = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
+            }
+        }
+        else {
+            return new ResponseEntity<String>("Invalid order and sort parameters!", HttpStatus.BAD_REQUEST);
+        }
+        if (type != null) {
+            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(type));
+        }
+        else {
+            bsPage= serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
+        }
+
+        List <BusinessService> bsList;
+
+        bsList = bsPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", bsList);
+        response.put("currentPage", bsPage.getNumber());
+        response.put("totalItems", bsPage.getTotalElements());
+        response.put("totalPages", bsPage.getTotalPages());
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+    }
+
 
     @PostMapping("/services")
     public ResponseEntity<?> createBusinessService( @Valid @RequestBody(required = false) BusinessService bs){

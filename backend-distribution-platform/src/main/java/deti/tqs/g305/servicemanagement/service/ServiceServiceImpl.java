@@ -1,7 +1,6 @@
 package deti.tqs.g305.servicemanagement.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import deti.tqs.g305.servicemanagement.model.*;
@@ -213,7 +212,10 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page) {
+    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<Long> type) {
+        if (type.isPresent()) {
+            return businessServiceRepository.findByBusiness_Email_AndServiceType(businessId, page, type.get());
+        }
         return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
 
