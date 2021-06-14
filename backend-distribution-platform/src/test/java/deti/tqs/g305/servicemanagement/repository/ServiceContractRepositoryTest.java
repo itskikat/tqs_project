@@ -10,7 +10,6 @@ import deti.tqs.g305.servicemanagement.model.*;
 import java.util.List;
 import java.time.LocalDate;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 

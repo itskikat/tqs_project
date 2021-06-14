@@ -1,12 +1,8 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
-import deti.tqs.g305.servicemanagement.configuration.WebSecurityConfig;
-import deti.tqs.g305.servicemanagement.exception.ResourceNotFoundException;
 import deti.tqs.g305.servicemanagement.model.*;
-import deti.tqs.g305.servicemanagement.repository.UserRepository;
 import deti.tqs.g305.servicemanagement.service.UserService;
-import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

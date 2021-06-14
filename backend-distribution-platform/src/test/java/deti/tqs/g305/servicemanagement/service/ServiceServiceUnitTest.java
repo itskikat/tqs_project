@@ -337,7 +337,7 @@ public class ServiceServiceUnitTest {
 
     // BUSINESS SERVICE
     @Test
-    void whenCreateBusinessService_thenBusinessServiceShouldBeStored( ){
+    void whenCreateBusinessService_thenBusinessServiceShouldBeStored() {
         bs_free.getService().setId(1L);
 
         ServiceContract sc1 = new ServiceContract();
@@ -359,7 +359,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated(){
+    void whenUpdateValidBusinessService_thenBusinessServiceShouldBeUpdated() {
         BusinessService bsFromDB = serviceService.updateBusinessService(bs_withId.getId(), bs_withId).get();
 
         assertThat(bs_withId).isEqualTo(bsFromDB);
@@ -369,7 +369,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty(){
+    void whenUpdateInvalidBusinessServiceID_thenBusinessServiceShouldBeEmpty() {
         Optional<BusinessService> invalidBsFromDB = serviceService.updateBusinessService(-99L, bs_withId);
 
         assertThat(invalidBsFromDB).isEqualTo(Optional.empty());
@@ -379,7 +379,7 @@ public class ServiceServiceUnitTest {
     }
 
     @Test
-    void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices(){
+    void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices() {
 
         Business b = new Business();
         b.setEmail("samplegoogleid");
@@ -393,7 +393,29 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(businessServiceRepository.findByBusiness_Email(eq("samplegoogleid") ,any())).thenReturn(page);
 
-        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage);
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage, Optional.empty());
+
+        assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
+
+    @Test
+    void givenBusinessServices_whenGetBusinessBusinessServicesWithType_thenReturnBusinessServices() {
+        Business b = new Business();
+        b.setEmail("samplegoogleid");
+
+        ServiceType st = new ServiceType("myservicetype", true);
+
+        List<BusinessService> bss = new ArrayList<BusinessService>();
+        bs_free.setService(st);
+        bss.add(bs_free);
+        bss.add(bs_withId);
+
+        Pageable mypage = PageRequest.of(10,10);
+        Page<BusinessService> page = new PageImpl(bss, mypage, 1L);
+
+        Mockito.when(businessServiceRepository.findByBusiness_EmailAndService_NameContains(eq("samplegoogleid") ,any(), any())).thenReturn(page);
+
+        Page<BusinessService> bsBusinessFromDB = serviceService.getBusinessBusinessServices(b.getEmail(), mypage, Optional.of(st.getName()));
 
         assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
     }

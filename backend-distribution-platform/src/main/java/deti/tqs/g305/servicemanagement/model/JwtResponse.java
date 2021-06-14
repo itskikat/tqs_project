@@ -1,8 +1,6 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
 

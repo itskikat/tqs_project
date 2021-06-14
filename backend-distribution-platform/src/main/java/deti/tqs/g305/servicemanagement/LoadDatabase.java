@@ -1,7 +1,5 @@
 package deti.tqs.g305.servicemanagement;
 
-import java.util.Optional;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import deti.tqs.g305.servicemanagement.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 
 @Configuration
 class LoadDatabase {

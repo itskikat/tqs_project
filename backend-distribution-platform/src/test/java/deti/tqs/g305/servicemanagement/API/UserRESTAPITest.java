@@ -3,7 +3,6 @@ package deti.tqs.g305.servicemanagement.API;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.UserRepository;
 import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;

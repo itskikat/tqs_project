@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 
-import java.util.Optional;
 
 /**
  * BusinessServiceRepository
@@ -17,5 +16,6 @@ public interface BusinessServiceRepository extends JpaRepository<BusinessService
     
     public BusinessService findById(long id);
     public Page<BusinessService> findByBusiness_Email(String business_id, Pageable page);
+    public Page<BusinessService> findByBusiness_EmailAndService_NameContains(String business_id, Pageable page, String name);
 
 }

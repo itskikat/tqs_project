@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
 import java.util.Optional;
-import java.util.List;
 
 /**
  * ServiceService
@@ -24,5 +23,5 @@ public interface ServiceService {
     public Optional<BusinessService> saveBusinessService(BusinessService businessService);
     public boolean deleteBusinessService(long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
-    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page);
+    public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<String> name);
 }

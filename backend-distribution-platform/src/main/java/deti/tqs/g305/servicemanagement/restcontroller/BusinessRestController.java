@@ -34,6 +34,46 @@ public class BusinessRestController {
     @Autowired
     private ServiceService serviceService;
 
+    @GetMapping("/services")
+    public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String name,
+                                                 @RequestParam(defaultValue = "service_name") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Pageable paging;
+        Page<BusinessService> bsPage;
+
+        if( (order.equals("ASC") || order.equals("DESC")) && (sort.equals("service_name") || sort.equals("price")) ) {
+            if (order.equals("ASC")) {
+                paging = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, sort));
+            }
+            else {
+                paging = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sort));
+            }
+        }
+        else {
+            return new ResponseEntity<String>("Invalid order and sort parameters!", HttpStatus.BAD_REQUEST);
+        }
+        if (name != null) {
+            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(name));
+        }
+        else {
+            bsPage= serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
+        }
+
+        List <BusinessService> bsList;
+
+        bsList = bsPage.getContent();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", bsList);
+        response.put("currentPage", bsPage.getNumber());
+        response.put("totalItems", bsPage.getTotalElements());
+        response.put("totalPages", bsPage.getTotalPages());
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+    }
+
 
     @PostMapping("/services")
     public ResponseEntity<?> createBusinessService( @Valid @RequestBody(required = false) BusinessService bs){

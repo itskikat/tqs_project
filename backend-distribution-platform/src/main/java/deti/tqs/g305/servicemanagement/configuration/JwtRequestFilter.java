@@ -1,7 +1,6 @@
 package deti.tqs.g305.servicemanagement.configuration;
 
 import deti.tqs.g305.servicemanagement.service.UserService;
-import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

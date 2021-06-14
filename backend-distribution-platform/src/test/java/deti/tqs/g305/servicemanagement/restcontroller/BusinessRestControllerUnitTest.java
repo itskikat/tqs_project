@@ -127,7 +127,7 @@ class BusinessRestControllerUnitTest {
 
         when(serviceService.deleteBusinessService(anyLong())).thenReturn(true);
 
-        mvc.perform(delete("/api/businesses/services/delete/"+ String.valueOf(bs.getId())))
+        mvc.perform(delete("/api/businesses/services/delete/" + bs.getId()))
                 .andExpect(status().isFound());
 
         verify(serviceService, times(1)).deleteBusinessService(anyLong());
@@ -156,6 +156,36 @@ class BusinessRestControllerUnitTest {
         .andExpect(jsonPath("data", hasSize(3)));
        
         verify(serviceService, times(1)).getServiceContracts(any(),any(),eq("Business"),eq(Optional.empty()),eq(Optional.empty()));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllBusinessServices_thenReturnBusinessServices() throws  Exception {
+
+        Business b = new Business();
+
+        BusinessService bs = new BusinessService();
+        bs.setBusiness(b);
+        BusinessService bs2 = new BusinessService();
+        bs2.setBusiness(b);
+        BusinessService bs3 = new BusinessService();
+        bs3.setBusiness(b);
+
+        List<BusinessService> listBusinessService = new ArrayList<>();
+        listBusinessService.add(bs);
+        listBusinessService.add(bs2);
+        listBusinessService.add(bs3);
+
+        Pageable page = PageRequest.of(10,10);
+        Page<BusinessService> optBusinessServices = new PageImpl(listBusinessService, page, 1L);
+
+        when(serviceService.getBusinessBusinessServices(any(), any(), eq(Optional.empty()))).thenReturn(optBusinessServices);
+
+        mvc.perform(get("/api/businesses/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(optBusinessServices)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data", hasSize(3)));
+
+        verify(serviceService, times(1)).getBusinessBusinessServices(any(), any(), eq(Optional.empty()));
     }
 
 
