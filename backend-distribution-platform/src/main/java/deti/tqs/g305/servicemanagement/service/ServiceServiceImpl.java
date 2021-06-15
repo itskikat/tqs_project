@@ -219,4 +219,16 @@ public class ServiceServiceImpl implements ServiceService {
         return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
 
+    @Override
+    public Optional<BusinessService> getBusinessService(String name, Long businessServiceId){
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
+        if(bs.isPresent()){
+        
+            if(!bs.get().getBusiness().getEmail().equals(name)){
+                bs=Optional.empty();
+            }
+        }
+        return bs;
+    }
+
 }

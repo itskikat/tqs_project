@@ -108,6 +108,18 @@ public class BusinessRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/services/{id}")
+    public ResponseEntity<?> getBusinessService(@PathVariable(value = "id") Long businessServiceId, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Optional<BusinessService> optBs = serviceService.getBusinessService(principal.getName(), businessServiceId);
+        if(optBs.isPresent()){
+            return new ResponseEntity<BusinessService>(optBs.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
+
+    }
+
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){

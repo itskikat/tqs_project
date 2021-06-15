@@ -14,7 +14,7 @@ export class BusinessServiceService {
   constructor(private http: HttpClient, private authservice: AuthService) { }
 
   getBusinnessService(id: number): Observable<BusinessService> {
-    let url= apiUrl + "/businesses/services/" + id + "/";
+    let url= apiUrl + "/businesses/services/" + id ;
 
     return this.http.get<BusinessService>(url,this.authservice.getOptions());
   }
