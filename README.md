@@ -49,6 +49,12 @@ CI/CD Environment - [Deployment](#Deployment)
 
 ## Deployment
 
-We have deployed our project at Amazon Web Services using the student program.
+We have deployed our project at a Virtual Machine provided by the university ICT services.
 
-The VM has IP 3.208.54.174 and the public DNS [ec2-3-208-54-174.compute-1.amazonaws.com](ec2-3-208-54-174.compute-1.amazonaws.com).
+The VM has DNS http://deti-tqs-14.ua.pt/.
+
+
+
+### Continuos Deployment
+
+We have set up a continuos deployment pipeline with GitHub runner, based on the official [documentation](https://docs.github.com/en/actions/hosting-your-own-runners/adding-self-hosted-runners#adding-a-self-hosted-runner-to-an-organization). It runs every time a commit is made to `main` branch.
