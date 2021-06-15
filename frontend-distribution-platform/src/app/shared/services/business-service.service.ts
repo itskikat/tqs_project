@@ -33,7 +33,7 @@ export class BusinessServiceService {
   }
 
   deleteBusinessServices(id:number): Observable<BusinessService>{
-    let url = apiUrl + "/businesses/services/delete/" + id + "/";
+    let url = apiUrl + "/businesses/services/delete/" + id ;
     return this.http.delete<BusinessService>(url,this.authservice.getOptions());
   }
 

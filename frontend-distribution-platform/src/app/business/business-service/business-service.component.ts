@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MENU_ITEMS } from '../../provider-menu';
+import { MENU_ITEMS } from '../../business-menu';
 import {BusinessService} from '../../shared/models/BusinessService';
 import {BusinessServiceService} from '../../shared/services/business-service.service';
 
