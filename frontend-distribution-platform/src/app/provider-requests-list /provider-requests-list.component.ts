@@ -1,26 +1,10 @@
+import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MENU_ITEMS } from '../provider-menu';
-
-interface Service {
-  name: string,
-}
-
-interface Client {
-  name: string,
-  servicesRequested: number 
-}
-
-interface Request {
-  moment: Date,
-  address: string,
-  client: Client
-  service: Service,
-  done: boolean,
-  accepted: boolean,
-  minutesAgo: number,
-  collected: number
-}
+import {ServiceContract} from '../shared/models/ServiceContract';
+import { ServiceStatus } from '../shared/models/ServiceStatus';
+import {ServiceContractService} from '../shared/services/service-contract.service';
  
 @Component({
   selector: 'ngx-provider-requests-list',
@@ -28,77 +12,88 @@ interface Request {
   styleUrls: ['./provider-requests-list.component.scss']
 })
 export class ProviderRequestsListComponent implements OnInit {
-  
+    
   // DATA
   menu=MENU_ITEMS;
 
-  requests: Request[] = [
-    {
-      moment: new Date(),
-      address: 'R. Mário Sacramento 149a, 3810-106 Aveiro',
-      client: {
-        name: 'Kate Psychologist',
-        servicesRequested: 6
-      },
-      service: {
-        name: 'Service 1',
-      },
-      done: false,
-      accepted: false,
-      minutesAgo: 3,
-      collected: -1
-    },
-    {
-      moment: new Date(),
-      address: 'R. da Estação 169, 3810-167 Aveiro',
-      client: {
-        name: 'Some Person',
-        servicesRequested: 3
-      },
-      service: {
-        name: 'Service 3',
-      },
-      done: false,
-      accepted: true,
-      minutesAgo: 10,
-      collected: -1
-    },
-    {
-      moment: new Date(),
-      address: 'R. Nova 7, 3810-368 Aveiro',
-      client: {
-        name: 'Mario Ferreira',
-        servicesRequested: 1
-      },
-      service: {
-        name: 'Service 1',
-      },
-      done: true,
-      accepted: true,
-      minutesAgo: -1,
-      collected: 36
-    }
-  ] 
+  previous: boolean;
+  next: boolean;
+  currentPage: number =0;
 
-  options=[{id:'price', name:'price'},{id:'aaaa', name:'aaaa'}];
-  selected= this.options[0].id;
+  serviceContracts: ServiceContract[];
 
-  constructor(public router: Router ) { }
+  status=[{id: "ALL", name:"ALL"},
+    {id:ServiceStatus.ACCEPTED , name:ServiceStatus.ACCEPTED},
+    {id:ServiceStatus.FINNISHED , name:ServiceStatus.FINNISHED},
+    {id:ServiceStatus.REJECTED , name:ServiceStatus.REJECTED},
+    {id:ServiceStatus.WAITING , name:ServiceStatus.WAITING}];
+  
+
+  order=[
+    {id:'date_DESC', name:'Newer'},
+    {id:'date_ASC', name:'Older'},
+    {id:'review_ASC', name:'Worst Reviews'},
+    {id:'review_DESC', name:'Best Reviews'}];
+  
+  orderSelected: string;
+  statusSelected: string;
+
+  constructor(public router: Router, private serviceContractService: ServiceContractService) { }
 
   ngOnInit(): void {
+    this.statusSelected= "ALL";
+    this.orderSelected= "date_DESC";
+    this.getContracts();
   }
 
-  optionSelected() :void{
-
-  }
-  editService() :void{
-    this.router.navigate(['/services/add']);
-  }
-
-  deleteService(): void{
+  
+  acceptContract(scId: number): void{
+    let sc= this.serviceContracts.find(x => x.id === scId);
+    sc.status= ServiceStatus.ACCEPTED;
+    this.serviceContractService.putServiceContract(scId, sc);
   }
 
-  addService(): void{
-    this.router.navigate(['/services/add']);
-  } 
+  finnishContract(scId: number): void{
+    let sc= this.serviceContracts.find(x => x.id === scId);
+    sc.status= ServiceStatus.FINNISHED;
+    this.serviceContractService.putServiceContract(scId, sc);
+  }
+
+
+  getContracts(): void{
+    console.log(this.statusSelected)
+    console.log(this.orderSelected)
+    let query="?page=" + this.currentPage.toString()
+    if(this.statusSelected!="ALL"){
+      query+="&status="+ this.statusSelected
+    }
+    let order= this.orderSelected.split("_")
+    query+="&order="+ order[1]+ "&sort="+order[0]
+    this.serviceContractService.getServiceContracts("p",query).subscribe(data => {
+      this.serviceContracts = data.data;
+      if(this.currentPage<1){
+        this.previous= false;
+      }
+      else{
+        this.previous=true;
+      }
+      if(this.currentPage==data.totalPages-1){
+        this.next= false;
+      }
+      else{
+        this.next=true;
+      }
+      console.log(data.data);
+    });
+  }
+
+  previousPage(): void{
+    this.currentPage-=1
+    this.getContracts()
+  }
+
+  nextPage(): void{
+    this.currentPage+=1
+    this.getContracts()
+  }
 }

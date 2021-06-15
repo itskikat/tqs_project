@@ -5,6 +5,9 @@ import { Routes, RouterModule } from "@angular/router";
 import { AdminComponent } from "./layouts/admin/admin.component";
 import { AuthComponent } from "./layouts/auth/auth.component";
 import { ServiceIndexComponent } from "./service/index/index.component";
+import { ServiceProviderComponent } from "./service/provider/provider.component";
+import { PastServicesComponent} from "./service/past-services/past-services.component";
+import { ServiceDetailsComponent} from "./service/service-details/service-details.component";
 
 // admin views
 import { DashboardComponent } from "./views/admin/dashboard/dashboard.component";
@@ -20,6 +23,9 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { ServiceLoginComponent } from "./service/auth/login/login.component";
+import { ServiceRegisterComponent } from "./service/auth/register/register.component";
+import { ServiceDashboardComponent } from "./service/dashboard/dashboard.component";
 
 const routes: Routes = [
   // admin views
@@ -48,7 +54,14 @@ const routes: Routes = [
   { path: "profile", component: ProfileComponent },
   { path: "landing", component: LandingComponent },
   { path: "index", component: IndexComponent },
+  // Service
   { path: "", component: ServiceIndexComponent },
+  { path: "services/:id", component: ServiceDetailsComponent },
+  { path: "dashboard", component: ServiceDashboardComponent },
+  { path: "provider", component: ServiceProviderComponent },
+  { path: "past", component: PastServicesComponent  },
+  { path: "login", component: ServiceLoginComponent  },
+  { path: "register", component: ServiceRegisterComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },
 ];
 
