@@ -75,7 +75,7 @@
                 <ng-template #elsePrevious>
                   <li class="page-item disabled"> <a class="page-link"> Previous </a></li>
                 </ng-template>
-                <li class="page-item"><a class="page-link"> {{currentPage}} </a> </li>
+                <li class="page-item"><a class="page-link"> {{currentPage+1}} </a> </li>
                 <div *ngIf="next;else elseNext">
                   <li class="page-item"> <a class="page-link" (click)="nextPage()"> Next </a></li>
                 </div>
@@ -84,7 +84,7 @@
                 </ng-template>
               </ul>
             </div>
-          </div>
+        </div>
     </nb-layout-column>
     <nb-layout-footer></nb-layout-footer>
 </nb-layout>

@@ -1,0 +1,75 @@
+<nb-layout windowMode>
+    <nb-layout-header fixed>
+        <ngx-header></ngx-header>
+    </nb-layout-header>
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <nb-menu [items]="menu"></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <form>
+            <div class="form-group row" style="margin-bottom: 2%;">
+                <div class="col-sm-4 mt-auto mb-auto">
+                    <button (click)="addService()" nbButton status="success">Add Service</button>
+                </div>
+                <div class="col-sm-1"></div>
+
+                <div class="form-group col-sm-3"> 
+                    <label>Search:</label>
+                    <input nbInput id="price"  class="form-control" (change)="getServices()" name="searchQuery" type="text" min=0 [(ngModel)]="searchQuery">
+                </div>
+                <div class="col-sm-1"> </div>
+                <div class=" col-sm-3">
+                    <label>Order:</label>
+                    <nb-select class="w-100" name="orderSelect" (selectedChange)="getServices()"  [(ngModel)]="selected"> 
+                        <nb-option *ngFor="let o of options"  [value]="o.id"> {{o.name}}</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </form>
+        <div class="row" *ngFor="let bs of businessServices">
+            <div class="col-md-12 col-lg-12 col-xxxl-12">
+                <nb-card>
+                <nb-card-header>{{bs.service.name}}</nb-card-header>
+                <nb-card-body>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Price: </strong> {{bs.price}}€/h</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>Has Extras: </strong> {{bs.service.hasExtras}}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button (click)="editService(bs.id)" nbButton status="warning" class="ml-auto">Edit</button>
+                        <button (click)="deleteService(bs.id)" nbButton status="danger" class="ml-3">Delete</button>
+                    </div>
+                    
+                </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 20px">
+            <div class="col align-self-center">
+              <ul class="pagination justify-content-center">
+                <div *ngIf="previous;else elsePrevious">
+                  <li class="page-item"> <a class="page-link" (click)="previousPage()"> Previous </a></li>
+                </div>
+                <ng-template #elsePrevious>
+                  <li class="page-item disabled"> <a class="page-link"> Previous </a></li>
+                </ng-template>
+                <li class="page-item"><a class="page-link"> {{currentPage+1}} </a> </li>
+                <div *ngIf="next;else elseNext">
+                  <li class="page-item"> <a class="page-link" (click)="nextPage()"> Next </a></li>
+                </div>
+                <ng-template #elseNext>
+                  <li class="page-item disabled"> <a class="page-link"> Next </a></li>
+                </ng-template>
+              </ul>
+            </div>
+        </div>
+    </nb-layout-column>
+<nb-layout-footer></nb-layout-footer>
+</nb-layout>
+
+
+    

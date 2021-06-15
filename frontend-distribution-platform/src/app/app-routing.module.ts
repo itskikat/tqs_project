@@ -12,6 +12,8 @@ import { BusinessProfileComponent } from './business/business-profile/business-p
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
 import { ProviderGuard } from './shared/guard/provider.guard';
 import { BusinessGuard } from './shared/guard/business.guard';
+import { BusinessServiceComponent } from './business/business-service/business-service.component';
+import {BusinessServiceFormComponent} from './business/business-service-form/business-service-form.component';
 
 
 export const routes: Routes = [
@@ -34,6 +36,12 @@ export const routes: Routes = [
   // Business
   {
     path:'business/stats', component: BusinessStatsComponent, canActivate: [BusinessGuard]
+  },
+  {
+    path:'business/services', component: BusinessServiceComponent, canActivate: [BusinessGuard]
+  },
+  {
+    path:'business/services/add/:id', component: BusinessServiceFormComponent, canActivate: [BusinessGuard]
   },
   {
     path:'business/profile', component: BusinessProfileComponent, canActivate: [BusinessGuard]
