@@ -34,12 +34,18 @@ public class ServiceServiceTypeUnitTest {
     private ServiceServiceTypeImpl serviceServiceType;
 
     ServiceType st;
-       
+    List<ServiceType> stlist;
 
     @BeforeEach
     public void setUp() {
-        st = new ServiceType("eletrecista", true);
-               
+        st = new ServiceType("eletricista", true);
+        ServiceType st2= new ServiceType("canalizador", true);
+        ServiceType st3 = new ServiceType("jardinagem", true);
+        
+        List<ServiceType> stlist= new ArrayList<ServiceType>();
+        stlist.add(st);
+        stlist.add(st2);
+        stlist.add(st3);
     }
 
     @Test
@@ -65,7 +71,32 @@ public class ServiceServiceTypeUnitTest {
         verify(serviceTypeRepository, times(0)).save(any());
         verify(serviceTypeRepository, times(1)).findByName(any());
     }
-    
+
+
+    @Test
+    public void whenGetAllServiceTypes_thenServiceTypesShouldBeStored(){
+        Mockito.when(serviceTypeRepository.findAll()).thenReturn(stlist);
+
+        List<ServiceType> serviceList = serviceServiceType.getServiceTypes(Optional.empty());
+
+        assertThat(serviceList).isEqualTo(stlist);
+        verify(serviceTypeRepository, times(1)).findAll();
+        
+    }
+
+    @Test
+    public void whenGetAllServiceTypesWithName_thenServiceTypesShouldBeStored(){
+
+        Mockito.when(serviceTypeRepository.findByNameContains(eq("Hello"))).thenReturn(stlist);
+
+        List<ServiceType> serviceList = serviceServiceType.getServiceTypes(Optional.of("Hello"));
+
+        assertThat(serviceList).isEqualTo(stlist);
+        verify(serviceTypeRepository, times(1)).findByNameContains(any());
+        
+    }
+
+
     
 
     

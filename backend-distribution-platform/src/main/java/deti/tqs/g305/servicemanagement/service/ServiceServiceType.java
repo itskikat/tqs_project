@@ -11,5 +11,5 @@ import java.util.List;
 public interface ServiceServiceType {
 
     public Optional<ServiceType> addServiceType(ServiceType st); 
-    public List<ServiceType> getServiceTypes(ServiceType st);
+    public List<ServiceType> getServiceTypes(Optional<String> name);
 }

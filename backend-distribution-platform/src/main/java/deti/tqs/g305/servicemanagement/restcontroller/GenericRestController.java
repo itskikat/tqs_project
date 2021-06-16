@@ -16,6 +16,7 @@ import deti.tqs.g305.servicemanagement.model.ServiceType;
 import deti.tqs.g305.servicemanagement.service.ServiceServiceType;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,6 +44,20 @@ public class GenericRestController {
             return new ResponseEntity<String>("Invalid Service Type", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Service Type not in request body", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/servicetypes")
+    public ResponseEntity<?> getServiceTypes(@RequestParam(required=false) String name){
+
+        List<ServiceType> sts;
+
+        if(name!=null){
+            sts =  serviceServiceType.getServiceTypes(Optional.of(name));
+        }
+        else{
+            sts =  serviceServiceType.getServiceTypes(Optional.empty());
+        }
+        return new ResponseEntity<List<ServiceType>>(sts, HttpStatus.OK);
     }
 
 

@@ -42,8 +42,11 @@ public class ServiceServiceTypeImpl implements ServiceServiceType {
         return Optional.empty();
     } 
 
-    public List<ServiceType> getServiceTypes(ServiceType st){
-        return null;
+    public List<ServiceType> getServiceTypes(Optional<String> name){
+        if(name.isPresent()){
+            return serviceTypeRepository.findByNameContains(name.get());
+        }
+        return serviceTypeRepository.findAll();
     }
     
 }

@@ -96,5 +96,31 @@ public class GenericRestControllerUnitTest {
         verify(serviceServiceType, times(1)).addServiceType(any());
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServices_thenReturnAllServiceTypes( ) throws IOException, Exception {
+        
+        when( serviceServiceType.getServiceTypes(Optional.empty())).thenReturn(listServiceType);
+
+        mvc.perform(get("/api/servicetypes"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(3)));
+
+        verify(serviceServiceType, times(1)).getServiceTypes(any());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllServicesContainingName_thenReturnAllServiceTypes( ) throws IOException, Exception {
+        
+        when( serviceServiceType.getServiceTypes(Optional.of("hello"))).thenReturn(listServiceType);
+
+        mvc.perform(get("/api/servicetypes?name=hello"))
+        .andExpect(status().isOk());
+        //.andExpect(jsonPath("$", hasSize(3)));
+
+        verify(serviceServiceType, times(1)).getServiceTypes(any());
+    }
+
 
 }
