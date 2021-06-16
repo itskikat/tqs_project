@@ -219,4 +219,26 @@ public class ServiceServiceImpl implements ServiceService {
         return businessServiceRepository.findByBusiness_Email(businessId, page);
     }
 
+    @Override
+    public Float getBusinessBusinessServiceProfit(String business_id) {
+
+        List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
+        float profit = 0;
+        for (ServiceContract serviceContract : scList) {
+            float val = serviceContract.getBusinessService().getPrice();
+            profit += val;
+        }
+        return profit;
+    }
+
+    @Override
+    public List<ServiceContract> getBusinessServiceContracts(String business_id) {
+        return serviceContractRepository.findByBusinessService_Business_Email(business_id);
+    }
+
+    @Override
+    public ServiceType getBusinessMostRequestedServiceType(String business_id) {
+        long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
+        return serviceTypeRepository.findById(id);
+    }
 }

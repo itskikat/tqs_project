@@ -25,7 +25,7 @@ class LoadDatabase {
   CommandLineRunner initDatabase(ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
   ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository) {
 
-    //docker exec -it tqs_project_db_1 bash
+    // docker exec -it tqs_project_db_1 bash
     // psql -h 127.0.0.1 -d demo -U demo
 
 
@@ -65,6 +65,12 @@ class LoadDatabase {
 
       ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 2);
       serviceContractRepository.save(sc2);
+
+      BusinessService bs2 = new BusinessService(25, st1, b);
+      businessServiceRepository.save(bs2);
+
+      BusinessService bs3 = new BusinessService(45, st1, b);
+      businessServiceRepository.save(bs3);
       
     };
     
