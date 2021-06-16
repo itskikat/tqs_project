@@ -68,6 +68,7 @@ import { BusinessAPIComponent } from './business/business-api/business-api.compo
 import { SharedModule } from './shared/shared.module';
 import { BusinessServiceComponent } from './business/business-service/business-service.component';
 import { BusinessServiceFormComponent } from './business/business-service-form/business-service-form.component';
+import { BusinessServiceEditFormComponent } from './business/business-service-edit-form/business-service-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { BusinessServiceFormComponent } from './business/business-service-form/b
     ProviderStatsComponent,
     ProviderStatsProgressSection,
     BusinessServiceComponent,
-    BusinessServiceFormComponent
+    BusinessServiceFormComponent,
+    BusinessServiceEditFormComponent
   ],
   imports: [
     BrowserModule,
