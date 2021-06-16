@@ -28,7 +28,7 @@ export class BusinessServiceService {
   }
 
   putBusinnessServices(id: number, bs: BusinessService): Observable<BusinessService> {
-    let url = apiUrl + "/businesses/services/" + id + "/";
+    let url = apiUrl + "/businesses/services/" + id;
     return this.http.put<BusinessService>(url,bs,this.authservice.getOptions());
   }
 

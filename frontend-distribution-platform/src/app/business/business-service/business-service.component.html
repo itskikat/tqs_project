@@ -15,7 +15,7 @@
 
                 <div class="form-group col-sm-3"> 
                     <label>Search:</label>
-                    <input nbInput id="price"  class="form-control" (change)="getServices()" name="searchQuery" type="text" min=0 [(ngModel)]="searchQuery">
+                    <input nbInput  class="form-control" (keyup)="getServices()" name="searchQuery" type="text"  [(ngModel)]="searchQuery">
                 </div>
                 <div class="col-sm-1"> </div>
                 <div class=" col-sm-3">

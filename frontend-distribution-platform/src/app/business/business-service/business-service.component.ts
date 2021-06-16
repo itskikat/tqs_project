@@ -50,6 +50,7 @@ export class BusinessServiceComponent implements OnInit {
     this.router.navigate(['/business/services/add',-1]);
   } 
 
+
   getServices(): void{
     let query="?page=" + this.currentPage.toString();
 
