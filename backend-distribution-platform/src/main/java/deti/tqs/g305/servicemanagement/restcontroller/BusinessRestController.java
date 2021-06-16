@@ -144,8 +144,8 @@ public class BusinessRestController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("profit", business_profit);
-        response.put("total contracts", business_contracts.size());
-        response.put("Most requested ServiceType", business_most_requested);
+        response.put("total-contracts", business_contracts.size());
+        response.put("most-requested-ServiceType", business_most_requested);
         
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
