@@ -33,7 +33,7 @@ public class GenericRestController {
     private ServiceServiceType serviceServiceType;
 
 
-    @PostMapping("/serviceType")
+    @PostMapping("/servicetypes")
     public ResponseEntity<?> saveServiceType(@RequestBody(required = false) ServiceType st){
         if(st!=null){
             Optional<ServiceType> optSt =  serviceServiceType.addServiceType(st);

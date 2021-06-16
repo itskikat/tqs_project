@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Transactional
 public class ServiceServiceTypeImpl implements ServiceServiceType {
 
-    Logger logger = LoggerFactory.getLogger(ServiceService.class); // to log everything
+    Logger logger = LoggerFactory.getLogger(ServiceServiceType.class); // to log everything
 
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
@@ -36,7 +36,8 @@ public class ServiceServiceTypeImpl implements ServiceServiceType {
         Optional<ServiceType> optSt = serviceTypeRepository.findByName(st.getName());
         if(optSt.isEmpty()){
             ServiceType st_final = new ServiceType(st.getName(), st.getHasExtras());
-            serviceTypeRepository.save(st_final);
+            st_final=serviceTypeRepository.save(st_final);
+            return Optional.of(st_final);
         }
         return Optional.empty();
     } 
