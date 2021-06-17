@@ -32,6 +32,11 @@ export class BusinessServiceService {
     return this.http.put<BusinessService>(url,bs,this.authservice.getOptions());
   }
 
+  postBusinnessServices( bs: BusinessService): Observable<BusinessService> {
+    let url = apiUrl + "/businesses/services";
+    return this.http.post<BusinessService>(url,bs,this.authservice.getOptions());
+  }
+
   deleteBusinessServices(id:number): Observable<BusinessService>{
     let url = apiUrl + "/businesses/services/delete/" + id ;
     return this.http.delete<BusinessService>(url,this.authservice.getOptions());

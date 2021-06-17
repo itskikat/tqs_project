@@ -54,6 +54,21 @@ class LoadDatabase {
       ServiceType st1 = new ServiceType("eletricidade", true);
       serviceTypeRepository.save(st1);
 
+      ServiceType st2 = new ServiceType("jardinagem", true);
+      serviceTypeRepository.save(st2);
+
+      ServiceType st3 = new ServiceType("babysitting", true);
+      serviceTypeRepository.save(st3);
+
+      ServiceType st4 = new ServiceType("limpeza", true);
+      serviceTypeRepository.save(st4);
+
+      ServiceType st5 = new ServiceType("informatica", true);
+      serviceTypeRepository.save(st5);
+
+      ServiceType st6 = new ServiceType("eheue", true);
+      serviceTypeRepository.save(st6);
+
       ProviderService ps1 = new ProviderService("bla bla", p, st1);
       providerServiceRepository.save(ps1);
 

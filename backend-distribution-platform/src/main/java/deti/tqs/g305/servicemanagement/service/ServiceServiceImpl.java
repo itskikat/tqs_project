@@ -161,19 +161,13 @@ public class ServiceServiceImpl implements ServiceService {
     public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
         BusinessService bs = businessServiceRepository.findById(businessService.getId());
 
-        if(bs == null && businessService.getService() != null && businessService.getServiceContract() != null ) {
+        if(bs == null && businessService.getService() != null ) {
 
             ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
             if (st == null) {
                 return Optional.empty();
             }
             businessService.setService(st);
-
-            List<ServiceContract> scList = serviceContractRepository.findByBusinessServiceId(businessService.getId());
-            if (scList.isEmpty()) {
-                return Optional.empty();
-            }
-            businessService.setServiceContract(scList);
             return Optional.of(businessServiceRepository.save(businessService));
         }
         return Optional.empty();

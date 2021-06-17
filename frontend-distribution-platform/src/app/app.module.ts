@@ -35,6 +35,7 @@ import {
   NbPopoverModule,
   NbCheckboxModule,
   NbTagModule,
+  NbAutocompleteModule,
 } from '@nebular/theme';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -103,6 +104,7 @@ import { BusinessServiceEditFormComponent } from './business/business-service-ed
   ],
   imports: [
     BrowserModule,
+    NbAutocompleteModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
