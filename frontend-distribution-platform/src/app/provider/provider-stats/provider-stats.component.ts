@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MENU_ITEMS } from '../provider-menu';
+import { MENU_ITEMS } from '../../provider-menu';
  
 @Component({
   selector: 'ngx-provider-stats',

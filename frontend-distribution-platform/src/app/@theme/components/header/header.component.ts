@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           if (role == "BUSINESS") {
             this.router.navigate(['/business/profile']);
           } else if (role == "PROVIDER") {
-            alert("Page available soon!");
+            this.router.navigate(['/provider/profile']);
           }
         }
       });

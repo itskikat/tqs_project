@@ -1,13 +1,13 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import {RegisterProviderComponent} from './register-provider/register-provider.component';
-import {ProviderServiceListComponent} from './provider-service-list/provider-service-list.component';
-import {ProviderServiceFormComponent} from './provider-service-form/provider-service-form.component';
-import {ProviderStatsComponent} from './provider-stats/provider-stats.component';
+import {ProviderServiceListComponent} from './provider/provider-service-list/provider-service-list.component';
+import {ProviderServiceFormComponent} from './provider/provider-service-form/provider-service-form.component';
+import {ProviderStatsComponent} from './provider/provider-stats/provider-stats.component';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
 import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
-import { ProviderProfileComponent } from './provider-profile/provider-profile.component';
-import { ProviderRequestsListComponent } from './provider-requests-list /provider-requests-list.component';
+import { ProviderProfileComponent } from './provider/provider-profile/provider-profile.component';
+import { ProviderRequestsListComponent } from './provider/provider-requests-list /provider-requests-list.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
 import { ProviderGuard } from './shared/guard/provider.guard';
@@ -20,19 +20,22 @@ import {BusinessServiceEditFormComponent} from './business/business-service-edit
 export const routes: Routes = [
   // Provider
   {
-    path:'services/add', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
+    path:'provider/services/add', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
   },
   {
-    path:'services', component: ProviderServiceListComponent, canActivate: [ProviderGuard]
+    path:'provider/services/edit/:id', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
   },
   {
-    path:'requests', component: ProviderRequestsListComponent, canActivate: [ProviderGuard]
+    path:'provider/services', component: ProviderServiceListComponent, canActivate: [ProviderGuard]
+  },
+  {
+    path:'provider/requests', component: ProviderRequestsListComponent, canActivate: [ProviderGuard]
   },
   {
     path: 'provider/stats', component: ProviderStatsComponent, canActivate: [ProviderGuard]
   },
   {
-    path: 'profile/provider', component: ProviderProfileComponent, canActivate: [ProviderGuard]
+    path: 'provider/profile', component: ProviderProfileComponent, canActivate: [ProviderGuard]
   },
   // Business
   {

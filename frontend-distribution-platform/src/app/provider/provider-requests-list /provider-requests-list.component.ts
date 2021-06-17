@@ -1,10 +1,10 @@
 import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MENU_ITEMS } from '../provider-menu';
-import {ServiceContract} from '../shared/models/ServiceContract';
-import { ServiceStatus } from '../shared/models/ServiceStatus';
-import {ServiceContractService} from '../shared/services/service-contract.service';
+import { MENU_ITEMS } from '../../provider-menu';
+import {ServiceContract} from '../../shared/models/ServiceContract';
+import { ServiceStatus } from '../../shared/models/ServiceStatus';
+import {ServiceContractService} from '../../shared/services/service-contract.service';
  
 @Component({
   selector: 'ngx-provider-requests-list',

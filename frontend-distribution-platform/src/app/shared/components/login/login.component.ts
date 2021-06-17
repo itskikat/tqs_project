@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
       if (role == "BUSINESS") {
         this.router.navigate(['/business/stats']);
       } else if (role == "PROVIDER") {
-        this.router.navigate(['/services']);
+        this.router.navigate(['/provider/requests']);
       } else {
         // Invaid role (CLIENT), alert and log out!
         this.invalid = "You don't have permission to access this portal!";
