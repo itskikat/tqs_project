@@ -24,6 +24,11 @@ export class BusinessServiceEditFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.serviceForm = this.fb.group({
+      title:[{value:'', disabled:true}, Validators.required],
+      price:[0, Validators.min(0)],
+      extras: [{value:true, disabled:true}]
+    });
     this.businessServiceService.getBusinnessService(this.id).subscribe(data=>{
       this.serviceForm = this.fb.group({
         title:[{value:data.service.name, disabled:true}, Validators.required],
@@ -31,9 +36,10 @@ export class BusinessServiceEditFormComponent implements OnInit {
         extras: [{value:data.service.hasExtras, disabled:true}]
       });
       this.businessService=data;
+      this.serviceForm.get('title').disable();
+      this.serviceForm.get('extras').disable();
     });
-    this.serviceForm.get('title').disable();
-    this.serviceForm.get('extras').disable();
+    
   }
 
   saveService(): void{
