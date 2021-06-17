@@ -1,8 +1,8 @@
 import {User} from './User';
 
 export interface Business extends User{
-    apikey: string,
-    name: string,
-    address: string,
-    nif: string
+    apikey?: string,
+    name?: string,
+    address?: string,
+    nif?: string
 }

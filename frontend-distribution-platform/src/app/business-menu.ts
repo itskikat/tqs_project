@@ -12,6 +12,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/business/profile',
   },
   {
+    title: 'Service',
+    icon: 'shopping-cart-outline',
+    link: '/business/services',
+  },
+  {
     title: 'API',
     icon: 'link-outline',
     link: '/business/api',

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.List;
 
+
 @Entity
 @Data
 @Table(name="BUSINESS_SERVICE")
@@ -28,7 +29,7 @@ public class BusinessService{
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy="businessService")
+    @OneToMany(mappedBy="businessService", cascade = { CascadeType.ALL })
     private List<ServiceContract> serviceContract;
 
     public BusinessService(){

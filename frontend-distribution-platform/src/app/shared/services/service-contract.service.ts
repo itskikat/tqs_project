@@ -17,10 +17,10 @@ export class ServiceContractService {
   getServiceContract(id: number, role: string): Observable<ServiceContract> {
     let url;
     if (role =="p"){
-      url = apiUrl + "/provider/contracts" + id + "/";
+      url = apiUrl + "/provider/contracts/" + id + "/";
     }
     else{
-      url = apiUrl + "/business/contracts" + id + "/";
+      url = apiUrl + "/businesses/contracts/" + id + "/";
     }
     return this.http.get<ServiceContract>(url,this.authservice.getOptions());
   }
@@ -31,7 +31,7 @@ export class ServiceContractService {
       url = apiUrl + "/provider/contracts";
     }
     else{
-      url = apiUrl + "/business/contracts";
+      url = apiUrl + "/businesses/contracts";
     }
     if (pageurl) {
       return this.http.get<ServiceContractPage>(url+pageurl,this.authservice.getOptions());
@@ -40,7 +40,7 @@ export class ServiceContractService {
   }
 
   putServiceContract(id: number, sc: ServiceContract): Observable<ServiceContract> {
-    let url = apiUrl + "/provider/contracts" + id + "/";
+    let url = apiUrl + "/provider/contracts/" + id + "/";
     return this.http.put<ServiceContract>(url,sc,this.authservice.getOptions());
   }
 
