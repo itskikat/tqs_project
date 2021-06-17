@@ -147,4 +147,27 @@ public class BusinessServiceRepositoryTest {
         assertThat(found.size()).isEqualTo(0);
     }
 
+    @Test
+    void whenFindBusinessServicesMostRequestedServiceTypeIdByValidBusiness_thenReturnServiceTypeId() {
+        ServiceType st = new ServiceType("canalizacao", true);
+        BusinessService bs2 = new BusinessService();
+        bs2.setService(st);
+
+        Business b = new Business();
+        b.setEmail("sample@mail.com");
+        b.setPassword("sample");
+
+        BusinessService bs = new BusinessService(10, st, b);
+
+        bs2.setBusiness(b);
+
+        entityManager.persist(bs);
+        entityManager.persist(bs2);
+        entityManager.persist(b);
+        entityManager.persist(st);
+
+        Long found = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(b.getEmail());
+        assertThat(found).isEqualTo(st.getId());
+    }
+
 }

@@ -215,6 +215,40 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(1)).getBusinessService(any(), anyLong());
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetBusinessStatistics_thenReturnStatistics() throws  Exception {
+
+        Business b = new Business();
+
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        BusinessService bs = new BusinessService(10, st, b);
+        BusinessService bs1 = new BusinessService(20, st, b);
+
+        ServiceContract sc = new ServiceContract(bs, new ProviderService(), ServiceStatus.FINNISHED, new Client(),0);
+        ServiceContract sc1 = new ServiceContract(bs1, new ProviderService(), ServiceStatus.FINNISHED, new Client(),0);
+
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc);
+        listServiceContract.add(sc1);
+
+        float profit = 30;
+
+        doReturn(profit).when(serviceService).getBusinessBusinessServiceProfit(any());
+        when(serviceService.getBusinessServiceContracts(any())).thenReturn(listServiceContract);
+        when(serviceService.getBusinessMostRequestedServiceType(any())).thenReturn(st);
+
+        mvc.perform(get("/api/businesses/statistics").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profit", is(30.0)))
+                .andExpect(jsonPath("$.total-contracts", is(listServiceContract.size())))
+                .andExpect(jsonPath("$.most-requested-ServiceType.name", is(st.getName())));
+
+        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any());
+        verify(serviceService, times(1)).getBusinessServiceContracts(any());
+        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any());
+    }
 
 
 }
