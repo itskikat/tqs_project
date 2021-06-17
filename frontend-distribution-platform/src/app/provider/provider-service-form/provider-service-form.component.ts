@@ -24,6 +24,7 @@ export class ProviderServiceFormComponent implements OnInit {
   serviceTypes: ServiceType[];
   serviceTypes_Names: string[]=[];
   id: number;
+  edit: boolean;
   add_disabled: boolean;
 
   @ViewChild('autoInput') input;
@@ -36,26 +37,47 @@ export class ProviderServiceFormComponent implements OnInit {
     private serviceTypeService: ServiceTypeServiceService
   ) { 
     this.id = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.edit = this.id>0;
   }
 
   ngOnInit(): void {
     this.providerService={id:0, provider:{email:""}}
-    this.serviceForm = this.fb.group({
-      title:['', Validators.minLength(3)],
-      description:['', Validators.minLength(3)]
-    });
-    this.serviceTypeService.getServiceTypes().subscribe(data=>{
-      this.serviceTypes= data;
-      this.serviceTypes_Names=[];
-      this.serviceTypes.forEach(st=> this.serviceTypes_Names.push(st.name));
-      this.filteredOptions$ = of(this.serviceTypes_Names);
-      this.filteredOptions$ = this.serviceForm.get('title').valueChanges
-        .pipe(
-          startWith(''),
-          map(filterString => this.filter(filterString)),
-        );
-      }
-    );
+    // If edit
+    if (this.edit) {
+      // Build form with title disabled
+      this.serviceForm = this.fb.group({
+        title:[{value:'', disabled:true}, Validators.required],
+        description:['', Validators.minLength(3)]
+      });
+      // Get service data from API and populate form with it
+      this.providerServiceService.getProviderService(this.id).subscribe(data=>{
+        this.providerService = data;
+        this.serviceForm = this.fb.group({
+          title:[{value:data.service.name, disabled:true}, Validators.required],
+          description:[data.description, Validators.minLength(3)]
+        });
+      });
+    // If adding
+    } else {
+      // Initialize empty form
+      this.serviceForm = this.fb.group({
+        title:['', Validators.minLength(3)],
+        description:['', Validators.minLength(3)]
+      });
+      // Get service types from API to form autocomplete
+      this.serviceTypeService.getServiceTypes().subscribe(data=>{
+        this.serviceTypes= data;
+        this.serviceTypes_Names=[];
+        this.serviceTypes.forEach(st=> this.serviceTypes_Names.push(st.name));
+        this.filteredOptions$ = of(this.serviceTypes_Names);
+        this.filteredOptions$ = this.serviceForm.get('title').valueChanges
+          .pipe(
+            startWith(''),
+            map(filterString => this.filter(filterString)),
+          );
+        }
+      );
+    }
    
   }
 
@@ -70,12 +92,21 @@ export class ProviderServiceFormComponent implements OnInit {
   }
 
   saveService(): void{
-    this.providerService.description = this.serviceForm.get('description').value;
-    this.providerService.provider.email= localStorage.getItem('email');
-    this.providerService.service= this.serviceTypes.find(x => x.name==this.serviceForm.get('title').value);
-    this.providerServiceService.postProviderServices(this.providerService).subscribe(data=>{
-      this.router.navigate(['/provider/services']);
-    });
+    // If edit, update description and PUT
+    if (this.edit) {
+      this.providerService.description = this.serviceForm.get('description').value;
+      this.providerServiceService.putProviderServices(this.id, this.providerService).subscribe(data=>{
+        this.router.navigate(['/provider/services']);
+      });
+    // If adding, create instance and POST to API
+    } else {
+      this.providerService.description = this.serviceForm.get('description').value;
+      this.providerService.provider.email= localStorage.getItem('email');
+      this.providerService.service= this.serviceTypes.find(x => x.name==this.serviceForm.get('title').value);
+      this.providerServiceService.postProviderServices(this.providerService).subscribe(data=>{
+        this.router.navigate(['/provider/services']);
+      });
+    }
   }
 
   private filter(value: string): string[] {

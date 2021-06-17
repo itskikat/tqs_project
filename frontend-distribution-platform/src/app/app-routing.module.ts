@@ -23,6 +23,9 @@ export const routes: Routes = [
     path:'provider/services/add', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
   },
   {
+    path:'provider/services/edit/:id', component: ProviderServiceFormComponent, canActivate: [ProviderGuard]
+  },
+  {
     path:'provider/services', component: ProviderServiceListComponent, canActivate: [ProviderGuard]
   },
   {
