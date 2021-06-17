@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MENU_ITEMS } from '../provider-menu';
+import { MENU_ITEMS } from '../../provider-menu';
 
  
 @Component({
@@ -24,13 +24,13 @@ export class ProviderServiceListComponent implements OnInit {
 
   }
   editService() :void{
-    this.router.navigate(['/services/add']);
+    this.router.navigate(['/provider/services/add']);
   }
 
   deleteService(): void{
   }
 
   addService(): void{
-    this.router.navigate(['/services/add']);
+    this.router.navigate(['/provider/services/add']);
   } 
 }

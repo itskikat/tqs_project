@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { StatsProgressBarData } from '../../@core/data/stats-progress-bar';
+import { StatsProgressBarData } from '../../../@core/data/stats-progress-bar';
 import { takeWhile } from 'rxjs/operators';
 
 

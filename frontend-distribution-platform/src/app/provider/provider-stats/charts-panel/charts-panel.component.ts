@@ -3,9 +3,9 @@ import { takeWhile } from 'rxjs/operators';
 
 import { ProviderStatsChartsOrdersChartComponent } from './charts/orders-chart.component';
 import { ProviderStatsChartsProfitChartComponent } from './charts/profit-chart.component';
-import { OrdersChart } from '../../@core/data/orders-chart';
-import { ProfitChart } from '../../@core/data/profit-chart';
-import { OrdersProfitChartData } from '../../@core/data/orders-profit-chart';
+import { OrdersChart } from '../../../@core/data/orders-chart';
+import { ProfitChart } from '../../../@core/data/profit-chart';
+import { OrdersProfitChartData } from '../../../@core/data/orders-profit-chart';
 
 // INTERFACE
 export interface OrderProfitChartSummary {

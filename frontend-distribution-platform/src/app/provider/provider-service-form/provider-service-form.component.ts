@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MENU_ITEMS } from '../provider-menu';
+import { MENU_ITEMS } from '../../provider-menu';
 
 @Component({
   selector: 'ngx-provider-service-form',
