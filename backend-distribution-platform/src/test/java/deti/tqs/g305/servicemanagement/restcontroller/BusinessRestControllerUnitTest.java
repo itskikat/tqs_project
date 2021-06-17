@@ -188,6 +188,33 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(1)).getBusinessBusinessServices(any(), any(), eq(Optional.empty()));
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetExistentBusinessService_thenReturnBusinessService() throws  Exception {
+        BusinessService bs = new BusinessService(0, new ServiceType(), new Business());
+        bs.setId(2);
+        bs.setPrice(10000);
+
+        when(serviceService.getBusinessService(any(), anyLong())).thenReturn(Optional.of(bs));
+
+        mvc.perform(get("/api/businesses/services/" + bs.getId()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.price", is(bs.getPrice())));
+
+        verify(serviceService, times(1)).getBusinessService(any(), anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetInexistentBusinessService_thenReturnBadRequest() throws  Exception {
+        when(serviceService.getBusinessService(any(), anyLong())).thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/businesses/services/9283724"))
+                .andExpect(status().isBadRequest());
+
+        verify(serviceService, times(1)).getBusinessService(any(), anyLong());
+    }
+
 
 
 }
