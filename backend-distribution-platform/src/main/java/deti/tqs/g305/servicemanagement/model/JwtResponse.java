@@ -14,6 +14,7 @@ public class JwtResponse implements Serializable {
     private final String name;
     private final String email;
 
+
     public JwtResponse(String jwttoken, UserAuthority type, String name, String email) {
         this.jwttoken = jwttoken;
         this.type = type;
@@ -36,4 +37,5 @@ public class JwtResponse implements Serializable {
     public String getEmail() {
         return email;
     }
+
 }

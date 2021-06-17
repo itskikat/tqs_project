@@ -38,7 +38,7 @@ export class BusinessServiceComponent implements OnInit {
 
   }
   editService(id:number) :void{
-    this.router.navigate(['/business/services/add', id ]);
+    this.router.navigate(['/business/services/edit', id ]);
   }
 
   deleteService(id:number): void{
@@ -48,7 +48,7 @@ export class BusinessServiceComponent implements OnInit {
   }
 
   addService(): void{
-    this.router.navigate(['/business/services/add',-1]);
+    this.router.navigate(['/business/services/add']);
   } 
 
 

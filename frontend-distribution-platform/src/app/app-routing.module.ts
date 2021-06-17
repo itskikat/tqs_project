@@ -14,6 +14,7 @@ import { ProviderGuard } from './shared/guard/provider.guard';
 import { BusinessGuard } from './shared/guard/business.guard';
 import { BusinessServiceComponent } from './business/business-service/business-service.component';
 import {BusinessServiceFormComponent} from './business/business-service-form/business-service-form.component';
+import {BusinessServiceEditFormComponent} from './business/business-service-edit-form/business-service-edit-form.component';
 
 
 export const routes: Routes = [
@@ -41,7 +42,10 @@ export const routes: Routes = [
     path:'business/services', component: BusinessServiceComponent, canActivate: [BusinessGuard]
   },
   {
-    path:'business/services/add/:id', component: BusinessServiceFormComponent, canActivate: [BusinessGuard]
+    path:'business/services/add', component: BusinessServiceFormComponent, canActivate: [BusinessGuard]
+  },
+  {
+    path:'business/services/edit/:id', component: BusinessServiceEditFormComponent, canActivate: [BusinessGuard]
   },
   {
     path:'business/profile', component: BusinessProfileComponent, canActivate: [BusinessGuard]
