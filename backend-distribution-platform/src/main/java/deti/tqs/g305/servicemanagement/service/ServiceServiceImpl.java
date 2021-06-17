@@ -6,6 +6,7 @@ import java.util.Optional;
 import deti.tqs.g305.servicemanagement.model.*;
 
 import deti.tqs.g305.servicemanagement.repository.*;
+import org.checkerframework.checker.nullness.Opt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -153,8 +154,72 @@ public class ServiceServiceImpl implements ServiceService {
         return Optional.empty();
     }
 
+    // ProviderService
+    @Override
+    public Optional<ProviderService> saveProviderService(ProviderService providerService) {
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerService.getId());
 
+        if(bs.isEmpty() && providerService.getService() != null ) {
+            ServiceType st = serviceTypeRepository.findById(providerService.getService().getId());
+            if (st == null) {
+                return Optional.empty();
+            }
+            providerService.setService(st);
+            return Optional.of(providerServiceRepository.save(providerService));
+        }
+        return Optional.empty();
+    }
 
+    @Override
+    public boolean deleteProviderService(long providerServiceId){
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if (bs.isPresent()) {
+            providerServiceRepository.delete(bs.get());
+            logger.info("ProviderService successfully deleted!");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Optional<ProviderService> updateProviderService(long providerServiceId, ProviderService providerService) {
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if(bs.isPresent()) {
+            ProviderService ps = bs.get();
+            if (providerService.getService() != null) {
+                ps.setService(providerService.getService());
+            }
+            if (providerService.getServiceContract() != null) {
+                ps.setServiceContract(providerService.getServiceContract());
+            }
+            if (providerService.getProvider() != null) {
+                ps.setProvider(providerService.getProvider());
+            }
+            ps.setDescription(providerService.getDescription());
+            return Optional.of(providerServiceRepository.save(ps));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Page<ProviderService> getProviderProviderServices(String providerId, Pageable page, Optional<String> name) {
+        if (name.isPresent()) {
+            return providerServiceRepository.findByProvider_EmailAndService_NameContains(providerId, page, name.get());
+        }
+        return providerServiceRepository.findByProvider_Email(providerId, page);
+    }
+
+    @Override
+    public Optional<ProviderService> getProviderService(String name, Long providerServiceId){
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if(bs.isPresent()){
+            if(!bs.get().getProvider().getEmail().equals(name)){
+                bs=Optional.empty();
+            }
+        }
+        return bs;
+    }
 
     // BusinessService
     @Override

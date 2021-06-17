@@ -62,6 +62,9 @@ public class ServiceServiceUnitTest {
     BusinessService bs_withId;
 
     Business b;
+
+    ProviderService ps_free;
+    ProviderService ps_withId;
     
 
     @BeforeEach
@@ -94,6 +97,16 @@ public class ServiceServiceUnitTest {
 
         b = new Business();
         b.setEmail("samplegoogleid");
+
+        // ProviderService
+        ps_free = new ProviderService(null, new Provider(), new ServiceType());
+        Mockito.when(providerServiceRepository.save(ps_free)).thenReturn(ps_free);
+
+        ps_withId = new ProviderService("Loren ipsum", new Provider(), new ServiceType());
+        ps_withId.setId(1L);
+        Mockito.when(providerServiceRepository.save(ps_withId)).thenReturn(ps_withId);
+        Mockito.when(providerServiceRepository.findById(ps_withId.getId())).thenReturn(Optional.of(ps_withId));
+        Mockito.when(providerServiceRepository.findById(-999L)).thenReturn(Optional.empty());
     }
 
     @Test
@@ -340,7 +353,101 @@ public class ServiceServiceUnitTest {
         
         assertThat(optSc).isEqualTo(Optional.empty());
         verify(serviceContractRepository, times(1)).findById(anyLong());
-    } 
+    }
+
+
+    // PROVIDER SERVICE
+    @Test
+    void whenCreateProviderService_thenProviderServiceShouldBeStored() {
+
+        ps_free.getService().setId(3L);
+
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(ps_free.getService());
+
+        ProviderService bsFromDB = serviceService.saveProviderService(ps_free).get();
+
+        assertThat(ps_free).isEqualTo(bsFromDB);
+        verify(providerServiceRepository, times(1)).save(any());
+    }
+
+    @Test
+    void whenUpdateValidProviderService_thenProviderServiceShouldBeUpdated() {
+        ProviderService bsFromDB = serviceService.updateProviderService(ps_withId.getId(), ps_withId).get();
+
+        assertThat(ps_withId).isEqualTo(bsFromDB);
+
+        verify(providerServiceRepository, times(1)).save(any());
+        verify(providerServiceRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void whenUpdateInvalidProviderServiceID_thenProviderServiceShouldBeEmpty() {
+        Optional<ProviderService> invalidBsFromDB = serviceService.updateProviderService(-99L, ps_withId);
+
+        assertThat(invalidBsFromDB).isEqualTo(Optional.empty());
+
+        verify(providerServiceRepository, times(0)).save(any());
+        verify(providerServiceRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void givenProviderServices_whenGetProviderServices_thenReturnProviderServices() {
+        Provider b = new Provider();
+        b.setEmail("samplegoogleid");
+
+        List<ProviderService> bss = new ArrayList<ProviderService>();
+        bss.add(ps_free);
+        bss.add(ps_withId);
+
+        Pageable mypage = PageRequest.of(10,10);
+        Page<ProviderService> page = new PageImpl(bss, mypage, 1L);
+
+        Mockito.when(providerServiceRepository.findByProvider_Email(eq("samplegoogleid") ,any())).thenReturn(page);
+
+        Page<ProviderService> bsBusinessFromDB = serviceService.getProviderProviderServices(b.getEmail(), mypage, Optional.empty());
+
+        assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
+
+    @Test
+    void givenProviderServices_whenGetProviderServicesByTypeName_thenReturnProviderServices() {
+        Provider b = new Provider();
+        b.setEmail("samplegoogleid");
+
+        ServiceType st = new ServiceType("myservicetype", true);
+
+        List<ProviderService> bss = new ArrayList<ProviderService>();
+        ps_free.setService(st);
+        bss.add(ps_free);
+        bss.add(ps_withId);
+
+        Pageable mypage = PageRequest.of(10,10);
+        Page<ProviderService> page = new PageImpl(bss, mypage, 1L);
+
+        Mockito.when(providerServiceRepository.findByProvider_EmailAndService_NameContains(eq("samplegoogleid") ,any(), any())).thenReturn(page);
+
+        Page<ProviderService> bsBusinessFromDB = serviceService.getProviderProviderServices(b.getEmail(), mypage, Optional.of(st.getName()));
+
+        assertThat(bsBusinessFromDB.getContent()).isEqualTo(bss);
+    }
+
+    @Test
+    void whenDeleteValidProviderServiceID_thenProviderServiceShouldBeDeleted() {
+
+        when(providerServiceRepository.findById(ps_withId.getId())).thenReturn(Optional.of(ps_withId));
+
+        serviceService.deleteProviderService(ps_withId.getId());
+
+        verify(providerServiceRepository, times(1)).delete(ps_withId);
+
+    }
+
+    @Test
+    void whenDeleteInvalidProviderServiceID_thenExceptionShouldBeThrown() {
+        assertTrue(!serviceService.deleteProviderService(-99L));
+        verify(providerServiceRepository, times(0)).delete(any());
+
+    }
 
 
     // BUSINESS SERVICE

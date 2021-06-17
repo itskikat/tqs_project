@@ -1,6 +1,7 @@
 package deti.tqs.g305.servicemanagement.service;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
+import deti.tqs.g305.servicemanagement.model.ProviderService;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 
@@ -21,6 +22,12 @@ public interface ServiceService {
     public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType, Optional<ServiceStatus> status, Optional<Long> type);
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);
 
+    // ProviderService
+    Optional<ProviderService> saveProviderService(ProviderService providerService);
+    boolean deleteProviderService(long providerServiceId);
+    Optional<ProviderService> updateProviderService(long providerServiceId, ProviderService providerService);
+    public Page<ProviderService> getProviderProviderServices(String providerId, Pageable page, Optional<String> name);
+    Optional<ProviderService> getProviderService(String name, Long providerServiceId);
 
     public Optional<BusinessService> saveBusinessService(BusinessService businessService);
     public boolean deleteBusinessService(long businessServiceId);
