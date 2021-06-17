@@ -6,6 +6,7 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -137,7 +138,7 @@ public class BusinessRestController {
         if(businessServiceId != null) {
             boolean exists = serviceService.deleteBusinessService(businessServiceId);
             if(exists){
-                return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+                return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body("Business Service deleted");
             }
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }

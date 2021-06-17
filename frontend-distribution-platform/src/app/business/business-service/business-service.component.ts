@@ -42,8 +42,9 @@ export class BusinessServiceComponent implements OnInit {
   }
 
   deleteService(id:number): void{
-    this.businessService.deleteBusinessServices(id).subscribe(data=>{});
-    this.getServices();
+    this.businessService.deleteBusinessServices(id).subscribe(data=>{
+      this.getServices();
+    });
   }
 
   addService(): void{
