@@ -8,95 +8,36 @@
     <nb-layout-column>
         <form>
             <div class="form-group row" style="margin-bottom: 2%;">
-                <div class="col-sm-4">
+                <div class="col-sm-4 mt-auto mb-auto">
                     <button (click)="addService()" nbButton status="success">Add Service</button>
                 </div>
-                <div class="col-sm-4"></div>
-                <div class="col-sm-1" style="align-items: center; text-align: right; display: flex;">
-                    <p style="margin-bottom: 0; ">Order:</p>
+                <div class="col-sm-1"></div>
+                <div class="form-group col-sm-3"> 
+                    <label>Search:</label>
+                    <input nbInput  class="form-control" (keyup)="getServices()" name="searchQuery" type="text"  [(ngModel)]="searchQuery">
                 </div>
+                <div class="col-sm-1"> </div>
                 <div class=" col-sm-3">
-                    
-                    <nb-select class="w-100" id="orderSelect" (change)="optionSelected()"  [(selected)]="selected"> 
+                    <label>Order:</label>
+                    <nb-select class="w-100" name="orderSelect" (selectedChange)="getServices()"  [(ngModel)]="selected"> 
                         <nb-option *ngFor="let o of options"  [value]="o.id"> {{o.name}}</nb-option>
                     </nb-select>
                 </div>
             </div>
         </form>
         <div class="row">
-            <div class="col-md-12 col-lg-12 col-xxxl-12">
+            <div class="col-md-12 col-lg-12 col-xxxl-12" *ngFor="let ps of providerServices">
                 <nb-card>
-                <nb-card-header>Service 1</nb-card-header>
+                <nb-card-header>{{ps.service.name}}</nb-card-header>
                 <nb-card-body>
                     <div class="row">
-                        <div class="col-6">
-                            <p><strong>Area: </strong> Aveiro</p>
-                        </div>
-                        <div class="col-6">
-                            <p><strong>Price: </strong> 20€/h</p>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col">
-                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
+                            <p><strong>Description: </strong> {{ps.description}}</p>
                         </div>
                     </div>
                     <div class="row">
-                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
-                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
-                    </div>
-                    
-                </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-xxxl-12">
-                <nb-card>
-                <nb-card-header>Service 1</nb-card-header>
-                <nb-card-body>
-                    <div class="row">
-                        <div class="col-6">
-                            <p><strong>Area: </strong> Aveiro</p>
-                        </div>
-                        <div class="col-6">
-                            <p><strong>Price: </strong> 20€/h</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
-                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
-                    </div>
-                </nb-card-body>
-                </nb-card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-lg-12 col-xxxl-12">
-                <nb-card>
-                <nb-card-header>Service 1</nb-card-header>
-                <nb-card-body>
-                    <div class="row">
-                        <div class="col-6">
-                            <p><strong>Area: </strong> Aveiro</p>
-                        </div>
-                        <div class="col-6">
-                            <p><strong>Price: </strong> 20€/h</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <p><strong>Description: </strong> shhdfbwhvboeirvboeqrvbqeovbeqrivbqe</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <button (click)="editService()" nbButton status="warning" class="ml-auto">Edit</button>
-                        <button (click)="deleteService()" nbButton status="danger" class="ml-3">Delete</button>
+                        <button (click)="editService(ps.id)" nbButton status="warning" class="ml-auto">Edit</button>
+                        <button (click)="deleteService(ps.id)" nbButton status="danger" class="ml-3">Delete</button>
                     </div>
                 </nb-card-body>
                 </nb-card>
