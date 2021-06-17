@@ -2,6 +2,7 @@ package deti.tqs.g305.servicemanagement.repository;
 
 import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.model.BusinessService;
+import deti.tqs.g305.servicemanagement.model.ServiceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,29 @@ public class BusinessServiceRepositoryTest {
 
         List<BusinessService> found = businessServiceRepository.findByBusiness_Email("someinvalid@mail.com", page).getContent();
         assertThat(found).isEqualTo(Collections.emptyList());
+    }
+
+    @Test
+    void whenFindBusinessServicesMostRequestedServiceTypeIdByValidBusiness_thenReturnServiceTypeId() {
+        ServiceType st = new ServiceType("canalizacao", true);
+        BusinessService bs2 = new BusinessService();
+        bs2.setService(st);
+
+        Business b = new Business();
+        b.setEmail("sample@mail.com");
+        b.setPassword("sample");
+
+        BusinessService bs = new BusinessService(10, st, b);
+
+        bs2.setBusiness(b);
+
+        entityManager.persist(bs);
+        entityManager.persist(bs2);
+        entityManager.persist(b);
+        entityManager.persist(st);
+
+        Long found = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(b.getEmail());
+        assertThat(found).isEqualTo(st.getId());
     }
 
 }

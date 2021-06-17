@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.testcontainers.shaded.com.google.common.util.concurrent.Service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,6 +60,8 @@ public class ServiceServiceUnitTest {
 
     BusinessService bs_free;
     BusinessService bs_withId;
+
+    Business b;
     
 
     @BeforeEach
@@ -86,6 +91,9 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findById(bs_withId.getId())).thenReturn(bs_withId);
 
         Mockito.when(businessServiceRepository.findById(-999L)).thenReturn(null);
+
+        b = new Business();
+        b.setEmail("samplegoogleid");
     }
 
     @Test
@@ -380,11 +388,7 @@ public class ServiceServiceUnitTest {
 
     @Test
     void givenBusinessServices_whenGetBusinessBusinessServices_thenReturnBusinessServices() {
-
-        Business b = new Business();
-        b.setEmail("samplegoogleid");
-
-        List<BusinessService> bss = new ArrayList<BusinessService>();
+        List<BusinessService> bss = new ArrayList<>();
         bss.add(bs_free);
         bss.add(bs_withId);
 
@@ -400,12 +404,9 @@ public class ServiceServiceUnitTest {
 
     @Test
     void givenBusinessServices_whenGetBusinessBusinessServicesWithType_thenReturnBusinessServices() {
-        Business b = new Business();
-        b.setEmail("samplegoogleid");
-
         ServiceType st = new ServiceType("myservicetype", true);
 
-        List<BusinessService> bss = new ArrayList<BusinessService>();
+        List<BusinessService> bss = new ArrayList<>();
         bs_free.setService(st);
         bss.add(bs_free);
         bss.add(bs_withId);
@@ -433,9 +434,66 @@ public class ServiceServiceUnitTest {
 
     @Test
     void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() {
-        assertTrue(!serviceService.deleteBusinessService(-99L));
+        assertFalse(serviceService.deleteBusinessService(-99L));
         verify(businessServiceRepository, times(0)).delete(any());
 
+    }
+
+    @Test
+    void givenServiceContracts_whenGetBusinessBusinessServicesProfit_thenReturnProfit() {
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(serviceContractRepository.findByStatusAndBusinessService_Business_Email(any(), any())).thenReturn(listServiceContract);
+
+        float expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
+
+        assertThat(0.0f).isEqualTo(expected);
+        verify(serviceContractRepository, times(1)).findByStatusAndBusinessService_Business_Email(any(), any());
+        
+    }
+
+    @Test
+    void givenBusinessServiceContracts_whenGetBusinessServiceContracts_thenReturnServiceContracts() {
+        bs_withId.setBusiness(b);
+
+        sc_wait.setBusinessService(bs_withId);
+        sc_accept.setBusinessService(bs_withId);
+        sc_fin.setBusinessService(bs_withId);
+
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_wait);
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(any())).thenReturn(listServiceContract);
+
+        List<ServiceContract> expected = serviceService.getBusinessServiceContracts(b.getEmail());
+
+        assertThat(listServiceContract).isEqualTo(expected);
+
+        verify(serviceContractRepository, times(1)).findByBusinessService_Business_Email(any());
+    }
+
+    @Test
+    void givenBusinessBusinessServices_whenGetMostRequestedServiceType_thenReturnMostRequestServiceType() {
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        BusinessService bs1 = new BusinessService(0, st, b);
+        BusinessService bs2 = new BusinessService(0, new ServiceType(), b);
+        bs_withId.setService(st);
+        bs_withId.setBusiness(b);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(any())).thenReturn(st.getId());
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
+
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail());
+
+        assertThat(st).isEqualTo(expected);
+
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_MostRequestedServiceTypeId(any());
+        verify(serviceTypeRepository, times(1)).findById(anyLong());
     }
 
 }

@@ -3,6 +3,7 @@ package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.model.BusinessService;
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
+import deti.tqs.g305.servicemanagement.model.ServiceType;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -144,4 +145,22 @@ public class BusinessRestController {
         }
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<?> getStatistics(HttpServletRequest request) {
+        
+        Principal principal = request.getUserPrincipal();
+
+        Float business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName());
+        List <ServiceContract> business_contracts = serviceService.getBusinessServiceContracts(principal.getName());
+        ServiceType business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("profit", business_profit);
+        response.put("total-contracts", business_contracts.size());
+        response.put("most-requested-ServiceType", business_most_requested);
+        
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+    }
+
 }
