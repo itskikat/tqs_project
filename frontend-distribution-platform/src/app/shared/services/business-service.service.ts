@@ -5,6 +5,7 @@ import {BusinessService} from '../models/BusinessService';
 import {BusinessServicePage} from '../models/BusinessServicePage';
 import { apiUrl } from '../../../environments/environment';
 import {AuthService} from './auth.service';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -37,9 +38,11 @@ export class BusinessServiceService {
     return this.http.post<BusinessService>(url,bs,this.authservice.getOptions());
   }
 
-  deleteBusinessServices(id:number): Observable<BusinessService>{
+  deleteBusinessServices(id:number): any {
     let url = apiUrl + "/businesses/services/delete/" + id ;
-    return this.http.delete<BusinessService>(url,this.authservice.getOptions());
+    let headers = this.authservice.getOptions();
+    headers['responseType'] = 'text';
+    return this.http.delete(url, headers);
   }
 
 }
