@@ -5,7 +5,6 @@ import {BusinessService} from '../models/BusinessService';
 import {BusinessServicePage} from '../models/BusinessServicePage';
 import { apiUrl } from '../../../environments/environment';
 import {AuthService} from './auth.service';
-import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
