@@ -4,6 +4,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AuthService } from '../../../shared/services/auth.service';
 import { Router } from '@angular/router';
+import { User } from '../../../shared/models/User';
 
 @Component({
   selector: 'ngx-header',
@@ -14,7 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
-  user: any;
+  user: User;
 
   currentTheme = 'default';
 
@@ -30,7 +31,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // Get user data
-    this.user = this.authService.user();
+    this.authService.loggedData().then(data => {
+      this.user=data;
+    }).catch(error => {
+      if (error.status==401) {
+        this.authService.logOut();
+        alert("Your session has expired!");
+        this.router.navigate(['/login']);
+      }
+    });
 
     // Subscribe to menu service, to handle user clicks
     this.menuService.onItemClick()

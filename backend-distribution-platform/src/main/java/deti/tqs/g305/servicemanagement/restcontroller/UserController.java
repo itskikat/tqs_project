@@ -12,10 +12,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,6 +54,17 @@ public class UserController {
         log.info("Token generated! {} // Returning", token);
 
         return ResponseEntity.ok(new JwtResponse(token, (UserAuthority) userDetails.getAuthorities().iterator().next(), u.getFull_name(), u.getEmail()));
+    }
+
+    @GetMapping("/logged")
+    public ResponseEntity<?> getUserLogged(HttpServletRequest request) {
+        // Get user logged
+        Principal principal = request.getUserPrincipal();
+        // Get User instance
+        User u = userService.getUserByEmail(principal.getName()).get();
+        final UserDetails userDetails = userService.loadUserByUsername(principal.getName());
+
+        return ResponseEntity.ok(new UserResponse((UserAuthority) userDetails.getAuthorities().iterator().next(), u.getFull_name(), u.getEmail()));
     }
 
     private void authenticate(String username, String password) throws Exception {
