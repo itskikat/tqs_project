@@ -34,9 +34,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserRESTAPITest {
+class UserRESTAPITestIT {
 
-    private static final Logger log = LoggerFactory.getLogger(UserRESTAPITest.class);
+    private static final Logger log = LoggerFactory.getLogger(UserRESTAPITestIT.class);
 
     @Container
   	public static PostgreSQLContainer container = new PostgreSQLContainer().withUsername("demo").withPassword("password").withDatabaseName("demo");
