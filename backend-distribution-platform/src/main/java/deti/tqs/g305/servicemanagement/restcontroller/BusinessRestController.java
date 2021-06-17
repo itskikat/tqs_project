@@ -6,6 +6,7 @@ import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -108,6 +109,18 @@ public class BusinessRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/services/{id}")
+    public ResponseEntity<?> getBusinessService(@PathVariable(value = "id") Long businessServiceId, HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+
+        Optional<BusinessService> optBs = serviceService.getBusinessService(principal.getName(), businessServiceId);
+        if(optBs.isPresent()){
+            return new ResponseEntity<BusinessService>(optBs.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
+
+    }
+
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
         if(bs != null){
@@ -125,7 +138,7 @@ public class BusinessRestController {
         if(businessServiceId != null) {
             boolean exists = serviceService.deleteBusinessService(businessServiceId);
             if(exists){
-                return new ResponseEntity<String>("Business Service deleted", HttpStatus.FOUND);
+                return ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body("Business Service deleted");
             }
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }

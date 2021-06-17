@@ -35,6 +35,7 @@ import {
   NbPopoverModule,
   NbCheckboxModule,
   NbTagModule,
+  NbAutocompleteModule,
 } from '@nebular/theme';
 import { RegisterProviderComponent } from './register-provider/register-provider.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -66,6 +67,9 @@ import { ProviderStatsChartsLegendChartComponent } from './provider-stats/charts
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
 import { BusinessAPIComponent } from './business/business-api/business-api.component';
 import { SharedModule } from './shared/shared.module';
+import { BusinessServiceComponent } from './business/business-service/business-service.component';
+import { BusinessServiceFormComponent } from './business/business-service-form/business-service-form.component';
+import { BusinessServiceEditFormComponent } from './business/business-service-edit-form/business-service-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -93,10 +97,14 @@ import { SharedModule } from './shared/shared.module';
     ProviderStatsChartsOrdersChartComponent,
     ProviderStatsChartsProfitChartComponent,
     ProviderStatsComponent,
-    ProviderStatsProgressSection
+    ProviderStatsProgressSection,
+    BusinessServiceComponent,
+    BusinessServiceFormComponent,
+    BusinessServiceEditFormComponent
   ],
   imports: [
     BrowserModule,
+    NbAutocompleteModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
