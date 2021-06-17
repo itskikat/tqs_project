@@ -1,0 +1,21 @@
+name: Continuous Deployment
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: label-vm 
+    
+    steps:
+      - uses: actions/checkout@v2 # Checkout the code
+
+      - name: Validate docker
+        run: docker-compose config
+
+      - name: Start docker
+        run: docker-compose up -d --build
+
+      - name: Check that containers are running
+        run: docker-compose ps
