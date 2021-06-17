@@ -19,6 +19,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 
 import java.util.List;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -209,6 +210,12 @@ public class ProviderRestController {
             }
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<?> getProviderStatistics(@PathVariable(value = "start_date" , required=true) LocalDate start_date, @PathVariable(value = "end_date" , required=true) LocalDate end_date ){
+        
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }
 }

@@ -74,7 +74,7 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(post("/api/businesses/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.price", is(0)))
+                .andExpect(jsonPath("$.price", is(0.0)))
                 .andExpect(jsonPath("$.service.hasExtras", is(false)));
 
         verify(serviceService, times(1)).saveBusinessService(any());
@@ -103,7 +103,7 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(put("/api/businesses/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.price", is(10000)));
+                .andExpect(jsonPath("$.price", is(10000.0)));
 
         verify(serviceService, times(1)).updateBusinessService(anyLong(),any());
     }
@@ -233,7 +233,7 @@ class BusinessRestControllerUnitTest {
         listServiceContract.add(sc);
         listServiceContract.add(sc1);
 
-        float profit = 30;
+        double profit = 30;
 
         doReturn(profit).when(serviceService).getBusinessBusinessServiceProfit(any());
         when(serviceService.getBusinessServiceContracts(any())).thenReturn(listServiceContract);

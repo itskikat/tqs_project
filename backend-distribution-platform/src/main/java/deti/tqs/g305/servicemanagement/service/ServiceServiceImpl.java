@@ -279,12 +279,12 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Float getBusinessBusinessServiceProfit(String business_id) {
+    public Double getBusinessBusinessServiceProfit(String business_id) {
 
         List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
-        float profit = 0;
+        double profit = 0;
         for (ServiceContract serviceContract : scList) {
-            float val = serviceContract.getBusinessService().getPrice();
+            double val = serviceContract.getBusinessService().getPrice();
             profit += val;
         }
         return profit;

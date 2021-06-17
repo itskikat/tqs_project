@@ -25,7 +25,7 @@ public class BusinessService{
     private ServiceType service;
     
     @Column(name = "price")
-    private int price;
+    private double price;
 
     @JsonIgnore
     @ToString.Exclude
@@ -36,7 +36,7 @@ public class BusinessService{
 
     }
 
-    public BusinessService(int price, ServiceType service, Business business){
+    public BusinessService(double price, ServiceType service, Business business){
         this.price=price;
         this.service=service;
         this.business=business;

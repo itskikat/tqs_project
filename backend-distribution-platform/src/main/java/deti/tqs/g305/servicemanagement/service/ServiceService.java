@@ -34,7 +34,8 @@ public interface ServiceService {
     public Optional<BusinessService> getBusinessService(String businessName, Long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<String> name);
-    public Float getBusinessBusinessServiceProfit(String businessId);
+    public Double getBusinessBusinessServiceProfit(String businessId);
     public List<ServiceContract> getBusinessServiceContracts(String business_id);
     public ServiceType getBusinessMostRequestedServiceType(String business_id);
+
 }
