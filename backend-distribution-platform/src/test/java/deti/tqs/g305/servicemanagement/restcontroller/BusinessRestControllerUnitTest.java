@@ -128,7 +128,7 @@ class BusinessRestControllerUnitTest {
         when(serviceService.deleteBusinessService(anyLong())).thenReturn(true);
 
         mvc.perform(delete("/api/businesses/services/delete/" + bs.getId()))
-                .andExpect(status().isFound());
+                .andExpect(status().isOk());
 
         verify(serviceService, times(1)).deleteBusinessService(anyLong());
     }
