@@ -233,11 +233,11 @@ class BusinessRestControllerUnitTest {
         listServiceContract.add(sc);
         listServiceContract.add(sc1);
 
-        float profit = 30;
+        double profit = 30;
 
-        doReturn(profit).when(serviceService).getBusinessBusinessServiceProfit(any());
-        when(serviceService.getBusinessServiceContracts(any())).thenReturn(listServiceContract);
-        when(serviceService.getBusinessMostRequestedServiceType(any())).thenReturn(st);
+        when(serviceService.getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(profit);
+        when(serviceService.getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(listServiceContract.size());
+        when(serviceService.getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(st);
 
         mvc.perform(get("/api/businesses/statistics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -245,9 +245,9 @@ class BusinessRestControllerUnitTest {
                 .andExpect(jsonPath("$.total-contracts", is(listServiceContract.size())))
                 .andExpect(jsonPath("$.most-requested-ServiceType.name", is(st.getName())));
 
-        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any());
-        verify(serviceService, times(1)).getBusinessServiceContracts(any());
-        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any());
+        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()));
+        verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()));
+        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()));
     }
 
 

@@ -554,7 +554,7 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByStatusAndBusinessService_Business_Email(any(), any())).thenReturn(listServiceContract);
 
-        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail(), Optional.empty(), Optional.empty());
 
         assertThat(0.0).isEqualTo(expected);
         verify(serviceContractRepository, times(1)).findByStatusAndBusinessService_Business_Email(any(), any());
@@ -576,9 +576,9 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(any())).thenReturn(listServiceContract);
 
-        List<ServiceContract> expected = serviceService.getBusinessServiceContracts(b.getEmail());
+        Integer expected = serviceService.getTotalBusinessServiceContracts(b.getEmail(), Optional.empty(), Optional.empty());
 
-        assertThat(listServiceContract).isEqualTo(expected);
+        assertThat(listServiceContract.size()).isEqualTo(expected);
 
         verify(serviceContractRepository, times(1)).findByBusinessService_Business_Email(any());
     }
@@ -595,7 +595,7 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(any())).thenReturn(st.getId());
         Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
 
-        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail());
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.empty(), Optional.empty());
 
         assertThat(st).isEqualTo(expected);
 
