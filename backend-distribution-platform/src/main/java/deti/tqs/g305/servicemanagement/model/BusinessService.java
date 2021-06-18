@@ -40,7 +40,6 @@ public class BusinessService{
         this.price = price;
         this.service = service;
         this.business = business;
-
     }
   
 

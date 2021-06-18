@@ -180,7 +180,6 @@ public class BusinessRestController {
             business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.empty(), Optional.empty());
         }
 
-
         response.put("profit", business_profit);
         response.put("total-contracts", business_contracts);
         response.put("most-requested-ServiceType", business_most_requested);
