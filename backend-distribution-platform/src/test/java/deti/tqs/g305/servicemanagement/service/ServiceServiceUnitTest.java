@@ -554,9 +554,9 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByStatusAndBusinessService_Business_Email(any(), any())).thenReturn(listServiceContract);
 
-        float expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
 
-        assertThat(0.0f).isEqualTo(expected);
+        assertThat(0.0).isEqualTo(expected);
         verify(serviceContractRepository, times(1)).findByStatusAndBusinessService_Business_Email(any(), any());
         
     }
