@@ -1,6 +1,9 @@
 package deti.tqs.g305.servicemanagement.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Optional;
 
 import deti.tqs.g305.servicemanagement.model.*;
@@ -279,12 +282,12 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Float getBusinessBusinessServiceProfit(String business_id) {
+    public Double getBusinessBusinessServiceProfit(String business_id) {
 
         List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
-        float profit = 0;
+        double profit = 0;
         for (ServiceContract serviceContract : scList) {
-            float val = serviceContract.getBusinessService().getPrice();
+            double val = serviceContract.getBusinessService().getPrice();
             profit += val;
         }
         return profit;
@@ -310,5 +313,66 @@ public class ServiceServiceImpl implements ServiceService {
         }
         return bs;
     }
+
+    @Override
+    public Optional<Double> getTotalProfit(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            return Optional.of(providerServiceRepository.getTotalProfit(provider_id, start_date, end_date));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Integer> getTotalFinished(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            return Optional.of(providerServiceRepository.getTotalFinished(provider_id, start_date, end_date));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<ProviderService> getTotalMostContractsProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            long id = providerServiceRepository.getTotalMostContractsProviderService(provider_id, start_date, end_date);
+            return providerServiceRepository.findById(id);
+        }
+        return Optional.empty();
+    }
+    
+    @Override
+    public Optional<ProviderService> getTotalMostProfitProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            long id= providerServiceRepository.getTotalMostProfitProviderService(provider_id, start_date, end_date);
+            return providerServiceRepository.findById(id);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Map<LocalDate,Double>> getProfitHistory(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
+            List<Object[]> results = providerServiceRepository.getProfitHistory(provider_id, start_date, end_date);
+            for(Object[] obj : results){
+                profitHistory.put((LocalDate) obj[0], (Double) obj[1]);
+            }
+            return Optional.of(profitHistory);
+        }
+        return Optional.empty();
+    }
+    
+    @Override
+    public Optional<Map<LocalDate,Integer>> getContractsHistory(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Integer> contractHistory = new TreeMap<LocalDate, Integer>();
+            List<Object[]> results = providerServiceRepository.getContractsHistory(provider_id, start_date, end_date);
+            for(Object[] obj : results){
+                contractHistory.put((LocalDate) obj[0], (Integer) obj[1]);
+            }
+            return Optional.of(contractHistory);
+        }
+        return Optional.empty();
+    }
+
 
 }

@@ -151,7 +151,7 @@ public class BusinessRestController {
         
         Principal principal = request.getUserPrincipal();
 
-        Float business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName());
+        Double business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName());
         List <ServiceContract> business_contracts = serviceService.getBusinessServiceContracts(principal.getName());
         ServiceType business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName());
 
