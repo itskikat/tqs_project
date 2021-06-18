@@ -20,6 +20,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 import java.util.List;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -214,10 +215,53 @@ public class ProviderRestController {
     }
 
     @GetMapping("/statistics")
-    public ResponseEntity<?> getProviderStatistics(@PathVariable(value = "start_date" , required=true) LocalDate start_date, @PathVariable(value = "end_date" , required=true) LocalDate end_date ){
+    public ResponseEntity<?> getProviderStatistics( @RequestParam(name = "start" , required=true) String start, 
+     @RequestParam(name = "end" , required=true) String end, HttpServletRequest request){
+        LocalDate end_date;
+        LocalDate start_date;
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            start_date= LocalDate.parse(start,dateTimeFormatter);
+            end_date= LocalDate.parse(end,dateTimeFormatter);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Bad date format", HttpStatus.BAD_REQUEST);
+        }
+        
+
+        Principal principal = request.getUserPrincipal();
+
         Map<String, Object> response = new HashMap();
 
+        Optional<Double> profit= serviceService.getTotalProfit(principal.getName(), start_date, end_date);
+        if(profit.isPresent()){
+            response.put("TOTAL_PROFIT", profit);
+        }
+
+        Optional<Integer> finished= serviceService.getTotalFinished(principal.getName(), start_date, end_date);
+        if(finished.isPresent()){
+            response.put("TOTAL_FINISHED", finished);
+        }
+
+        Optional<ProviderService> ps= serviceService.getTotalMostProfitProviderService(principal.getName(), start_date, end_date);
+        if(ps.isPresent()){
+            response.put("PROFIT_SERVICE", ps);
+        }
+
+        Optional<ProviderService> ps1= serviceService.getTotalMostContractsProviderService(principal.getName(), start_date, end_date);
+        if(ps.isPresent()){
+            response.put("CONTRACTS_SERVICE", ps1);
+        }
+
+        Optional<Map<LocalDate,Double>> hist= serviceService.getProfitHistory(principal.getName(), start_date, end_date);
+        if(hist.isPresent()){
+            response.put("PROFIT_HISTORY", hist);
+        }
+
+        Optional<Map<LocalDate,Integer>> hist1= serviceService.getContractsHistory(principal.getName(), start_date, end_date);
+        if(hist.isPresent()){
+            response.put("CONTRACTS_HISTORY", hist1);
+        }
         
-        return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 }
