@@ -250,5 +250,27 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()));
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetBusinessStatisticsDateInterval_thenReturnStatisticsDateInterval() throws  Exception {
+        double profit = 30;
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        when(serviceService.getBusinessBusinessServiceProfit(any(), any(), any())).thenReturn(profit);
+        when(serviceService.getTotalBusinessServiceContracts(any(), any(), any())).thenReturn(3);
+        when(serviceService.getBusinessMostRequestedServiceType(any(), any(), any())).thenReturn(st);
+
+        mvc.perform(get("/api/businesses/statistics?start=11/12/2021&end=11/12/2021"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profit", is(30.0)))
+                .andExpect(jsonPath("$.start_date[0]", is(2021)))
+                .andExpect(jsonPath("$.start_date[1]", is(12)))
+                .andExpect(jsonPath("$.start_date[2]", is(11)));
+
+        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any(), any(), any());
+        verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), any(), any());
+        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), any(), any());
+    }
+
 
 }
