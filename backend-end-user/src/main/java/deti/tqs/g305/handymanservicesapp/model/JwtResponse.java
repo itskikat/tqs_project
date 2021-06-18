@@ -39,4 +39,19 @@ public class JwtResponse implements Serializable {
         return email;
     }
 
+    public void setJwttoken(String jwttoken) {
+        this.jwttoken = jwttoken;
+    }
+
+    public void setType(UserAuthority type) {
+        this.type = type;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
