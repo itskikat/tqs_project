@@ -1,5 +1,6 @@
 package deti.tqs.g305.servicemanagement.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -279,33 +280,51 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Float getBusinessBusinessServiceProfit(String business_id) {
+    public Double getBusinessBusinessServiceProfit(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
 
-        List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
-        float profit = 0;
-        for (ServiceContract serviceContract : scList) {
-            float val = serviceContract.getBusinessService().getPrice();
-            profit += val;
+        if (start_date.isPresent() && end_date.isPresent()) {
+            return businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval(business_id, start_date.get(), end_date.get());
         }
-        return profit;
+        else {
+            List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
+            double profit = 0;
+            for (ServiceContract serviceContract : scList) {
+                double val = serviceContract.getBusinessService().getPrice();
+                profit += val;
+            }
+            return profit;
+        }
+
     }
 
     @Override
-    public List<ServiceContract> getBusinessServiceContracts(String business_id) {
-        return serviceContractRepository.findByBusinessService_Business_Email(business_id);
+    public Integer getTotalBusinessServiceContracts(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        if (start_date.isPresent() && end_date.isPresent()) {
+            return businessServiceRepository.findByBusiness_Email_TotalContractsFinishedDateInterval(business_id, start_date.get(), end_date.get());
+        }
+        else {
+            List<ServiceContract> scs = serviceContractRepository.findByBusinessService_Business_Email(business_id);
+            return scs.size();
+        }
     }
 
     @Override
-    public ServiceType getBusinessMostRequestedServiceType(String business_id) {
-        long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
-        return serviceTypeRepository.findById(id);
+    public ServiceType getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        if (start_date.isPresent() && end_date.isPresent()) {
+            long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
+            return serviceTypeRepository.findById(id);
+        }
+        else {
+            long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
+            return serviceTypeRepository.findById(id);
+        }
     }
   
     public Optional<BusinessService> getBusinessService(String name, Long businessServiceId){
         Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
-        if(bs.isPresent()){
-            if(!bs.get().getBusiness().getEmail().equals(name)){
-                bs=Optional.empty();
+        if (bs.isPresent()) {
+            if (!bs.get().getBusiness().getEmail().equals(name)) {
+                bs = Optional.empty();
             }
         }
         return bs;

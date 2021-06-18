@@ -9,7 +9,7 @@ import deti.tqs.g305.servicemanagement.model.ServiceType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -34,7 +34,8 @@ public interface ServiceService {
     public Optional<BusinessService> getBusinessService(String businessName, Long businessServiceId);
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<String> name);
-    public Float getBusinessBusinessServiceProfit(String businessId);
-    public List<ServiceContract> getBusinessServiceContracts(String business_id);
-    public ServiceType getBusinessMostRequestedServiceType(String business_id);
+
+    public Double getBusinessBusinessServiceProfit(String businessId, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
+    public Integer getTotalBusinessServiceContracts(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
+    public ServiceType getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
 }
