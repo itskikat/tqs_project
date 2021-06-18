@@ -346,33 +346,4 @@ public class ProviderRestControllerUnitTest {
     }
 
 }
-/*
-Optional<Double> profit= serviceService.getTotalProfit(principal.getName(), start_date, end_date);
-        if(profit.isPresent()){
-            response.put("TOTAL_PROFIT", profit);
-        }
 
-        Optional<Integer> finished= serviceService.getTotalFinished(principal.getName(), start_date, end_date);
-        if(finished.isPresent()){
-            response.put("TOTAL_FINISHED", finished);
-        }
-
-        Optional<ProviderService> ps= serviceService.getTotalMostProfitProviderService(principal.getName(), start_date, end_date);
-        if(ps.isPresent()){
-            response.put("PROFIT_SERVICE", ps);
-        }
-
-        Optional<ProviderService> ps1= serviceService.getTotalMostContractsProviderService(principal.getName(), start_date, end_date);
-        if(ps.isPresent()){
-            response.put("CONTRACTS_SERVICE", ps1);
-        }
-
-        Optional<Map<LocalDate,Double>> hist= serviceService.getProfitHistory(principal.getName(), start_date, end_date);
-        if(hist.isPresent()){
-            response.put("PROFIT_HISTORY", hist);
-        }
-
-        Optional<Map<LocalDate,Integer>> hist1= serviceService.getContractsHistory(principal.getName(), start_date, end_date);
-        if(hist.isPresent()){
-            response.put("CONTRACTS_HISTORY", hist1);
-        }*/
