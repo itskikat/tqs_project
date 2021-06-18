@@ -215,6 +215,8 @@ public class ProviderRestController {
 
     @GetMapping("/statistics")
     public ResponseEntity<?> getProviderStatistics(@PathVariable(value = "start_date" , required=true) LocalDate start_date, @PathVariable(value = "end_date" , required=true) LocalDate end_date ){
+        Map<String, Object> response = new HashMap();
+
         
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
     }
