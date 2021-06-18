@@ -7,7 +7,6 @@ import java.util.Optional;
 import deti.tqs.g305.servicemanagement.model.*;
 
 import deti.tqs.g305.servicemanagement.repository.*;
-import org.checkerframework.checker.nullness.Opt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -310,14 +309,14 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceType getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        long id;
         if (start_date.isPresent() && end_date.isPresent()) {
-            long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
-            return serviceTypeRepository.findById(id);
+            id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
         }
         else {
-            long id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
-            return serviceTypeRepository.findById(id);
+            id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
         }
+        return serviceTypeRepository.findById(id);
     }
   
     public Optional<BusinessService> getBusinessService(String name, Long businessServiceId){

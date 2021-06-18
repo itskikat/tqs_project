@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.security.Principal;
 
@@ -38,6 +39,7 @@ public class BusinessRestController {
     public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String name,
                                                  @RequestParam(defaultValue = "service_name") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
+
         Principal principal = request.getUserPrincipal();
 
         Pageable paging;
@@ -58,7 +60,7 @@ public class BusinessRestController {
             bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(name));
         }
         else {
-            bsPage= serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
+            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
         }
 
         List <BusinessService> bsList;
@@ -113,7 +115,7 @@ public class BusinessRestController {
         Principal principal = request.getUserPrincipal();
 
         Optional<BusinessService> optBs = serviceService.getBusinessService(principal.getName(), businessServiceId);
-        if(optBs.isPresent()){
+        if(optBs.isPresent()) {
             return new ResponseEntity<BusinessService>(optBs.get(), HttpStatus.OK);
         }
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
@@ -122,9 +124,9 @@ public class BusinessRestController {
 
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
-        if(bs != null){
+        if(bs != null) {
             Optional<BusinessService> optBs = serviceService.updateBusinessService(businessServiceId, bs);
-            if(optBs.isPresent()){
+            if(optBs.isPresent() ){
                 return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
             }
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
@@ -145,16 +147,27 @@ public class BusinessRestController {
     }
 
     @GetMapping("/statistics")
-    public ResponseEntity<?> getStatistics(@RequestParam(required = false) LocalDate start_date, @RequestParam(required = false) LocalDate end_date, HttpServletRequest request) {
-        
+    public ResponseEntity<?> getStatistics(@RequestParam(required = false) String start,
+                                           @RequestParam(required = false) String end,
+                                           HttpServletRequest request) {
+
         Principal principal = request.getUserPrincipal();
         Map<String, Object> response = new HashMap<>();
         Double business_profit = 0.0;
         Integer business_contracts = 0;
         ServiceType business_most_requested = null;
 
+        if (start != null && end != null) {
+            LocalDate start_date;
+            LocalDate end_date;
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                start_date = LocalDate.parse(start, dateTimeFormatter);
+                end_date = LocalDate.parse(end, dateTimeFormatter);
+            } catch (Exception e) {
+                return new ResponseEntity<String>("Bad date format", HttpStatus.BAD_REQUEST);
+            }
 
-        if (start_date != null && end_date != null) {
             response.put("start_date", start_date);
             response.put("end_date", end_date);
             business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName(), Optional.of(start_date), Optional.of(end_date));

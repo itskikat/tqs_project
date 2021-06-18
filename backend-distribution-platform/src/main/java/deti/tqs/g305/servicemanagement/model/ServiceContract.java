@@ -45,7 +45,7 @@ public class ServiceContract {
         
     }
 
-    public ServiceContract(BusinessService businessService,ProviderService providerService, ServiceStatus status, Client client, int review) {
+    public ServiceContract(BusinessService businessService, ProviderService providerService, ServiceStatus status, Client client, int review) {
         this.businessService=businessService;
         this.status=status;
         this.client=client;
