@@ -1,6 +1,7 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.exception.UnauthorizedException;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.service.UserService;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest, HttpServletRequest request) throws Exception {
 
         log.info("createAuthenticationToken() given request: {}", authenticationRequest);
 
@@ -47,7 +48,22 @@ public class UserController {
 
         final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
 
-        log.info("Got them: {} // Generating token...", userDetails);
+        log.info("Got them: {}", userDetails);
+
+        // If CLIENT, check that has API token
+        if (userDetails.getAuthorities().contains(new UserAuthority(UserAuthorities.CLIENT.name()))) {
+            String APIToken = request.getHeader("APIToken");
+            log.info("CLIENT! Validating Business key: {}", APIToken);
+            if (APIToken==null) {
+                log.error("Client logged without Business API key!");
+                throw new UnauthorizedException("CLIENT login must be made through an end service.");
+            } else if (userService.getBusinessByApiKey(APIToken).isEmpty()) {
+                log.error("Client logged with INVALID Business API key!");
+                throw new UnauthorizedException("Invalid API token.");
+            }
+        } else {
+            log.info("User is not client! Generating token...");
+        }
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 

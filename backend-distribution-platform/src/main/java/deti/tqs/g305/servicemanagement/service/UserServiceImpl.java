@@ -1,5 +1,6 @@
 package deti.tqs.g305.servicemanagement.service;
 
+import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.model.User;
 import deti.tqs.g305.servicemanagement.model.UserAuthorities;
 import deti.tqs.g305.servicemanagement.model.UserAuthority;
@@ -55,4 +56,11 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public Optional<Business> getBusinessByApiKey(String apiKey) {
+        return businessRepository.findByApikey(apiKey);
+    }
+
+
 }
