@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {ProviderService} from '../models/ProviderService';
 import {ProviderServicePage} from '../models/ProviderServicePage';
 import { apiUrl } from '../../../environments/environment';
+import {ProviderStatistics} from '../models/ProviderStatistics';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +43,10 @@ export class ProviderServiceService {
     let headers = this.authservice.getOptions();
     headers['responseType'] = 'text';
     return this.http.delete(url, headers);
+  }
+
+  getProviderStatistics(start: string, end:string): Observable<ProviderStatistics>{
+    let url = apiUrl + "/provider/statistics?start=" + start + "&end=" + end;
+    return this.http.get(url,this.authservice.getOptions());
   }
 }
