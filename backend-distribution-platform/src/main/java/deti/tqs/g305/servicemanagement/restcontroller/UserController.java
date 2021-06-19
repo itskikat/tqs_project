@@ -76,6 +76,7 @@ public class UserController {
     public ResponseEntity<?> getUserLogged(HttpServletRequest request) {
         // Get user logged
         Principal principal = request.getUserPrincipal();
+        log.info("principal is {}", principal);
         // Get User instance
         User u = userService.getUserByEmail(principal.getName()).get();
         final UserDetails userDetails = userService.loadUserByUsername(principal.getName());
