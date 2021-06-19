@@ -36,14 +36,9 @@ public class UserController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    @GetMapping("/logged")
-    public ResponseEntity<?> getUserLogged(HttpServletRequest request) {
-        // Get user logged
-        Principal principal = request.getUserPrincipal();
-
-        log.info("/logged request for {}", principal.getName());
-
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(String.format("{\"email\": \"%s\"}", principal.getName()));
+    @GetMapping("/dumb")
+    public ResponseEntity<?> dumb() {
+        return ResponseEntity.ok().body("OK");
     }
 
 }

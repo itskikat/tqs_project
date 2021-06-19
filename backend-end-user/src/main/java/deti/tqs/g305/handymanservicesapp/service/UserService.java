@@ -1,13 +1,19 @@
 package deti.tqs.g305.handymanservicesapp.service;
 
+import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
 import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
 import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
+import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
+import deti.tqs.g305.handymanservicesapp.model.UserResponse;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,22 +32,24 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserDetails.class);
 
-    String url = "http://localhost:8080/api/users";
+    @Autowired
+    private RequestsHelper requestsHelper;
+
+    @Value("${enduser.apiurl}")
+    String apiBaseUrl;
 
     private RestTemplate restTemplate = new RestTemplate();
-
-    public UserDetails getUserByToken(String token) {
-        return restTemplate.getForObject(url + "/logged", UserDetails.class);
-    }
 
     public JwtResponse logIn(JwtRequest request) throws UnauthorizedException {
         // Try to log in on backbone API, if bad credentials, return 401
         JwtResponse response = null;
+        HttpEntity entity = new HttpEntity(request, requestsHelper.getHeaders());
         try {
-            response = restTemplate.postForObject(url + "/login", request, JwtResponse.class);
-            response.setJwttoken(this.getJWTToken(response.getEmail()));
+            ResponseEntity<JwtResponse> r = restTemplate.postForEntity(apiBaseUrl + "/users/login", entity, JwtResponse.class);
+            response = r.getBody();
             log.info("User logged! Token generated: {}", response.getToken());
         } catch (HttpStatusCodeException e) {
+            log.error("Backbone service returned exception with code {}", e.getStatusCode());
             throw new UnauthorizedException("Invalid credentials!");
         }
         // Validate that user has authority CLIENT, else return 401
@@ -49,23 +59,15 @@ public class UserService {
         return response;
     }
 
-    private String getJWTToken(String username) {
-        String secretKey = "mySecretKey";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
-
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(username)
-                .claim("authorities",
-                        grantedAuthorities.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();
-
-        return token;
+    public UserResponse getUserLogged(HttpServletRequest request) throws UnauthorizedException {
+        UserResponse ud = null;
+        try {
+            ud = restTemplate.exchange(apiBaseUrl + "/users/logged", HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), UserResponse.class).getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new UnauthorizedException("Session expired!");
+        }
+        return ud;
     }
+
+
 }
