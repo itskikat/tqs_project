@@ -12,13 +12,16 @@ import { ServiceLoginComponent } from "./service/auth/login/login.component";
 import { ServiceRegisterComponent } from "./service/auth/register/register.component";
 import { ServiceDashboardComponent } from "./service/dashboard/dashboard.component";
 
+// guards
+import { ClientGuard } from './shared/guard/client.guard';
+
 const routes: Routes = [
   // Service
   { path: "", component: ServiceIndexComponent },
-  { path: "services/:id", component: ServiceDetailsComponent },
-  { path: "dashboard", component: ServiceDashboardComponent },
-  { path: "provider", component: ServiceProviderComponent },
-  { path: "past", component: PastServicesComponent  },
+  { path: "services/:id", component: ServiceDetailsComponent, canActivate: [ClientGuard] },
+  { path: "dashboard", component: ServiceDashboardComponent, canActivate: [ClientGuard] },
+  { path: "provider", component: ServiceProviderComponent, canActivate: [ClientGuard] },
+  { path: "past", component: PastServicesComponent, canActivate: [ClientGuard]  },
   { path: "login", component: ServiceLoginComponent  },
   { path: "register", component: ServiceRegisterComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },

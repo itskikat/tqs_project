@@ -16,6 +16,8 @@ import { ServiceLoginComponent } from "./service/auth/login/login.component";
 import { ServiceRegisterComponent } from "./service/auth/register/register.component";
 import { ServiceDashboardComponent } from "./service/dashboard/dashboard.component";
 
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,12 @@ import { ServiceDashboardComponent } from "./service/dashboard/dashboard.compone
     ServiceLoginComponent,
     ServiceRegisterComponent
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [
+    BrowserModule, 
+    AppRoutingModule,
+    // Authentication
+    SharedModule
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
