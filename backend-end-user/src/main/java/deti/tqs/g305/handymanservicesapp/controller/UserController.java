@@ -33,6 +33,7 @@ public class UserController {
 
         // Forward request to backbone API
         JwtResponse jwtResponse = userService.logIn(authenticationRequest);
+        log.info("Service returned response {}", jwtResponse);
         return ResponseEntity.ok(jwtResponse);
     }
 
