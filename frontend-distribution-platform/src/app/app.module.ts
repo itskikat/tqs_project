@@ -59,8 +59,6 @@ import { ProviderRequestsListComponent } from './provider/provider-requests-list
 import { ProviderStatsComponent } from './provider/provider-stats/provider-stats.component';
 import { ProviderStatsCharts} from './provider/provider-stats/charts-panel/charts-panel.component';
 import { ProviderStatsProgressSection } from './provider/provider-stats/progress-section/progress-section.component';
-import { ProviderStatsChartsProfitChartComponent } from './provider/provider-stats/charts-panel/charts/profit-chart.component';
-import { ProviderStatsChartsOrdersChartComponent } from './provider/provider-stats/charts-panel/charts/orders-chart.component';
 import { ProviderStatsChartsChartPanelSummaryComponent } from './provider/provider-stats/charts-panel/chart-panel-summary/chart-panel-summary.component';
 import { ProviderStatsChartsChartPanelHeaderComponent } from './provider/provider-stats/charts-panel/chart-panel-header/chart-panel-header.component';
 import { ProviderStatsChartsLegendChartComponent } from './provider/provider-stats/charts-panel/legend-chart/legend-chart.component';
@@ -94,8 +92,6 @@ import { BusinessServiceEditFormComponent } from './business/business-service-ed
     ProviderStatsChartsChartPanelHeaderComponent,
     ProviderStatsChartsChartPanelSummaryComponent,
     ProviderStatsChartsLegendChartComponent,
-    ProviderStatsChartsOrdersChartComponent,
-    ProviderStatsChartsProfitChartComponent,
     ProviderStatsComponent,
     ProviderStatsProgressSection,
     BusinessServiceComponent,

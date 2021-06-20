@@ -4,7 +4,7 @@ import { DatePipe } from '@angular/common';
 
 export interface ProgressInfo {
   title: string;
-  value: number;
+  value: any;
 }
 
 @Component({
@@ -39,6 +39,7 @@ export class ProviderStatsProgressSection implements OnDestroy {
 
   getData(){
     let end = new Date();
+    end.setDate(end.getDate() +1)
     let start =new Date();
     if(this.selectedTimespan=="week"){
       
@@ -52,9 +53,11 @@ export class ProviderStatsProgressSection implements OnDestroy {
       start.setFullYear(start.getFullYear() - 1);
     }
     this.providerServiceService.getProviderStatistics(this.datepipe.transform(start, 'dd/MM/yyyy'), this.datepipe.transform(end, 'dd/MM/yyyy')).subscribe(data=>{
+      this.progressInfoData=[];
       this.progressInfoData.push({title:'Profit', value: data.TOTAL_PROFIT });
-      this.progressInfoData.push({title:'Profit', value: data.TOTAL_PROFIT });
-      this.progressInfoData.push({title:'Profit', value: data.TOTAL_PROFIT });
+      this.progressInfoData.push({title:'Number of contracts', value: data.TOTAL_FINISHED });
+      this.progressInfoData.push({title:'Service with most profit', value: data.PROFIT_SERVICE.service.name });
+      this.progressInfoData.push({title:'Service with most contracts', value: data.CONTRACTS_SERVICE.service.name });
     });
   }
 

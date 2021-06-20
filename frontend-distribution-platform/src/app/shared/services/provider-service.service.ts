@@ -47,6 +47,6 @@ export class ProviderServiceService {
 
   getProviderStatistics(start: string, end:string): Observable<ProviderStatistics>{
     let url = apiUrl + "/provider/statistics?start=" + start + "&end=" + end;
-    return this.http.get(url,this.authservice.getOptions());
+    return this.http.get<ProviderStatistics>(url,this.authservice.getOptions());
   }
 }
