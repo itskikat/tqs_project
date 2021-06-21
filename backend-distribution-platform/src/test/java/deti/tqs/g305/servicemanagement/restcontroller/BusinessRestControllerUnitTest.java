@@ -12,6 +12,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -61,6 +62,9 @@ class BusinessRestControllerUnitTest {
 
     @MockBean
     private JwtTokenUtil jwtToken;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;

@@ -37,6 +37,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.hamcrest.Matchers.*;
 
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
+
 
 /**
  * ProviderRestControllerUnitTest
@@ -58,6 +60,9 @@ public class ProviderRestControllerUnitTest {
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     private List<ServiceContract> listServiceContract;
     

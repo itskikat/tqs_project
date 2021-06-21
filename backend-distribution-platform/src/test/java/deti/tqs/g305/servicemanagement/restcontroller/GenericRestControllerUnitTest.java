@@ -27,6 +27,8 @@ import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -54,6 +56,9 @@ public class GenericRestControllerUnitTest {
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     List<ServiceType> listServiceType;
 
