@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Service } from "../service";
 import { Provider } from "../provider";
 import { Router } from '@angular/router';
+import { GeneralService } from 'src/app/shared/services/general.service';
+import { ServiceContract } from 'src/app/shared/models/ServiceContract';
 
 
 var servicesList:Service[] = [
@@ -92,13 +94,21 @@ var servicesList:Service[] = [
 })
 export class PastServicesComponent implements OnInit {
 
-  myServices: Service[]
+  myServices: Service[];
+
+  contracts: ServiceContract[];
   
-  constructor(public router: Router) { }
+  constructor(public router: Router, private generalService: GeneralService) { }
 
   
   ngOnInit(): void {
     this.myServices=servicesList;
+    // Get user contracts
+    this.generalService.getContracts().then(data => {
+      this.contracts=data.data;
+      console.log("GOT CONTRACTS");
+      console.log(this.contracts);
+    });
   }
 
   details(id: number): void{

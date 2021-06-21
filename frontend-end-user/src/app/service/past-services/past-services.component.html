@@ -92,58 +92,54 @@
                   </div>
                 </div>
                 <div class="flex flex-row flex-wrap mt-10 py-10  border-blueGray-200 text-center">
-                    <div class="flex w-full md:w-4/12 px-4 text-center" *ngFor="let service of myServices">
+                    <div class="flex w-full md:w-4/12 px-4 text-center" *ngFor="let contract of contracts; let i = index">
                       <div
                         class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
                       >
                         <div class="flex flex-column flex-grow flex-wrap px-4 py-5">
                           <div
-                            [class]="'mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color"
+                            class="mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full"
+                            [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
                           >
-                            <i [class]="service.icon"></i>
+                            <i class="fas fa-truck"></i>
                           </div>
-                          <h6 class="w-full text-center text-xl font-semibold">{{service.name}}</h6>
+                          <h6 class="w-full text-center text-xl font-semibold">{{contract.providerService.service.name}} | {{i%2}}</h6>
                           <p class="w-full text-center text-blueGray-400 small">
-                            <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br/>
-                            <a href="/provider">
-                                <i class="fas fa-user-circle mr-1"></i>{{service.provider.name}}<br/>
+                            <i class="fas fa-map-marked-alt mr-1"></i>{{contract.client.address}}<br/>
+                            <a [href]="'/provider/' + contract.providerService.provider.email">
+                                <i class="fas fa-user-circle mr-1"></i>{{contract.providerService.provider.full_name}}<br/>
                               </a>
-                            <i class="fas fa-tag mr-1"></i>{{service.category}}<br/>
-                            <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                            <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                            <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                            <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                            <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                            ({{service.number_reviews}} reviews) <br/>
                           </p>
-                          <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
+                          <div class="w-full text-center text-blueGray-400 small" *ngIf="contract.review">
+                            <i [class]="(contract.review >= 1) ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                            <i [class]="(contract.review >= 2) ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                            <i [class]="(contract.review >= 3) ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                            <i [class]="(contract.review >= 4) ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                            <i [class]="(contract.review >= 5) ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
+                          </div>
+                          <p *ngIf="contract.review == 0" class="w-full text-center text-blueGray-400">
+                            Not reviewed yet
+                          </p>
+                          <p class="w-full text-center mt-2 mb-4">{{contract.providerService.service.description}}</p>
                           <div class="w-full text-center mb-4">
-                                <ng-template [ngIf]="service.status == 'A'">
-                                    <span class="text-m font-semibold inline-block py-1 px-2  uppercase rounded text-emerald-600 bg-emerald-200 uppercase last:mr-0 mr-1">
-                                        Acepted
+                                <ng-template>
+                                    <span 
+                                        class="text-m font-semibold inline-block py-1 px-2  uppercase rounded text-emerald-600 bg-emerald-200 uppercase last:mr-0 mr-1">
+                                        {{contract.status}}
                                     </span>
                                 </ng-template>
-                                <ng-template [ngIf]="service.status == 'F'">
-                                    <span class="text-m font-semibold inline-block py-1 px-2 uppercase rounded text-blueGray-600 bg-blueGray-200 uppercase last:mr-0 mr-1">
-                                        Finished
-                                      </span>
-                                </ng-template>
-                                <ng-template [ngIf]="service.status == 'W'">
-                                    <span class="text-m font-semibold inline-block py-1 px-2 uppercase rounded  text-orange-600 bg-orange-200 uppercase last:mr-0 mr-1">
-                                        Waiting
-                                      </span>
-                                </ng-template>
-                                <p class="w-full text-center mt-2 ">{{service.date}}</p>
+                                <p class="w-full text-center mt-2">{{contract.date[2]}}/{{contract.date[1]}}/{{contract.date[0]}} {{contract.date[4]}}:{{contract.date[5]}}</p>
                           </div>
                           <div class="w-full text-center mb-4">
-                            <h5 class="text-xl font-semibold">{{service.price}}€</h5>
-                            <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+                            <h5 class="text-xl font-semibold">{{contract.businessService.price}}€</h5>
+                            <p class="small text-blueGray-400" *ngIf="contract.providerService.service.hasExtras"><small>Extra fees may apply</small></p>
                           </div>
                           <button
-                              [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
+                              class="mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
+                              [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
                               type="button"
                               style="margin-top: auto;"
-                              (click)="details(service.id)"
+                              (click)="details(contract.id)"
                             >
                               <i class="fas fa-plus mr-1"></i> Service details
                           </button>
