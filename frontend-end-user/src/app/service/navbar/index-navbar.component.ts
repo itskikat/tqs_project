@@ -1,4 +1,7 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { User } from "src/app/shared/models/User";
+import { AuthService } from "src/app/shared/services/auth.service";
 
 @Component({
   selector: "service-navbar",
@@ -8,11 +11,32 @@ import { Component, OnInit } from "@angular/core";
 export class ServiceNavbarComponent implements OnInit {
   navbarOpen = false;
 
-  constructor() {}
+  user: User;
 
-  ngOnInit(): void {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // Get user data
+    this.authService.loggedData().then(data => {
+      this.user=data;
+    }).catch(error => {
+      if (error.status==401) {
+        this.authService.logOut();
+        alert("Your session has expired!");
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 
   setNavbarOpen() {
     this.navbarOpen = !this.navbarOpen;
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this.router.navigate(['/login']);
   }
 }

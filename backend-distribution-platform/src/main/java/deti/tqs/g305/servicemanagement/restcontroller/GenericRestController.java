@@ -60,5 +60,10 @@ public class GenericRestController {
         return new ResponseEntity<List<ServiceType>>(sts, HttpStatus.OK);
     }
 
+    @GetMapping("/dumbclient")
+    public ResponseEntity<?> getDumbClient(HttpServletRequest request){
+        return ResponseEntity.ok().body("SUCCESS");
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package deti.tqs.g305.servicemanagement.configuration;
 
+import deti.tqs.g305.servicemanagement.model.UserAuthorities;
+import deti.tqs.g305.servicemanagement.model.UserAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
+    private BusinessMatcher businessMatcher;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
@@ -55,6 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular requests
                 .authorizeRequests()
                     .antMatchers("/api/users/login").permitAll()
+                    // CLIENT endpoints (require Business API)
+                    .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and()
                 // make sure we use stateless session; session won't be used to store user's state.
