@@ -37,10 +37,9 @@ public class BusinessService{
     }
 
     public BusinessService(double price, ServiceType service, Business business){
-        this.price=price;
-        this.service=service;
-        this.business=business;
-
+        this.price = price;
+        this.service = service;
+        this.business = business;
     }
   
 

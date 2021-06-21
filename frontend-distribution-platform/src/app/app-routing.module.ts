@@ -5,7 +5,6 @@ import {ProviderServiceListComponent} from './provider/provider-service-list/pro
 import {ProviderServiceFormComponent} from './provider/provider-service-form/provider-service-form.component';
 import {ProviderStatsComponent} from './provider/provider-stats/provider-stats.component';
 import { RegisterBusinessComponent } from './register-business/register-business.component';
-import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
 import { ProviderProfileComponent } from './provider/provider-profile/provider-profile.component';
 import { ProviderRequestsListComponent } from './provider/provider-requests-list /provider-requests-list.component';
 import { BusinessProfileComponent } from './business/business-profile/business-profile.component';
@@ -15,6 +14,7 @@ import { BusinessGuard } from './shared/guard/business.guard';
 import { BusinessServiceComponent } from './business/business-service/business-service.component';
 import {BusinessServiceFormComponent} from './business/business-service-form/business-service-form.component';
 import {BusinessServiceEditFormComponent} from './business/business-service-edit-form/business-service-edit-form.component';
+import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
 
 
 export const routes: Routes = [

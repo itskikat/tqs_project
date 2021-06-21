@@ -540,14 +540,12 @@ public class ServiceServiceUnitTest {
         serviceService.deleteBusinessService(bs_withId.getId());
 
         verify(businessServiceRepository, times(1)).delete(bs_withId);
-
     }
 
     @Test
     void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() {
         assertFalse(serviceService.deleteBusinessService(-99L));
         verify(businessServiceRepository, times(0)).delete(any());
-
     }
 
     @Test
@@ -558,7 +556,7 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByStatusAndBusinessService_Business_Email(any(), any())).thenReturn(listServiceContract);
 
-        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail(), Optional.empty(), Optional.empty());
 
         assertThat(0.0).isEqualTo(expected);
         verify(serviceContractRepository, times(1)).findByStatusAndBusinessService_Business_Email(any(), any());
@@ -580,9 +578,9 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(any())).thenReturn(listServiceContract);
 
-        List<ServiceContract> expected = serviceService.getBusinessServiceContracts(b.getEmail());
+        Integer expected = serviceService.getTotalBusinessServiceContracts(b.getEmail(), Optional.empty(), Optional.empty());
 
-        assertThat(listServiceContract).isEqualTo(expected);
+        assertThat(listServiceContract.size()).isEqualTo(expected);
 
         verify(serviceContractRepository, times(1)).findByBusinessService_Business_Email(any());
     }
@@ -599,11 +597,67 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(any())).thenReturn(st.getId());
         Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
 
-        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail());
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.empty(), Optional.empty()).get();
 
         assertThat(st).isEqualTo(expected);
 
         verify(businessServiceRepository, times(1)).findByBusiness_Email_MostRequestedServiceTypeId(any());
+        verify(serviceTypeRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void givenServiceContracts_whenGetBusinessBusinessServicesProfitDateInterval_thenReturnProfitDateInterval() {
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval(any(), any(), any())).thenReturn(0.0);
+
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1)));
+
+        assertThat(0.0).isEqualTo(expected);
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_TotalProfitDateInterval(any(), any(), any());
+    }
+
+    @Test
+    void givenBusinessServiceContracts_whenGetBusinessServiceContractsDateInterval_thenReturnServiceContractsDateInterval() {
+        bs_withId.setBusiness(b);
+
+        sc_wait.setBusinessService(bs_withId);
+        sc_accept.setBusinessService(bs_withId);
+        sc_fin.setBusinessService(bs_withId);
+
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_wait);
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_TotalContractsFinishedDateInterval(any(), any(), any())).thenReturn(listServiceContract.size());
+
+        Integer expected = serviceService.getTotalBusinessServiceContracts(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1)));
+
+        assertThat(listServiceContract.size()).isEqualTo(expected);
+
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_TotalContractsFinishedDateInterval(any(), any(), any());
+    }
+
+    @Test
+    void givenBusinessBusinessServices_whenGetMostRequestedServiceTypeDateInterval_thenReturnMostRequestServiceTypeDateInterval() {
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        BusinessService bs1 = new BusinessService(0, st, b);
+        BusinessService bs2 = new BusinessService(0, new ServiceType(), b);
+        bs_withId.setService(st);
+        bs_withId.setBusiness(b);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(any(), any(), any())).thenReturn(st.getId());
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
+
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1))).get();
+
+        assertThat(st).isEqualTo(expected);
+
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(any(), any(), any());
         verify(serviceTypeRepository, times(1)).findById(anyLong());
     }
 
@@ -742,6 +796,4 @@ public class ServiceServiceUnitTest {
         assertThat(hist).isEqualTo(Optional.empty());
         verify(providerServiceRepository, times(0)).getContractsHistory(any(),any(),any());
     }
-
-
 }

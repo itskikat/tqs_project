@@ -10,8 +10,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -170,4 +172,59 @@ public class BusinessServiceRepositoryTest {
         assertThat(found).isEqualTo(st.getId());
     }
 
+    @Test
+    void whenFindBusinessServicesTotalProfitDateIntervalByValidBusiness_thenReturnTotalProfitDateInterval() {
+        Business b = persistData_getBusiness();
+
+        Double found = businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval(b.getEmail(), LocalDate.now().minusWeeks(1), LocalDate.now().plusWeeks(1));
+        assertThat(found).isEqualTo(10.0);
+    }
+
+    @Test
+    void whenFindBusinessServicesTotalContractsFinishedDateIntervalByValidBusiness_thenReturnTotalContractsFinishedDateInterval() {
+        Business b = persistData_getBusiness();
+
+        Integer found = businessServiceRepository.findByBusiness_Email_TotalContractsFinishedDateInterval(b.getEmail(), LocalDate.now().minusWeeks(1), LocalDate.now().plusWeeks(1));
+        assertThat(found).isEqualTo(1);
+    }
+
+    @Test
+    void whenFindBusinessServicesMostRequestedServiceTypeIdDateIntervalByValidBusiness_thenReturnMostRequestedServiceTypeIdDateInterval() {
+        Business b = persistData_getBusiness();
+
+        Long found = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(b.getEmail(), LocalDate.now().minusWeeks(1), LocalDate.now().plusWeeks(1));
+        assertThat(found).isEqualTo(st.getId());
+    }
+
+
+    ServiceType st;
+    Business persistData_getBusiness() {
+        Business b = new Business();
+        b.setEmail("sample@mail.com");
+        b.setPassword("sample");
+
+        st = new ServiceType("canalizacao", true);
+        BusinessService bs2 = new BusinessService();
+        bs2.setService(st);
+        bs2.setBusiness(b);
+
+        BusinessService bs = new BusinessService(10, st, b);
+
+        Client c = new Client();
+        c.setEmail("sample2@mail.com");
+        c.setPassword("anothersample2");
+        ProviderService ps = new ProviderService();
+        ps.setService(st);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 0);
+        
+        entityManager.persist(bs);
+        entityManager.persist(bs2);
+        entityManager.persist(b);
+        entityManager.persist(st);
+        entityManager.persist(sc);
+        entityManager.persist(c);
+        entityManager.persist(ps);
+
+        return b;
+    }
 }
