@@ -15,8 +15,14 @@ export class GeneralService {
   ) { }
 
   // Operations
-  getContracts() {
-    return this.http.get<ServiceContractPage>(apiUrl + "/contracts", this.authService.getOptions()).toPromise();
+  getContracts(status: string, sort: string, order: string, page: number) {
+    let url = apiUrl + "/contracts?size=3&";
+    if (status!="ALL") { url += "status=" + status + "&"; }
+    if (sort) { url += "sort=" + sort + "&"; }
+    if (order) { url += "order=" + order + "&"; }
+    if (page>=0) { url += "page=" + page + "&"; }
+    url = url.slice(0, url.length-1);
+    return this.http.get<ServiceContractPage>(url, this.authService.getOptions()).toPromise();
   }
   
 }
