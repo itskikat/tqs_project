@@ -1,13 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { StatsProgressBarData } from '../../../@core/data/stats-progress-bar';
-import { takeWhile } from 'rxjs/operators';
-
+import {ProviderServiceService} from '../../../shared/services/provider-service.service';
+import { DatePipe } from '@angular/common';
 
 export interface ProgressInfo {
   title: string;
-  value: number;
-  activeProgress: number;
-  description: string;
+  value: any;
 }
 
 @Component({
@@ -32,34 +29,36 @@ export class ProviderStatsProgressSection implements OnDestroy {
     {
       id: 'year',
       name: 'Year'
-    },
-    {
-      id: 'all',
-      name: 'Provider'
-    },
+    }
   ]
-  progressInfoData: ProgressInfo[] = [
-    {
-      title: 'Profit',
-      value: 130,
-      activeProgress: 30,
-      description: 'Better than average week (30%)',
-    },
-    {
-      title: 'Number of calls',
-      value: 10,
-      activeProgress: 40,
-      description: 'Better than average week (40%)',
-    },
-    {
-      title: 'New custommers',
-      value: 2,
-      activeProgress: 10,
-      description: 'Better than last week (10%)',
-    },
-  ];
+  progressInfoData: ProgressInfo[] = [];
 
-  constructor() {
+  constructor(private providerServiceService: ProviderServiceService, public datepipe: DatePipe) {
+    this.getData();
+  }
+
+  getData(){
+    let end = new Date();
+    end.setDate(end.getDate() +1)
+    let start =new Date();
+    if(this.selectedTimespan=="week"){
+      
+      start.setDate(start.getDate() - 7);
+    }
+    if(this.selectedTimespan=="month"){
+      
+      start.setMonth(start.getMonth() - 1);
+    }
+    if(this.selectedTimespan=="year"){
+      start.setFullYear(start.getFullYear() - 1);
+    }
+    this.providerServiceService.getProviderStatistics(this.datepipe.transform(start, 'dd/MM/yyyy'), this.datepipe.transform(end, 'dd/MM/yyyy')).subscribe(data=>{
+      this.progressInfoData=[];
+      this.progressInfoData.push({title:'Profit', value: data.TOTAL_PROFIT });
+      this.progressInfoData.push({title:'Number of contracts', value: data.TOTAL_FINISHED });
+      this.progressInfoData.push({title:'Service with most profit', value: data.PROFIT_SERVICE.service.name });
+      this.progressInfoData.push({title:'Service with most contracts', value: data.CONTRACTS_SERVICE.service.name });
+    });
   }
 
   ngOnDestroy() {

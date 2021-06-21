@@ -21,7 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
@@ -693,7 +696,6 @@ public class ServiceServiceUnitTest {
 
     @Test
     void whenGetTotalFinishedInvalidDate_ReturnTotalFinished(){
-        Mockito.when(providerServiceRepository.getTotalFinished(eq("hello"), any(), any())).thenReturn(6);
         
         Optional<Integer> contracts = serviceService.getTotalFinished("hello", LocalDate.now().plusWeeks(1),  LocalDate.now().minusWeeks(1));
 
@@ -704,16 +706,16 @@ public class ServiceServiceUnitTest {
 
     @Test
     void whenGetTotalMostContractsProviderService_ReturnProviderService(){
-        Mockito.when(providerServiceRepository.getTotalMostContractsProviderService(eq("hello"), any(), any())).thenReturn(ps_withId.getId());
-        Mockito.when(providerServiceRepository.findById(anyLong())).thenReturn(Optional.of(ps_withId));
+        Mockito.when(providerServiceRepository.getTotalMostContractsProviderService(eq("hello"), any(), any())).thenReturn(Long.valueOf(1));
+        Mockito.when(providerServiceRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(ps_withId));
     
 
-        ProviderService ps = serviceService.getTotalMostContractsProviderService("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+        Optional<ProviderService> ps = serviceService.getTotalMostContractsProviderService("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1));
 
-        assertThat(ps).isEqualTo(ps_withId);
+        assertThat(ps.get()).isEqualTo(ps_withId);
 
         verify(providerServiceRepository, times(1)).getTotalMostContractsProviderService(any(),any(),any());
-        verify(providerServiceRepository, times(1)).findById(anyLong());
+        verify(providerServiceRepository, times(1)).findById(Long.valueOf(1));
     }
 
     @Test
@@ -728,15 +730,15 @@ public class ServiceServiceUnitTest {
 
     @Test
     void whenGetTotalMostProfitProviderService_ReturnProviderService(){
-        Mockito.when(providerServiceRepository.getTotalMostProfitProviderService(eq("hello"), any(), any())).thenReturn(ps_withId.getId());
-        Mockito.when(providerServiceRepository.findById(ps_withId.getId())).thenReturn(Optional.of(ps_withId));
+        Mockito.when(providerServiceRepository.getTotalMostProfitProviderService(eq("hello"), any(), any())).thenReturn(Long.valueOf(1) );
+        Mockito.when(providerServiceRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(ps_withId));
         
         ProviderService ps = serviceService.getTotalMostProfitProviderService("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
 
         assertThat(ps).isEqualTo(ps_withId);
 
         verify(providerServiceRepository, times(1)).getTotalMostProfitProviderService(any(),any(),any());
-        verify(providerServiceRepository, times(1)).findById(anyLong());
+        verify(providerServiceRepository, times(1)).findById(Long.valueOf(1));
     }
 
     @Test
@@ -752,14 +754,14 @@ public class ServiceServiceUnitTest {
     @Test
     void whenGetProfitHistory_ReturnProfitHistory(){
         List<Object[]> profit = new ArrayList<Object[]>();
-        LocalDate date = LocalDate.now();
+        Timestamp date = Timestamp.valueOf(LocalDateTime.now());
         profit.add( new Object[]{(Object) date, (Object) 2.0 });
 
         Mockito.when(providerServiceRepository.getProfitHistory(eq("hello"), any() , any())).thenReturn(profit);
 
         Map<LocalDate,Double> hist = serviceService.getProfitHistory("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
 
-        assertThat(hist.get(date)).isEqualTo(2.0);
+        assertThat(hist.get(date.toLocalDateTime().toLocalDate())).isEqualTo(2.0);
         verify(providerServiceRepository, times(1)).getProfitHistory(any(),any(),any());
     }
 
@@ -775,14 +777,14 @@ public class ServiceServiceUnitTest {
     void whenGetContractsHistory_ReturnContractsHistory(){
         
         List<Object[]> profit = new ArrayList<Object[]>();
-        LocalDate date = LocalDate.now();
-        profit.add( new Object[]{(Object) date, (Object) 2 });
+        Timestamp date = Timestamp.valueOf(LocalDateTime.now());
+        profit.add( new Object[]{(Object) date, (Object) BigInteger.valueOf(2) });
 
         Mockito.when(providerServiceRepository.getContractsHistory(eq("hello"), any() , any())).thenReturn(profit);
 
         Map<LocalDate,Integer> hist = serviceService.getContractsHistory("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
 
-        assertThat(hist.get(date)).isEqualTo(2);
+        assertThat(hist.get(date.toLocalDateTime().toLocalDate())).isEqualTo(2);
         verify(providerServiceRepository, times(1)).getContractsHistory(any(),any(),any());
 
     }

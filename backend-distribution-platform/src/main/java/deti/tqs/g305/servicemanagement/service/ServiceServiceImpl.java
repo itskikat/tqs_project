@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Optional;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import deti.tqs.g305.servicemanagement.model.*;
 
@@ -351,7 +353,11 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Optional<Double> getTotalProfit(String provider_id,LocalDate start_date, LocalDate end_date ){
         if(start_date.isBefore(end_date)){
-            return Optional.of(providerServiceRepository.getTotalProfit(provider_id, start_date, end_date));
+            Double d = providerServiceRepository.getTotalProfit(provider_id, start_date, end_date);
+            if(d!=null){
+                return Optional.of(d);
+            }
+            return Optional.of(0.0);
         }
         return Optional.empty();
     }
@@ -359,7 +365,11 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Optional<Integer> getTotalFinished(String provider_id,LocalDate start_date, LocalDate end_date ){
         if(start_date.isBefore(end_date)){
-            return Optional.of(providerServiceRepository.getTotalFinished(provider_id, start_date, end_date));
+            Integer i = providerServiceRepository.getTotalFinished(provider_id, start_date, end_date);
+            if(i!=null){
+                return Optional.of(i);
+            }
+            return Optional.of(0);
         }
         return Optional.empty();
     }
@@ -367,8 +377,10 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Optional<ProviderService> getTotalMostContractsProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
         if(start_date.isBefore(end_date)){
-            long id = providerServiceRepository.getTotalMostContractsProviderService(provider_id, start_date, end_date);
-            return providerServiceRepository.findById(id);
+            Long id = providerServiceRepository.getTotalMostContractsProviderService(provider_id, start_date, end_date);
+            if(id!=null){
+                return providerServiceRepository.findById(id);
+            }
         }
         return Optional.empty();
     }
@@ -376,8 +388,10 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Optional<ProviderService> getTotalMostProfitProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
         if(start_date.isBefore(end_date)){
-            long id= providerServiceRepository.getTotalMostProfitProviderService(provider_id, start_date, end_date);
-            return providerServiceRepository.findById(id);
+            Long id= providerServiceRepository.getTotalMostProfitProviderService(provider_id, start_date, end_date);
+            if(id!=null){
+                return providerServiceRepository.findById(id);
+            }
         }
         return Optional.empty();
     }
@@ -387,10 +401,13 @@ public class ServiceServiceImpl implements ServiceService {
         if(start_date.isBefore(end_date)){
             Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
             List<Object[]> results = providerServiceRepository.getProfitHistory(provider_id, start_date, end_date);
-            for(Object[] obj : results){
-                profitHistory.put((LocalDate) obj[0], (Double) obj[1]);
-            }
-            return Optional.of(profitHistory);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    profitHistory.put(t.toLocalDateTime().toLocalDate() , (Double) obj[1]);
+                }
+                return Optional.of(profitHistory);
+            }  
         }
         return Optional.empty();
     }
@@ -400,10 +417,14 @@ public class ServiceServiceImpl implements ServiceService {
         if(start_date.isBefore(end_date)){
             Map<LocalDate, Integer> contractHistory = new TreeMap<LocalDate, Integer>();
             List<Object[]> results = providerServiceRepository.getContractsHistory(provider_id, start_date, end_date);
-            for(Object[] obj : results){
-                contractHistory.put((LocalDate) obj[0], (Integer) obj[1]);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    BigInteger bi = (BigInteger) obj[1];
+                    contractHistory.put(t.toLocalDateTime().toLocalDate() ,bi.intValue() );
+                }
+                return Optional.of(contractHistory);
             }
-            return Optional.of(contractHistory);
         }
         return Optional.empty();
     }
