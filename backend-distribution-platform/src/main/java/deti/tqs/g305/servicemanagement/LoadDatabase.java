@@ -28,7 +28,6 @@ class LoadDatabase {
     // docker exec -it tqs_project_db_1 bash
     // psql -h 127.0.0.1 -d demo -U demo
 
-
     return args -> {
       Client c = new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now());
       clientRepository.save(c);
@@ -36,7 +35,7 @@ class LoadDatabase {
       Business b = new Business("plumber@plumber.com", "Plumber.com, LDA", bcryptEncoder.encode("abc"), "lala", "lele", "lili","lulu");
       businessRepository.save(b);
 
-      ServiceType st = new ServiceType("canalização", true);
+      ServiceType st = new ServiceType("canalização", false);
       serviceTypeRepository.save(st);
 
       BusinessService bs = new BusinessService(10, st, b);
@@ -72,10 +71,10 @@ class LoadDatabase {
       ProviderService ps1 = new ProviderService("bla bla", p, st1);
       providerServiceRepository.save(ps1);
 
-      BusinessService bs1 = new BusinessService(10, st1, b);
+      BusinessService bs1 = new BusinessService(15, st1, b);
       businessServiceRepository.save(bs1);
 
-      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
+      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 5);
       serviceContractRepository.save(sc1);
 
       ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 2);
