@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.repository.*;
+import deti.tqs.g305.servicemanagement.service.messaging.NotificationController;
 import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
@@ -53,6 +54,9 @@ public class ServiceServiceUnitTest {
 
     @Mock( lenient = true)
     private ServiceTypeRepository serviceTypeRepository;
+
+    @Mock( lenient = true)
+    private NotificationController notificationController;
 
     @InjectMocks
     private ServiceServiceImpl serviceService;

@@ -59,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.cors().and().csrf().disable()
                 // dont authenticate this particular requests
                 .authorizeRequests()
+                    .antMatchers("/notification/**").permitAll()
+                    .antMatchers("/notification/info/*").permitAll()
                     .antMatchers("/api/users/login").permitAll()
                     // CLIENT endpoints (require Business API)
                     .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
