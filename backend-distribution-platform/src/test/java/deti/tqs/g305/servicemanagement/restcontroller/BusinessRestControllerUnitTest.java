@@ -237,7 +237,7 @@ class BusinessRestControllerUnitTest {
 
         when(serviceService.getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(profit);
         when(serviceService.getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(listServiceContract.size());
-        when(serviceService.getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(st);
+        when(serviceService.getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(Optional.of(st));
 
         mvc.perform(get("/api/businesses/statistics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -258,7 +258,7 @@ class BusinessRestControllerUnitTest {
 
         when(serviceService.getBusinessBusinessServiceProfit(any(), any(), any())).thenReturn(profit);
         when(serviceService.getTotalBusinessServiceContracts(any(), any(), any())).thenReturn(3);
-        when(serviceService.getBusinessMostRequestedServiceType(any(), any(), any())).thenReturn(st);
+        when(serviceService.getBusinessMostRequestedServiceType(any(), any(), any())).thenReturn(Optional.of(st));
 
         mvc.perform(get("/api/businesses/statistics?start=11/12/2021&end=11/12/2021"))
                 .andExpect(status().isOk())

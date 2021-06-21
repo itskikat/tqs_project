@@ -48,7 +48,9 @@ public interface ServiceService {
     public Optional<BusinessService> updateBusinessService(long businessServiceId, BusinessService businessService);
     public Page<BusinessService> getBusinessBusinessServices(String businessId, Pageable page, Optional<String> name);
 
+    //Business statistics
     public Double getBusinessBusinessServiceProfit(String businessId, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
     public Integer getTotalBusinessServiceContracts(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
-    public ServiceType getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
+    public Optional<ServiceType> getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date);
+    public Optional<Map<LocalDate,Double>> getBusinessProfitHistory (String business_id, LocalDate start_date, LocalDate end_date);
 }

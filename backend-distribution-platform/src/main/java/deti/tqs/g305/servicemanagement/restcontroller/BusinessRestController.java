@@ -155,7 +155,8 @@ public class BusinessRestController {
         Map<String, Object> response = new HashMap<>();
         Double business_profit = 0.0;
         Integer business_contracts = 0;
-        ServiceType business_most_requested = null;
+        Optional<ServiceType> business_most_requested = null;
+        Optional<Map<LocalDate,Double>> hist_profit = Optional.empty();
 
         if (start != null && end != null) {
             LocalDate start_date;
@@ -173,16 +174,23 @@ public class BusinessRestController {
             business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName(), Optional.of(start_date), Optional.of(end_date));
             business_contracts = serviceService.getTotalBusinessServiceContracts(principal.getName(), Optional.of(start_date), Optional.of(end_date));
             business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.of(start_date), Optional.of(end_date));
+            hist_profit = serviceService.getBusinessProfitHistory(principal.getName(), start_date, end_date);
         }
         else {
             business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName(), Optional.empty(), Optional.empty());
             business_contracts = serviceService.getTotalBusinessServiceContracts(principal.getName(), Optional.empty(), Optional.empty());
             business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.empty(), Optional.empty());
         }
-
+        
         response.put("profit", business_profit);
         response.put("total-contracts", business_contracts);
-        response.put("most-requested-ServiceType", business_most_requested);
+        if(business_most_requested.isPresent()){
+            response.put("most-requested-ServiceType", business_most_requested);
+        }
+        if(hist_profit.isPresent()){
+            response.put("profit-history", hist_profit);
+        }
+        
         
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }

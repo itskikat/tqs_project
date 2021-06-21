@@ -594,7 +594,7 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(any())).thenReturn(st.getId());
         Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
 
-        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.empty(), Optional.empty());
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.empty(), Optional.empty()).get();
 
         assertThat(st).isEqualTo(expected);
 
@@ -650,7 +650,7 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(any(), any(), any())).thenReturn(st.getId());
         Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
 
-        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1)));
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1))).get();
 
         assertThat(st).isEqualTo(expected);
 

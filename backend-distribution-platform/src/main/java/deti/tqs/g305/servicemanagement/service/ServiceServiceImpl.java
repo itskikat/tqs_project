@@ -309,15 +309,33 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceType getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+    public Optional<ServiceType> getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
         long id;
         if (start_date.isPresent() && end_date.isPresent()) {
-            id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
+            if(start_date.get().isBefore(end_date.get()) ){
+                id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
+            }
+            else{
+                return Optional.empty();
+            }
         }
         else {
             id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
         }
-        return serviceTypeRepository.findById(id);
+        return Optional.of(serviceTypeRepository.findById(id));
+    }
+
+    @Override
+    public Optional<Map<LocalDate,Double>> getBusinessProfitHistory(String business_id, LocalDate start_date, LocalDate end_date){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
+            List<Object[]> results = businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval_History(business_id, start_date, end_date);
+            for(Object[] obj : results){
+                profitHistory.put((LocalDate) obj[0], (Double) obj[1]);
+            }
+            return Optional.of(profitHistory);
+        }
+        return Optional.empty();
     }
   
     public Optional<BusinessService> getBusinessService(String name, Long businessServiceId){
