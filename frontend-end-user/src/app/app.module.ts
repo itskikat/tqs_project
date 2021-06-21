@@ -17,6 +17,8 @@ import { ServiceRegisterComponent } from "./service/auth/register/register.compo
 import { ServiceDashboardComponent } from "./service/dashboard/dashboard.component";
 
 import { SharedModule } from './shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -35,8 +37,11 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     BrowserModule, 
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     // Authentication
-    SharedModule
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

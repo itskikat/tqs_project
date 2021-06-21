@@ -1,4 +1,4 @@
 export interface User{
-    email: String,
+    email?: String,
     full_name?: String
 }

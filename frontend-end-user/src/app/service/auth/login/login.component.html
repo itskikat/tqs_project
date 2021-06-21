@@ -8,7 +8,11 @@
           <div class="text-center mb-3 mt-5">
             <h6 class="text-blueGray-500 text-sm font-bold">Sign in</h6>
 
-            <nb-alert *ngIf="invalid" status="danger">{{invalid}}</nb-alert>
+            <div class="text-white px-6 py-4 border-0 rounded relative my-4 bg-red-500" *ngIf="invalid">
+              <span class="inline-block align-middle mr-8">
+                {{invalid}}
+              </span>
+            </div>            
           </div>
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)">
             <div class="relative w-full mb-3">
