@@ -15,7 +15,7 @@ public class Client extends User {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "location_city")
+    @ManyToOne
     private City location_city;
 
     @Column(name = "birthdate")

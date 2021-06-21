@@ -25,7 +25,7 @@ class LoadDatabase {
 
   @Bean
   CommandLineRunner initDatabase(ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
-  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository,
+                                 ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository,
                                  CityRepository cityRepository, DistrictRepository districtRepository) {
 
     // docker exec -it tqs_project_db_1 bash
@@ -45,7 +45,16 @@ class LoadDatabase {
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
+      District district = new District(1L, "Lisbon");
+      districtRepository.save(district);
+
+      City city = new City(1L, "Almada", district);
+      cityRepository.save(city);
+
       Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
+      List<City> provider_location = new ArrayList<>();
+      provider_location.add(city);
+      p.setLocation_city(provider_location);
       providerRepository.save(p);
 
       ProviderService ps = new ProviderService("bla bla", p, st);
@@ -75,7 +84,6 @@ class LoadDatabase {
       ProviderService ps1 = new ProviderService("bla bla", p, st1);
       providerServiceRepository.save(ps1);
 
-
       BusinessService bs1 = new BusinessService(10, st1, b);
       businessServiceRepository.save(bs1);
 
@@ -91,25 +99,13 @@ class LoadDatabase {
       BusinessService bs3 = new BusinessService(45, st1, b);
       businessServiceRepository.save(bs3);
 
-
-      District district = new District(01L, "Lisbon");
-      districtRepository.save(district);
-
-      City city = new City(2L, "Almada", district);
-      cityRepository.save(city);
-
       Client c2 = new Client("xpto22@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta2", "lalale", city, LocalDate.now());
       clientRepository.save(c2);
 
-      List<City> provider_location = new ArrayList<>();
-      provider_location.add(city);
-      p.setLocation_city(provider_location);
-      providerRepository.save(p);
-      
     };
-    
+
   }
-  
+
 
 }
 
