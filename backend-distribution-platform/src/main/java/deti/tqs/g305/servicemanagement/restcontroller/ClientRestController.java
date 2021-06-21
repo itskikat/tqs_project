@@ -142,7 +142,7 @@ public class ClientRestController {
     }
 
     @GetMapping("/matches")
-    public ResponseEntity<?> getServiceProviders(@Valid @RequestBody(required = true) ServiceContract sc, HttpServletRequest request){
+    public ResponseEntity<?> getMatchingServiceProviders(@Valid @RequestBody(required = true) ServiceContract sc, HttpServletRequest request){
         if(sc != null) {
             Principal principal = request.getUserPrincipal();
             City client_location = (clientRepository.findByEmail(principal.getName()).get()).getLocation_city();
