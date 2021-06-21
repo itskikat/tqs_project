@@ -45,16 +45,12 @@ export class ProviderStatsChartsChartPanelHeaderComponent implements OnDestroy {
     this.chartLegend = [
       {
         iconColor: orderProfitLegend.firstItem,
-        title: 'All service',
+        title: 'Orders',
       },
       {
         iconColor: orderProfitLegend.secondItem,
-        title: 'Best service',
-      },
-      {
-        iconColor: orderProfitLegend.thirdItem,
-        title: 'Worst service',
-      },
+        title: 'Profit',
+      }
     ];
   }
 
