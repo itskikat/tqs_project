@@ -182,13 +182,13 @@ public class BusinessRestController {
             business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.empty(), Optional.empty());
         }
         
-        response.put("profit", business_profit);
-        response.put("total-contracts", business_contracts);
+        response.put("PROFIT", business_profit);
+        response.put("TOTAL_CONTRACTS", business_contracts);
         if(business_most_requested.isPresent()){
-            response.put("most-requested-ServiceType", business_most_requested);
+            response.put("MOST_REQUESTED_SERVICETYPE", business_most_requested);
         }
         if(hist_profit.isPresent()){
-            response.put("profit-history", hist_profit);
+            response.put("PROFIT_HISTORY", hist_profit);
         }
         
         

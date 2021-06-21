@@ -332,10 +332,13 @@ public class ServiceServiceImpl implements ServiceService {
         if(start_date.isBefore(end_date)){
             Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
             List<Object[]> results = businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval_History(business_id, start_date, end_date);
-            for(Object[] obj : results){
-                profitHistory.put((LocalDate) obj[0], (Double) obj[1]);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    profitHistory.put(t.toLocalDateTime().toLocalDate() , (Double) obj[1]);
+                }
+                return Optional.of(profitHistory);
             }
-            return Optional.of(profitHistory);
         }
         return Optional.empty();
     }

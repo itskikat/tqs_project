@@ -241,9 +241,9 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(get("/api/businesses/statistics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.profit", is(30.0)))
-                .andExpect(jsonPath("$.total-contracts", is(listServiceContract.size())))
-                .andExpect(jsonPath("$.most-requested-ServiceType.name", is(st.getName())));
+                .andExpect(jsonPath("$.PROFIT", is(30.0)))
+                .andExpect(jsonPath("$.TOTAL_CONTRACTS", is(listServiceContract.size())))
+                .andExpect(jsonPath("$.MOST_REQUESTED_SERVICETYPE.name", is(st.getName())));
 
         verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()));
         verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()));
@@ -262,7 +262,7 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(get("/api/businesses/statistics?start=11/12/2021&end=11/12/2021"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.profit", is(30.0)))
+                .andExpect(jsonPath("$.PROFIT", is(30.0)))
                 .andExpect(jsonPath("$.start_date[0]", is(2021)))
                 .andExpect(jsonPath("$.start_date[1]", is(12)))
                 .andExpect(jsonPath("$.start_date[2]", is(11)));
@@ -271,6 +271,5 @@ class BusinessRestControllerUnitTest {
         verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), any(), any());
         verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), any(), any());
     }
-
 
 }
