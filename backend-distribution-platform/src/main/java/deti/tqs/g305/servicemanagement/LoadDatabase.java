@@ -12,6 +12,8 @@ import deti.tqs.g305.servicemanagement.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 class LoadDatabase {
@@ -23,7 +25,8 @@ class LoadDatabase {
 
   @Bean
   CommandLineRunner initDatabase(ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
-  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository) {
+  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository,
+                                 CityRepository cityRepository, DistrictRepository districtRepository) {
 
     // docker exec -it tqs_project_db_1 bash
     // psql -h 127.0.0.1 -d demo -U demo
@@ -87,6 +90,21 @@ class LoadDatabase {
 
       BusinessService bs3 = new BusinessService(45, st1, b);
       businessServiceRepository.save(bs3);
+
+
+      District district = new District(01L, "Lisbon");
+      districtRepository.save(district);
+
+      City city = new City(2L, "Almada", district);
+      cityRepository.save(city);
+
+      Client c2 = new Client("xpto22@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta2", "lalale", city, LocalDate.now());
+      clientRepository.save(c2);
+
+      List<City> provider_location = new ArrayList<>();
+      provider_location.add(city);
+      p.setLocation_city(provider_location);
+      providerRepository.save(p);
       
     };
     

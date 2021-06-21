@@ -1,5 +1,9 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
+import deti.tqs.g305.servicemanagement.model.*;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
+import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
+import deti.tqs.g305.servicemanagement.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,15 +24,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +41,12 @@ public class ClientRestController {
 
     @Autowired
     private ServiceService serviceService;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ProviderRepository providerRepository;
 
     @PostMapping("/contracts")
     public ResponseEntity<?> createServiceContract( @Valid @RequestBody(required = false) ServiceContract sc){
@@ -134,5 +139,31 @@ public class ClientRestController {
             return new ResponseEntity<String>("Could not find service contract", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/matches")
+    public ResponseEntity<?> getServiceProviders(@Valid @RequestBody(required = true) ServiceContract sc, HttpServletRequest request){
+        if(sc != null) {
+            Principal principal = request.getUserPrincipal();
+            City client_location = (clientRepository.findByEmail(principal.getName()).get()).getLocation_city();
+            List<Provider> response = new ArrayList<>();
+
+            ProviderService contract_ps = sc.getProviderService();
+            List<Provider> providers = providerRepository.findAll();
+
+            if(providers != null) {
+                System.out.println("PROVIDER");
+                for (Provider p : providers) {
+                    if (p.getProviderServices().contains(contract_ps)) {
+                        System.out.println("TEM O MESMO SERVICE!");
+                        if (p.getLocation_city().contains(client_location)) {
+                            response.add(p);
+                        }
+                    }
+                }
+            }
+            return new ResponseEntity<List<Provider>>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Invalid service contract! Could not find Providers!", HttpStatus.NOT_FOUND);
     }
 }
