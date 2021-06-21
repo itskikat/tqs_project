@@ -33,12 +33,18 @@ public class GeneralService {
     public Map getContracts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required=false) String status,
-        @RequestParam(required=false) Long type,
         @RequestParam(defaultValue = "date") String sort,
         @RequestParam(defaultValue = "ASC") String order,
+        @RequestParam(defaultValue = "10") int size,
         HttpServletRequest request
     ) {
-        return restTemplate.exchange(apiBaseUrl + "/clients/contracts", HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), Map.class).getBody();
+        log.info("getContracts for status {}, sorted by {} {}, page {}", status, sort, order, page);
+        StringBuilder query = new StringBuilder(String.format("?page=%d&sort=%s&order=%s&size=%d", page, sort, order, size));
+        if (status != null) {
+            query.append(String.format("&status=%s", status));
+        }
+        log.info("query: {}", query.toString());
+        return restTemplate.exchange(apiBaseUrl + "/clients/contracts" + query.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), Map.class).getBody();
     }
 
 }

@@ -26,12 +26,12 @@ public class GeneralController {
     public ResponseEntity<?> getServiceContracts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required=false) String status,
-        @RequestParam(required=false) Long type,
         @RequestParam(defaultValue = "date") String sort,
         @RequestParam(defaultValue = "ASC") String order,
+        @RequestParam(defaultValue = "10") int size,
         HttpServletRequest request
     ) {
-        return ResponseEntity.ok(generalService.getContracts(page, status, type, sort, order, request));
+        return ResponseEntity.ok(generalService.getContracts(page, status, sort, order, size, request));
     }
 
 }
