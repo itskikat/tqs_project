@@ -147,6 +147,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public List<ServiceContract> getProviderServiceContracts(String username) {
+        return serviceContractRepository.findByProviderService_Provider_Email(username);
+    }
+
+    @Override
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId) {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
         

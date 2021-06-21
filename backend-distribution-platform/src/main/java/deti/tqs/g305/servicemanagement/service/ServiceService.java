@@ -23,6 +23,7 @@ public interface ServiceService {
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);
     public Page<ServiceContract> getServiceContracts(String username, Pageable page, String userType, Optional<ServiceStatus> status, Optional<Long> type);
+    public List<ServiceContract> getProviderServiceContracts(String username);
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId);
 
     // ProviderService

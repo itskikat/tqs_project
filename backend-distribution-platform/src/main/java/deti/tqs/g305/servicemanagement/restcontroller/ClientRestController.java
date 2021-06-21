@@ -150,14 +150,17 @@ public class ClientRestController {
 
             ProviderService contract_ps = sc.getProviderService();
             List<Provider> providers = providerRepository.findAll();
-
             if(providers != null) {
                 System.out.println("PROVIDER");
                 for (Provider p : providers) {
                     if (p.getProviderServices().contains(contract_ps)) {
                         System.out.println("TEM O MESMO SERVICE!");
                         if (p.getLocation_city().contains(client_location)) {
-                            response.add(p);
+                            System.out.println("City do client!");
+                            List<ServiceContract> provider_contracts = serviceService.getProviderServiceContracts(p.getEmail());
+                            if (!isProviderBusy(provider_contracts)) {
+                                response.add(p);
+                            }
                         }
                     }
                 }
@@ -165,5 +168,14 @@ public class ClientRestController {
             return new ResponseEntity<List<Provider>>(response, HttpStatus.OK);
         }
         return new ResponseEntity<String>("Invalid service contract! Could not find Providers!", HttpStatus.NOT_FOUND);
+    }
+
+    private boolean isProviderBusy(List<ServiceContract> serviceContracts) {
+        for (ServiceContract sc: serviceContracts) {
+            if (sc.getStatus() != ServiceStatus.WAITING && sc.getStatus() != ServiceStatus.ACCEPTED) {
+                return false;
+            }
+        }
+        return true;
     }
 }
