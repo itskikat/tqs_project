@@ -6,6 +6,7 @@ import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
 import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
 import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
 import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
+import deti.tqs.g305.handymanservicesapp.model.UserResponse;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
@@ -65,6 +75,36 @@ public class UserControllerUnitTest {
         // Call controller and validate response
         mvc.perform(post("/api/users/login").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(request)))
             .andExpect(status().isUnauthorized());
+
+        // Validate that service was called
+        verify(userService, times(1)).logIn(any());
+    }
+
+    @Test
+    void whenLoggedGetLogged_thenReturnUserResponse() throws Exception {
+        // Mock service
+        when(userService.getUserLogged(any())).thenReturn(new UserResponse(new UserAuthority("CLIENT"), "Person Name", "email@ua.pt"));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/users/logged"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.email", is("email@ua.pt")));
+
+        // Validate that service was called
+        verify(userService, times(1)).getUserLogged(any());
+    }
+
+    @Test
+    void whenExpiredGetLogged_thenReturnError() throws Exception {
+        // Mock service
+        when(userService.getUserLogged(any())).thenThrow(new UnauthorizedException("Session expired!"));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/users/logged"))
+                .andExpect(status().isUnauthorized());
+
+        // Validate that service was called
+        verify(userService, times(1)).getUserLogged(any());
     }
 
 }

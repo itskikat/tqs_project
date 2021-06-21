@@ -37,9 +37,9 @@ public class UserController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    @GetMapping("/dumb")
-    public ResponseEntity<?> dumb() {
-        return ResponseEntity.ok().body("OK");
+    @GetMapping("/logged")
+    public ResponseEntity<UserResponse> createAuthenticationToken(HttpServletRequest request) throws Exception {
+        return ResponseEntity.ok(userService.getUserLogged(request));
     }
 
 }

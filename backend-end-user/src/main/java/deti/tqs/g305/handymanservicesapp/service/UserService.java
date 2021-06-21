@@ -49,11 +49,12 @@ public class UserService {
             response = r.getBody();
             log.info("User logged! Token generated: {}", response.getToken());
         } catch (HttpStatusCodeException e) {
-            log.error("Backbone service returned exception with code {}", e.getStatusCode());
+            log.error("Backbone service returned exception with code {}, returning invalid credentials...", e.getStatusCode());
             throw new UnauthorizedException("Invalid credentials!");
         }
         // Validate that user has authority CLIENT, else return 401
         if (!response.getType().getAuthority().equals("CLIENT")) {
+            log.error("Stop! User is {} (not CLIENT). Returning 401...", response.getType().getAuthority());
             throw new UnauthorizedException(String.format("Your authority \"%s\" does not grant you access to this service!", response.getType().getAuthority()));
         }
         return response;
