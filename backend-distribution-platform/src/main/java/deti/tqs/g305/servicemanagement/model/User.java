@@ -1,6 +1,7 @@
 package deti.tqs.g305.servicemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 
@@ -20,7 +21,6 @@ public class User {
     @Column(name = "full_name")
     private String full_name;
 
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -34,4 +34,13 @@ public class User {
         this.password = password;
     }
 
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

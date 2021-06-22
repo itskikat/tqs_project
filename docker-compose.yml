@@ -1,6 +1,7 @@
 version: '3'
 services:
   
+
   frontend-distribution-platform:
     build: ./frontend-distribution-platform
     volumes:

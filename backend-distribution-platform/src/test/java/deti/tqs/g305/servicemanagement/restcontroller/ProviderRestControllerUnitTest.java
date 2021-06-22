@@ -1,5 +1,6 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
+import deti.tqs.g305.servicemanagement.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -8,24 +9,21 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.TreeMap;
+import java.time.LocalDate;
 
 import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
-import deti.tqs.g305.servicemanagement.model.ProviderService;
-import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
+
 import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
@@ -38,6 +36,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.hamcrest.Matchers.*;
+
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 
 
 /**
@@ -60,6 +60,9 @@ public class ProviderRestControllerUnitTest {
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     private List<ServiceContract> listServiceContract;
     
@@ -204,4 +207,148 @@ public class ProviderRestControllerUnitTest {
         verify(serviceService, times(1)).getServiceContract(any(),anyLong());
     }
 
+    // ProviderService
+    @Test
+    @WithMockUser("duke")
+    void whenPostValidProviderService_thenCreateProviderService() throws Exception {
+        ProviderService bs = new ProviderService("LOREN ipsam", new Provider(), new ServiceType());
+
+        when(serviceService.saveProviderService(any())).thenReturn(Optional.of(bs));
+
+        mvc.perform(post("/api/provider/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.description", is(bs.getDescription())))
+            .andExpect(jsonPath("$.service.hasExtras", is(false)));
+
+        verify(serviceService, times(1)).saveProviderService(any());
+
+    }
+
+    @Test
+    @WithMockUser("duke")
+    void whenPostInvalidProviderService_thenReturnBadRequest() throws Exception {
+
+        mvc.perform(post("/api/provider/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("bad service")))
+                .andExpect(status().isBadRequest());
+
+        verify(serviceService, times(0)).saveProviderService(any());
+    }
+
+
+    @Test
+    @WithMockUser("duke")
+    void whenPutValidProviderService_thenUpdateProviderService() throws Exception {
+        ProviderService bs = new ProviderService(null, new Provider(), new ServiceType());
+        bs.setId(2);
+        bs.setDescription("HElloo");
+
+        when(serviceService.updateProviderService(anyLong(),any())).thenReturn(Optional.of(bs));
+
+        mvc.perform(put("/api/provider/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description", is(bs.getDescription())));
+
+        verify(serviceService, times(1)).updateProviderService(anyLong(),any());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    void whenPutInvalidProviderService_thenReturnBadRequest() throws Exception {
+
+        mvc.perform(put("/api/provider/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson("another bad service")))
+                .andExpect(status().isBadRequest());
+
+        verify(serviceService, times(0)).updateProviderService(anyLong(),any());
+    }
+
+
+    @Test
+    @WithMockUser("duke")
+    void whenDeleteValidProviderService_thenDeleteProviderService() throws Exception {
+        ProviderService bs = new ProviderService(null, new Provider(), new ServiceType());
+        bs.setId(2);
+
+        when(serviceService.deleteProviderService(anyLong())).thenReturn(true);
+
+        mvc.perform(delete("/api/provider/services/delete/" + bs.getId()))
+                .andExpect(status().isOk());
+
+        verify(serviceService, times(1)).deleteProviderService(anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllProviderServices_thenReturnProviderServices() throws  Exception {
+
+        Provider p = new Provider();
+
+        ProviderService bs = new ProviderService();
+        bs.setProvider(p);
+        ProviderService bs2 = new ProviderService();
+        bs2.setProvider(p);
+        ProviderService bs3 = new ProviderService();
+        bs3.setProvider(p);
+
+        List<ProviderService> listProviderService = new ArrayList<>();
+        listProviderService.add(bs);
+        listProviderService.add(bs2);
+        listProviderService.add(bs3);
+
+        Pageable page = PageRequest.of(10,10);
+        Page<ProviderService> optProviderServices = new PageImpl(listProviderService, page, 1L);
+
+        when(serviceService.getProviderProviderServices(any(), any(), eq(Optional.empty()))).thenReturn(optProviderServices);
+
+        mvc.perform(get("/api/provider/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(optProviderServices)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data", hasSize(3)));
+
+        verify(serviceService, times(1)).getProviderProviderServices(any(), any(), eq(Optional.empty()));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetExistentProviderService_thenReturnProviderService() throws  Exception {
+        ProviderService bs = new ProviderService(null, new Provider(), new ServiceType());
+        bs.setId(2);
+        bs.setDescription("I have tests");
+
+        when(serviceService.getProviderService(any(), anyLong())).thenReturn(Optional.of(bs));
+
+        mvc.perform(get("/api/provider/services/" + bs.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description", is(bs.getDescription())));
+
+        verify(serviceService, times(1)).getProviderService(any(), anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetInexistentProviderService_thenReturnBadRequest() throws  Exception {
+        when(serviceService.getProviderService(any(), anyLong())).thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/provider/services/9283724"))
+                .andExpect(status().isBadRequest());
+
+        verify(serviceService, times(1)).getProviderService(any(), anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetStatistics_thenStatistics() throws  Exception {
+        when(serviceService.getTotalFinished(any(), any(),any())).thenReturn(Optional.of(3));
+        when(serviceService.getTotalProfit(any(), any(),any())).thenReturn(Optional.of(3.0));
+        when(serviceService.getTotalMostProfitProviderService(any(), any(),any())).thenReturn(Optional.of(new ProviderService()));
+        when(serviceService.getTotalMostContractsProviderService(any(), any(),any())).thenReturn(Optional.of(new ProviderService()));
+        when(serviceService.getProfitHistory(any(), any(),any())).thenReturn(Optional.of(new TreeMap<LocalDate, Double>()));
+        when(serviceService.getContractsHistory(any(), any(),any())).thenReturn(Optional.of(new TreeMap<LocalDate, Integer>()));
+        
+        mvc.perform(get("/api/provider/statistics?start=11/12/2021&end=11/12/2021"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.TOTAL_PROFIT", is(3.0)));
+
+        verify(serviceService, times(1)).getTotalProfit(any(), any(),any());
+    }
+
 }
+

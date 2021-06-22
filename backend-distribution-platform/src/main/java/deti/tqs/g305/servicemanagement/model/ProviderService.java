@@ -1,7 +1,7 @@
 package deti.tqs.g305.servicemanagement.model;
 
 /**
- * ProviderService
+ * ProviderUserService
  */
 
 
@@ -32,7 +32,7 @@ public class ProviderService {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy="providerService")
+    @OneToMany(mappedBy="providerService", cascade = { CascadeType.ALL })
     private List<ServiceContract> serviceContract;
 
     public ProviderService(){

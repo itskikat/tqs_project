@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.List;
 
+
 @Entity
 @Data
 @Table(name="BUSINESS_SERVICE")
@@ -24,22 +25,21 @@ public class BusinessService{
     private ServiceType service;
     
     @Column(name = "price")
-    private int price;
+    private double price;
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy="businessService")
+    @OneToMany(mappedBy="businessService", cascade = { CascadeType.ALL })
     private List<ServiceContract> serviceContract;
 
     public BusinessService(){
 
     }
 
-    public BusinessService(int price, ServiceType service, Business business){
-        this.price=price;
-        this.service=service;
-        this.business=business;
-
+    public BusinessService(double price, ServiceType service, Business business){
+        this.price = price;
+        this.service = service;
+        this.business = business;
     }
   
 

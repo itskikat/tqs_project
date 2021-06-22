@@ -1,7 +1,14 @@
 package deti.tqs.g305.servicemanagement.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Optional;
+import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.util.Random;
 
 import deti.tqs.g305.servicemanagement.model.*;
 
@@ -15,8 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
-
-
+import deti.tqs.g305.servicemanagement.service.messaging.NotificationController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -44,6 +50,9 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
 
+    @Autowired
+    private NotificationController notificationController;
+
     @Override
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
@@ -68,6 +77,10 @@ public class ServiceServiceImpl implements ServiceService {
                 return Optional.empty();
             }
             serviceContract.setClient(c.get());
+            
+            // Send Notification
+            notificationController.send(serviceContract.getProviderService().getProvider().getEmail()+":"+"W");
+
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
         
@@ -101,6 +114,11 @@ public class ServiceServiceImpl implements ServiceService {
             }
             sc.setReview(serviceContract.getReview());
             sc.setStatus(serviceContract.getStatus());
+
+            if(sc.getStatus()==ServiceStatus.ACCEPTED){
+                // Send Notification
+                notificationController.send(sc.getProviderService().getProvider().getEmail()+":"+"A");
+            }
             return Optional.of(serviceContractRepository.save(sc));
         }
         return Optional.empty();
@@ -141,6 +159,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public List<ServiceContract> getProviderServiceContracts(String username) {
+        return serviceContractRepository.findByProviderService_Provider_Email(username);
+    }
+
+    @Override
     public Optional<ServiceContract> getServiceContract(String username,long serviceContractId) {
         ServiceContract sc = serviceContractRepository.findById(serviceContractId);
         
@@ -153,27 +176,85 @@ public class ServiceServiceImpl implements ServiceService {
         return Optional.empty();
     }
 
+    // ProviderService
+    @Override
+    public Optional<ProviderService> saveProviderService(ProviderService providerService) {
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerService.getId());
 
+        if(bs.isEmpty() && providerService.getService() != null ) {
+            ServiceType st = serviceTypeRepository.findById(providerService.getService().getId());
+            if (st == null) {
+                return Optional.empty();
+            }
+            providerService.setService(st);
+            return Optional.of(providerServiceRepository.save(providerService));
+        }
+        return Optional.empty();
+    }
 
+    @Override
+    public boolean deleteProviderService(long providerServiceId){
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if (bs.isPresent()) {
+            providerServiceRepository.delete(bs.get());
+            logger.info("ProviderService successfully deleted!");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Optional<ProviderService> updateProviderService(long providerServiceId, ProviderService providerService) {
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if(bs.isPresent()) {
+            ProviderService ps = bs.get();
+            if (providerService.getService() != null) {
+                ps.setService(providerService.getService());
+            }
+            if (providerService.getServiceContract() != null) {
+                ps.setServiceContract(providerService.getServiceContract());
+            }
+            if (providerService.getProvider() != null) {
+                ps.setProvider(providerService.getProvider());
+            }
+            ps.setDescription(providerService.getDescription());
+            return Optional.of(providerServiceRepository.save(ps));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Page<ProviderService> getProviderProviderServices(String providerId, Pageable page, Optional<String> name) {
+        if (name.isPresent()) {
+            return providerServiceRepository.findByProvider_EmailAndService_NameContains(providerId, page, name.get());
+        }
+        return providerServiceRepository.findByProvider_Email(providerId, page);
+    }
+
+    @Override
+    public Optional<ProviderService> getProviderService(String name, Long providerServiceId){
+        Optional<ProviderService> bs = providerServiceRepository.findById(providerServiceId);
+        if(bs.isPresent()){
+            if(!bs.get().getProvider().getEmail().equals(name)){
+                bs=Optional.empty();
+            }
+        }
+        return bs;
+    }
 
     // BusinessService
     @Override
     public Optional<BusinessService> saveBusinessService(BusinessService businessService) {
         BusinessService bs = businessServiceRepository.findById(businessService.getId());
 
-        if(bs == null && businessService.getService() != null && businessService.getServiceContract() != null ) {
+        if(bs == null && businessService.getService() != null ) {
 
             ServiceType st = serviceTypeRepository.findById(businessService.getService().getId());
             if (st == null) {
                 return Optional.empty();
             }
             businessService.setService(st);
-
-            List<ServiceContract> scList = serviceContractRepository.findByBusinessServiceId(businessService.getId());
-            if (scList.isEmpty()) {
-                return Optional.empty();
-            }
-            businessService.setServiceContract(scList);
             return Optional.of(businessServiceRepository.save(businessService));
         }
         return Optional.empty();
@@ -217,6 +298,190 @@ public class ServiceServiceImpl implements ServiceService {
             return businessServiceRepository.findByBusiness_EmailAndService_NameContains(businessId, page, name.get());
         }
         return businessServiceRepository.findByBusiness_Email(businessId, page);
+    }
+
+    @Override
+    public Double getBusinessBusinessServiceProfit(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        if (start_date.isPresent() && end_date.isPresent()) {
+            return businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval(business_id, start_date.get(), end_date.get());
+        }
+        else {
+            List<ServiceContract> scList = serviceContractRepository.findByStatusAndBusinessService_Business_Email(ServiceStatus.FINNISHED, business_id);
+            double profit = 0;
+            for (ServiceContract serviceContract : scList) {
+                double val = serviceContract.getBusinessService().getPrice();
+                profit += val;
+            }
+            return profit;
+        }
+
+    }
+
+    @Override
+    public Integer getTotalBusinessServiceContracts(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        if (start_date.isPresent() && end_date.isPresent()) {
+            return businessServiceRepository.findByBusiness_Email_TotalContractsFinishedDateInterval(business_id, start_date.get(), end_date.get());
+        }
+        else {
+            List<ServiceContract> scs = serviceContractRepository.findByBusinessService_Business_Email(business_id);
+            return scs.size();
+        }
+    }
+
+    @Override
+    public Optional<ServiceType> getBusinessMostRequestedServiceType(String business_id, Optional<LocalDate> start_date, Optional<LocalDate> end_date) {
+        long id;
+        if (start_date.isPresent() && end_date.isPresent()) {
+            if(start_date.get().isBefore(end_date.get()) ){
+                id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(business_id, start_date.get(), end_date.get());
+            }
+            else{
+                return Optional.empty();
+            }
+        }
+        else {
+            id = businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(business_id);
+        }
+        return Optional.of(serviceTypeRepository.findById(id));
+    }
+
+    @Override
+    public Optional<Map<LocalDate,Double>> getBusinessProfitHistory(String business_id, LocalDate start_date, LocalDate end_date){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
+            List<Object[]> results = businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval_History(business_id, start_date, end_date);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    profitHistory.put(t.toLocalDateTime().toLocalDate() , (Double) obj[1]);
+                }
+                return Optional.of(profitHistory);
+            }
+        }
+        return Optional.empty();
+    }
+  
+    public Optional<BusinessService> getBusinessService(String name, Long businessServiceId){
+        Optional<BusinessService> bs = businessServiceRepository.findById(businessServiceId);
+        if (bs.isPresent()) {
+            if (!bs.get().getBusiness().getEmail().equals(name)) {
+                bs = Optional.empty();
+            }
+        }
+        return bs;
+    }
+
+    @Override
+    public Optional<Double> getTotalProfit(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Double d = providerServiceRepository.getTotalProfit(provider_id, start_date, end_date);
+            if(d!=null){
+                return Optional.of(d);
+            }
+            return Optional.of(0.0);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Integer> getTotalFinished(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Integer i = providerServiceRepository.getTotalFinished(provider_id, start_date, end_date);
+            if(i!=null){
+                return Optional.of(i);
+            }
+            return Optional.of(0);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<ProviderService> getTotalMostContractsProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Long id = providerServiceRepository.getTotalMostContractsProviderService(provider_id, start_date, end_date);
+            if(id!=null){
+                return providerServiceRepository.findById(id);
+            }
+        }
+        return Optional.empty();
+    }
+    
+    @Override
+    public Optional<ProviderService> getTotalMostProfitProviderService(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Long id= providerServiceRepository.getTotalMostProfitProviderService(provider_id, start_date, end_date);
+            if(id!=null){
+                return providerServiceRepository.findById(id);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Map<LocalDate,Double>> getProfitHistory(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Double> profitHistory = new TreeMap<LocalDate, Double>();
+            List<Object[]> results = providerServiceRepository.getProfitHistory(provider_id, start_date, end_date);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    profitHistory.put(t.toLocalDateTime().toLocalDate() , (Double) obj[1]);
+                }
+                return Optional.of(profitHistory);
+            }  
+        }
+        return Optional.empty();
+    }
+    
+    @Override
+    public Optional<Map<LocalDate,Integer>> getContractsHistory(String provider_id,LocalDate start_date, LocalDate end_date ){
+        if(start_date.isBefore(end_date)){
+            Map<LocalDate, Integer> contractHistory = new TreeMap<LocalDate, Integer>();
+            List<Object[]> results = providerServiceRepository.getContractsHistory(provider_id, start_date, end_date);
+            if(results!=null){
+                for(Object[] obj : results){
+                    Timestamp t = (Timestamp) obj[0];
+                    BigInteger bi = (BigInteger) obj[1];
+                    contractHistory.put(t.toLocalDateTime().toLocalDate() ,bi.intValue() );
+                }
+                return Optional.of(contractHistory);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<ProviderService> getMatches( String clientid, Long serviceId){
+
+        Client c = clientRepository.findByEmail(clientid).get();
+        List<ProviderService> providersServices = providerServiceRepository.findByService_Id(serviceId);
+        List<ProviderService> filtered= new ArrayList<ProviderService>();
+        List<ProviderService> finalList= new ArrayList<ProviderService>();
+        for (ProviderService p : providersServices) {
+            boolean available=true;
+            List<ServiceContract> scs= serviceContractRepository.findByProviderService_Provider_Email(p.getProvider().getEmail());
+            for (ServiceContract sc :scs){
+                if(sc.getStatus()==ServiceStatus.ACCEPTED || sc.getStatus()==ServiceStatus.REJECTED){
+                    available=false;
+                }
+            }
+            if(available && p.getProvider().getLocation_city().contains(c.getLocation_city())){
+                filtered.add(p);
+            }
+
+            Random rand = new Random();
+            for (int i = 0; i < 3; i++) {
+                if(filtered.size()==0){
+                    break;
+                }
+                int randomIndex = rand.nextInt(filtered.size());
+                ProviderService randomElement = filtered.get(randomIndex);
+                finalList.add(randomElement);
+                filtered.remove(randomIndex);
+            }
+        }
+        return finalList;
+        
     }
 
 }
