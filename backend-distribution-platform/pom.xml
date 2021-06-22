@@ -167,7 +167,12 @@
             <artifactId>xml-path</artifactId>
             <version>${io-rest-assured.version}</version>
         </dependency>
-
+        <!-- Automatic Documentation -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>3.0.0</version>
+        </dependency>
         <!-- Security (Authentication) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
