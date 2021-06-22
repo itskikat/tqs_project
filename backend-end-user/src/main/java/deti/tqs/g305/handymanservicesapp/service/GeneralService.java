@@ -79,4 +79,12 @@ public class GeneralService {
         return (List<BusinessService>) restTemplate.exchange(apiBaseUrl + "/businesses/allservices", HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), List.class).getBody();
     }
 
+    public ServiceContract createContract(
+        @Valid @RequestBody(required = false) ServiceContract sc,
+        HttpServletRequest request
+    ) {
+        HttpEntity<ServiceContract> entity = new HttpEntity<>(sc, requestsHelper.getHeadersWithAuthorization(request.getHeader("Authorization")));
+        return restTemplate.exchange(apiBaseUrl + "/clients/contracts/", HttpMethod.POST, entity, ServiceContract.class).getBody();
+    }
+
 }

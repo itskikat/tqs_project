@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +26,7 @@ public class GeneralController {
     @Autowired
     private GeneralService generalService;
 
+    // Past services
     @GetMapping("/contracts")
     public ResponseEntity<Map> getServiceContracts(
         @RequestParam(defaultValue = "0") int page,
@@ -54,6 +56,7 @@ public class GeneralController {
         return ResponseEntity.ok(generalService.updateContract(serviceContractId, sc, request));
     }
 
+    // Dynamic matching
     @GetMapping("/matches/{id}")
     public ResponseEntity<List> getMatchingServiceProviders(
         @PathVariable(value = "id") Long serviceTypeId,
@@ -65,6 +68,14 @@ public class GeneralController {
     @GetMapping("/services")
     public ResponseEntity<?> getBusinessServices(HttpServletRequest request) {
         return ResponseEntity.ok(generalService.services(request));
+    }
+
+    @PostMapping("/contracts")
+    public ResponseEntity<?> createServiceContract(
+        @Valid @RequestBody(required = false) ServiceContract sc,
+        HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(generalService.createContract(sc, request));
     }
 
 }

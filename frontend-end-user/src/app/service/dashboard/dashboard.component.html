@@ -60,7 +60,7 @@
               class="mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
               <i class="fas fa-search"></i>
             </div>
-            <div *ngIf="matches">
+            <div *ngIf="matches.length>0">
               <h6 class="w-full text-center text-xl font-semibold">
                 We have found {{matches.length}} offers that match your requirements!
               </h6>
@@ -69,12 +69,20 @@
                 Check them below and choose the one that best fits you. :)
               </p>
             </div>  
-            <div *ngIf="!matches">
+            <div *ngIf="matches.length==0 && !signed">
               <h6 class="w-full text-center text-xl font-semibold">
                 Unfortunately the service you are looking for is not available in your location.
               </h6>
               <p class="w-full text-center">
                 Try again later.
+              </p>
+            </div>  
+            <div *ngIf="matches.length==0 && signed">
+              <h6 class="w-full text-center text-xl font-semibold">
+                You have requested the service with success!
+              </h6>
+              <p class="w-full text-center">
+                The provider will get in touch soon to arranje all the details. You can check the request status in the Past Services tab.
               </p>
             </div>  
             <div class="w-full mt-10 flex flex-row flex-wrap">
@@ -132,7 +140,16 @@
                   style="margin-top: auto;"
                   (click)="details(match.id)"
                 >
-                  <i class="fas fa-plus mr-1"></i> Service details
+                  <i class="fas fa-plus mr-1" ></i> See details
+              </button>
+              <button
+                  class="mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
+                  [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
+                  type="button"
+                  style="margin-top: auto;"
+                  (click)="contract(match.id)"
+                >
+                  <i class="fas fa-plus mr-1" ></i> Request service
               </button>
             </div>
           </div>

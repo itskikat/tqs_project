@@ -44,4 +44,20 @@ export class GeneralService {
   getServices() {
     return this.http.get<BusinessService[]>(apiUrl + "/services/", this.authService.getOptions()).toPromise();
   }
+
+  signContract(businessService: number, providerService: number) {
+    let contract = {
+      'providerService': {
+        'id': providerService
+      },
+      'businessService': {
+        'id': businessService
+      },
+      'client': {
+        'email': localStorage.getItem('email')
+      },
+      'status': 'WAITING'
+    }
+    return this.http.post<ServiceContract>(apiUrl + "/contracts/", contract, this.authService.getOptions()).toPromise();
+  }
 }

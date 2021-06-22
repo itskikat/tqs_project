@@ -75,13 +75,14 @@ class LoadDatabase {
       Business b = new Business("plumber@plumber.com", "Plumber.com, LDA", bcryptEncoder.encode("abc"), "lala", "lele", "lili","lulu");
       businessRepository.save(b);
 
-      ServiceType st = new ServiceType("canalização", false);
+      ServiceType st = new ServiceType("Pipe leaks", false);
       serviceTypeRepository.save(st);
 
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
       Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
+      p.setCategory("Plumber");
       City city = cityRepository.findById(1L).get();
 
       List<City> provider_location = new ArrayList<>();
@@ -89,31 +90,31 @@ class LoadDatabase {
       p.setLocation_city(provider_location);
       providerRepository.save(p);
 
-      ProviderService ps = new ProviderService("bla bla", p, st);
+      ProviderService ps = new ProviderService("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", p, st);
       providerServiceRepository.save(ps);
 
       ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.WAITING, c, 0);
       serviceContractRepository.save(sc);
 
-      ServiceType st1 = new ServiceType("eletricidade", true);
+      ServiceType st1 = new ServiceType("Swimming pool maintenance", true);
       serviceTypeRepository.save(st1);
 
-      ServiceType st2 = new ServiceType("jardinagem", true);
+      ServiceType st2 = new ServiceType("Water shortages", true);
       serviceTypeRepository.save(st2);
 
-      ServiceType st3 = new ServiceType("babysitting", true);
+      ServiceType st3 = new ServiceType("Tap installation", true);
       serviceTypeRepository.save(st3);
 
-      ServiceType st4 = new ServiceType("limpeza", true);
+      ServiceType st4 = new ServiceType("Water drill", true);
       serviceTypeRepository.save(st4);
 
-      ServiceType st5 = new ServiceType("informatica", true);
+      ServiceType st5 = new ServiceType("Bathroom maintenance", true);
       serviceTypeRepository.save(st5);
 
-      ServiceType st6 = new ServiceType("eheue", true);
+      ServiceType st6 = new ServiceType("Pipe instalation", true);
       serviceTypeRepository.save(st6);
 
-      ProviderService ps1 = new ProviderService("bla bla", p, st1);
+      ProviderService ps1 = new ProviderService("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", p, st1);
       providerServiceRepository.save(ps1);
 
 
@@ -130,10 +131,10 @@ class LoadDatabase {
       ServiceContract sc3 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc3);
 
-      BusinessService bs2 = new BusinessService(25, st1, b);
+      BusinessService bs2 = new BusinessService(25, st2, b);
       businessServiceRepository.save(bs2);
 
-      BusinessService bs3 = new BusinessService(45, st1, b);
+      BusinessService bs3 = new BusinessService(45, st3, b);
       businessServiceRepository.save(bs3);
 
       Client c2 = new Client("xpto22@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta2", "lalale", cityRepository.findById(1L).get(), LocalDate.now());

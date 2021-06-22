@@ -115,6 +115,7 @@ export class ServiceDashboardComponent implements OnInit {
   serviceTypeSelected: number;
   serviceType: BusinessService;
   matches: ProviderService[];
+  signed: boolean = false;
 
   constructor(public router: Router, private generalService: GeneralService) {
     this.services = servicesList;
@@ -146,9 +147,18 @@ export class ServiceDashboardComponent implements OnInit {
 
   searchRevert() {
     this.searched = false;
+    this.matches = [];
   }
 
-  match() {
-    console.log("MATCH");
+  contract(businessService: number) {
+    console.log("Business service", businessService);
+    console.log("Provider service", this.serviceTypeSelected);
+    this.generalService.signContract(businessService, this.serviceTypeSelected).then(data => {
+      console.log("SIGNED");
+      console.log(data);
+      this.signed = true;
+      this.matches = [];
+    });
+
   }
 }
