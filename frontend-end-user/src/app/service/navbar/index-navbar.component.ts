@@ -12,7 +12,6 @@ export class ServiceNavbarComponent implements OnInit {
   navbarOpen = false;
 
   user: User;
-
   constructor(
     private authService: AuthService,
     private router: Router
@@ -23,10 +22,12 @@ export class ServiceNavbarComponent implements OnInit {
     this.authService.loggedData().then(data => {
       this.user=data;
     }).catch(error => {
-      if (error.status==401) {
-        this.authService.logOut();
-        alert("Your session has expired!");
-        this.router.navigate(['/login']);
+      if (this.router.url.split('?')[0]!="/" && this.router.url.split('?')[0]!="/login") {
+        if (error.status==401) {
+          this.authService.logOut();
+          alert("Your session has expired!");
+          this.router.navigate(['/login']);
+        }
       }
     });
   }
