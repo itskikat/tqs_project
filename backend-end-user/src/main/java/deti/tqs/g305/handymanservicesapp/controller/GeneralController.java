@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,7 +24,7 @@ public class GeneralController {
     private GeneralService generalService;
 
     @GetMapping("/contracts")
-    public ResponseEntity<?> getServiceContracts(
+    public ResponseEntity<Map> getServiceContracts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required=false) String status,
         @RequestParam(defaultValue = "date") String sort,
