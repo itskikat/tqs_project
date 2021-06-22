@@ -57,17 +57,17 @@ public class GeneralController {
     }
 
     // Dynamic matching
+    @GetMapping("/services")
+    public ResponseEntity<List> getBusinessServices(HttpServletRequest request) { // Returns List<BusinessService>
+        return ResponseEntity.ok(generalService.services(request));
+    }
+
     @GetMapping("/matches/{id}")
-    public ResponseEntity<List> getMatchingServiceProviders(
+    public ResponseEntity<List> getMatchingServiceProviders( // Returns List<ProviderService>
         @PathVariable(value = "id") Long serviceTypeId,
         HttpServletRequest request
     ) {
         return ResponseEntity.ok(generalService.match(serviceTypeId, request));
-    }
-
-    @GetMapping("/services")
-    public ResponseEntity<?> getBusinessServices(HttpServletRequest request) {
-        return ResponseEntity.ok(generalService.services(request));
     }
 
     @PostMapping("/contracts")

@@ -36,7 +36,7 @@ public class BusinessRestController {
     private ServiceService serviceService;
 
     @GetMapping("/allservices")
-    public ResponseEntity<?> getBusinessServices(HttpServletRequest request){
+    public ResponseEntity<List<BusinessService>> getBusinessServices(HttpServletRequest request){
         return ResponseEntity.ok(serviceService.getBusinessServices(request.getHeader("APIToken")));
     }
 
