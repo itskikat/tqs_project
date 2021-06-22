@@ -1,6 +1,8 @@
 package deti.tqs.g305.servicemanagement.repository;
 
 import deti.tqs.g305.servicemanagement.model.Provider;
+import deti.tqs.g305.servicemanagement.model.ProviderService;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

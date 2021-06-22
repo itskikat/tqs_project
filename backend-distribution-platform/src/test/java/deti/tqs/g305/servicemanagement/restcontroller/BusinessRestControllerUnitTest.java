@@ -12,6 +12,7 @@ import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -63,6 +64,9 @@ class BusinessRestControllerUnitTest {
     private JwtTokenUtil jwtToken;
 
     @MockBean
+    private BusinessMatcher bm;
+
+    @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
 
     @Test
@@ -74,7 +78,7 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(post("/api/businesses/services").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.price", is(0)))
+                .andExpect(jsonPath("$.price", is(0.0)))
                 .andExpect(jsonPath("$.service.hasExtras", is(false)));
 
         verify(serviceService, times(1)).saveBusinessService(any());
@@ -103,7 +107,7 @@ class BusinessRestControllerUnitTest {
 
         mvc.perform(put("/api/businesses/services/2").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(bs)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.price", is(10000)));
+                .andExpect(jsonPath("$.price", is(10000.0)));
 
         verify(serviceService, times(1)).updateBusinessService(anyLong(),any());
     }
@@ -233,22 +237,43 @@ class BusinessRestControllerUnitTest {
         listServiceContract.add(sc);
         listServiceContract.add(sc1);
 
-        float profit = 30;
+        double profit = 30;
 
-        doReturn(profit).when(serviceService).getBusinessBusinessServiceProfit(any());
-        when(serviceService.getBusinessServiceContracts(any())).thenReturn(listServiceContract);
-        when(serviceService.getBusinessMostRequestedServiceType(any())).thenReturn(st);
+        when(serviceService.getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(profit);
+        when(serviceService.getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(listServiceContract.size());
+        when(serviceService.getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()))).thenReturn(Optional.of(st));
 
         mvc.perform(get("/api/businesses/statistics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.profit", is(30.0)))
-                .andExpect(jsonPath("$.total-contracts", is(listServiceContract.size())))
-                .andExpect(jsonPath("$.most-requested-ServiceType.name", is(st.getName())));
+                .andExpect(jsonPath("$.PROFIT", is(30.0)))
+                .andExpect(jsonPath("$.TOTAL_CONTRACTS", is(listServiceContract.size())))
+                .andExpect(jsonPath("$.MOST_REQUESTED_SERVICETYPE.name", is(st.getName())));
 
-        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any());
-        verify(serviceService, times(1)).getBusinessServiceContracts(any());
-        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any());
+        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any(), eq(Optional.empty()), eq(Optional.empty()));
+        verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), eq(Optional.empty()), eq(Optional.empty()));
+        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), eq(Optional.empty()), eq(Optional.empty()));
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetBusinessStatisticsDateInterval_thenReturnStatisticsDateInterval() throws  Exception {
+        double profit = 30;
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        when(serviceService.getBusinessBusinessServiceProfit(any(), any(), any())).thenReturn(profit);
+        when(serviceService.getTotalBusinessServiceContracts(any(), any(), any())).thenReturn(3);
+        when(serviceService.getBusinessMostRequestedServiceType(any(), any(), any())).thenReturn(Optional.of(st));
+
+        mvc.perform(get("/api/businesses/statistics?start=11/12/2021&end=11/12/2021"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.PROFIT", is(30.0)))
+                .andExpect(jsonPath("$.start_date[0]", is(2021)))
+                .andExpect(jsonPath("$.start_date[1]", is(12)))
+                .andExpect(jsonPath("$.start_date[2]", is(11)));
+
+        verify(serviceService, times(1)).getBusinessBusinessServiceProfit(any(), any(), any());
+        verify(serviceService, times(1)).getTotalBusinessServiceContracts(any(), any(), any());
+        verify(serviceService, times(1)).getBusinessMostRequestedServiceType(any(), any(), any());
+    }
 
 }

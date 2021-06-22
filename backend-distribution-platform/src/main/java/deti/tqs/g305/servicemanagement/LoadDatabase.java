@@ -72,6 +72,7 @@ class LoadDatabase {
       ProviderService ps1 = new ProviderService("bla bla", p, st1);
       providerServiceRepository.save(ps1);
 
+
       BusinessService bs1 = new BusinessService(10, st1, b);
       businessServiceRepository.save(bs1);
 

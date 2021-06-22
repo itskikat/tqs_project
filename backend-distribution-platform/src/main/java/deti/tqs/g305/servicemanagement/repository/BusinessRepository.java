@@ -14,5 +14,6 @@ import java.util.Optional;
 public interface BusinessRepository extends JpaRepository<Business, String>{
 
     Optional<Business> findByEmail(String email);
+    Optional<Business> findByApikey(String apiKey);
 
 }

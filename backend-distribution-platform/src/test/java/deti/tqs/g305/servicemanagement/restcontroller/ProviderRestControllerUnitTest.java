@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.TreeMap;
+import java.time.LocalDate;
 
 import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
+
 import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
@@ -33,6 +36,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import static org.hamcrest.Matchers.*;
+
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 
 
 /**
@@ -55,6 +60,9 @@ public class ProviderRestControllerUnitTest {
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     private List<ServiceContract> listServiceContract;
     
@@ -325,4 +333,22 @@ public class ProviderRestControllerUnitTest {
         verify(serviceService, times(1)).getProviderService(any(), anyLong());
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetStatistics_thenStatistics() throws  Exception {
+        when(serviceService.getTotalFinished(any(), any(),any())).thenReturn(Optional.of(3));
+        when(serviceService.getTotalProfit(any(), any(),any())).thenReturn(Optional.of(3.0));
+        when(serviceService.getTotalMostProfitProviderService(any(), any(),any())).thenReturn(Optional.of(new ProviderService()));
+        when(serviceService.getTotalMostContractsProviderService(any(), any(),any())).thenReturn(Optional.of(new ProviderService()));
+        when(serviceService.getProfitHistory(any(), any(),any())).thenReturn(Optional.of(new TreeMap<LocalDate, Double>()));
+        when(serviceService.getContractsHistory(any(), any(),any())).thenReturn(Optional.of(new TreeMap<LocalDate, Integer>()));
+        
+        mvc.perform(get("/api/provider/statistics?start=11/12/2021&end=11/12/2021"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.TOTAL_PROFIT", is(3.0)));
+
+        verify(serviceService, times(1)).getTotalProfit(any(), any(),any());
+    }
+
 }
+

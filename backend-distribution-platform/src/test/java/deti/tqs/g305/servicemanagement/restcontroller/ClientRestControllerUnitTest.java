@@ -31,6 +31,8 @@ import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
+
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -59,6 +61,9 @@ public class ClientRestControllerUnitTest {
 
     @MockBean
     private JwtTokenUtil jwtToken;
+
+    @MockBean
+    private BusinessMatcher bm;
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
