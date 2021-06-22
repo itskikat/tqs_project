@@ -105,9 +105,11 @@ export class ServiceDashboardComponent implements OnInit {
 
   services: Service[];
   searched: boolean=false;
+  clientName: String;
 
   constructor(public router: Router) {
     this.services = servicesList;
+    this.clientName = localStorage.getItem("name").split(" ")[0];
   }
 
   ngOnInit(): void {}
