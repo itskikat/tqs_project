@@ -142,7 +142,7 @@ public class ClientRestController {
     }
 
     @GetMapping("/matches")
-    public ResponseEntity<?> getMatchingServiceProviders(@Valid @RequestBody(required = true) ServiceContract sc, HttpServletRequest request){
+    public ResponseEntity<?> getMatchingServiceProviders(@Valid @RequestBody(required = false) ServiceContract sc, HttpServletRequest request){
         if(sc != null) {
             Principal principal = request.getUserPrincipal();
             City client_location = (clientRepository.findByEmail(principal.getName()).get()).getLocation_city();
@@ -151,10 +151,10 @@ public class ClientRestController {
             ProviderService contract_ps = sc.getProviderService();
             List<Provider> providers = providerRepository.findAll();
             if(providers != null) {
-                System.out.println("PROVIDER");
+                //System.out.println("PROVIDER");
                 for (Provider p : providers) {
                     if (p.getProviderServices().contains(contract_ps)) {
-                        System.out.println("TEM O MESMO SERVICE!");
+                        // System.out.println("TEM O MESMO SERVICE!");
                         if (p.getLocation_city().contains(client_location)) {
                             System.out.println("City do client!");
                             List<ServiceContract> provider_contracts = serviceService.getProviderServiceContracts(p.getEmail());

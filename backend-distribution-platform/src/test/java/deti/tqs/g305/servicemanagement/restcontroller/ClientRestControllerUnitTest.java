@@ -1,10 +1,14 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
+import deti.tqs.g305.servicemanagement.model.*;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
+import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
@@ -20,11 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
-import deti.tqs.g305.servicemanagement.model.ProviderService;
-import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import deti.tqs.g305.servicemanagement.JsonUtil;
@@ -67,6 +66,12 @@ public class ClientRestControllerUnitTest {
 
     @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private ClientRepository clientRepository;
+
+    @MockBean
+    private ProviderRepository providerRepository;
 
     List<ServiceContract> listServiceContract;
 
@@ -236,6 +241,34 @@ public class ClientRestControllerUnitTest {
         .andExpect(status().isNotFound());
        
         verify(serviceService, times(1)).getServiceContract(any(),anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetMatchingServiceProviders_thenReturnMatchingServiceProviders() throws Exception {
+        Provider p = new Provider();
+        District district = new District(1L, "Lisbon");
+        City city = new City(1L, "Almada", district);
+        List<City> provider_location = new ArrayList<>();
+        provider_location.add(city);
+        p.setLocation_city(provider_location);
+        Client c2 = new Client();
+        c2.setEmail("demo@demo.com");
+        c2.setLocation_city(city);
+
+        ProviderService ps = new ProviderService();
+        ps.setProvider(p);
+        ServiceContract sc = new ServiceContract(new BusinessService(), ps, ServiceStatus.FINNISHED, c2,0);
+        List<ServiceContract> provider_contracts = new ArrayList<>();
+        provider_contracts.add(sc);
+
+        when( serviceService.getProviderServiceContracts(any())).thenReturn(provider_contracts);
+        when(clientRepository.findByEmail(any())).thenReturn(Optional.of(c2));
+
+        mvc.perform(get("/api/clients/matches").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(sc)))
+                .andExpect(status().isOk());
+
+        verify(clientRepository, times(1)).findByEmail(any());
     }
 
 
