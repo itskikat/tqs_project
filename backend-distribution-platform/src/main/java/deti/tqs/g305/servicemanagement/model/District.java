@@ -29,8 +29,7 @@ public class District{
     public District(){
 
     }
-    public District(long id, String name){
-        this.id=id;
+    public District( String name){
         this.name=name;
     }
 

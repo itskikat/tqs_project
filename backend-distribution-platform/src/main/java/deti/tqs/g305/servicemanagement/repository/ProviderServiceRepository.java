@@ -25,6 +25,7 @@ public interface ProviderServiceRepository extends JpaRepository<ProviderService
     public Optional<ProviderService> findById(long id);
     public Page<ProviderService> findByProvider_Email(String provider_id, Pageable page);
     public Page<ProviderService> findByProvider_EmailAndService_NameContains(String provider_id, Pageable page, String name);
+    public List<ProviderService> findByService_Id(Long serviceId);
 
     @Query(value = "SELECT SUM(bs.price) FROM business_service bs, service_contract sc, provider_service ps where ps.provider_id=:provider_id "
       + "AND bs.id=sc.business_service AND ps.id=provider_service AND status=2 AND sc.contract_date>=:start_date AND sc.contract_date<=:end_date", nativeQuery = true)

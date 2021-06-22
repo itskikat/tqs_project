@@ -41,12 +41,10 @@ import { RegisterProviderComponent } from './register-provider/register-provider
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ProviderServiceListComponent } from './provider/provider-service-list/provider-service-list.component';
 import { BusinessStatsComponent } from './business/business-stats/business-stats.component';
-import { BusinessStatsProgressSection } from './business/business-stats/progress-section/progress-section.component';
 import { BusinessStatsCharts } from './business/business-stats/charts-panel/charts-panel.component';
-import { BusinessStatsChartsProfitChartComponent } from './business/business-stats/charts-panel/charts/profit-chart.component';
-import { BusinessStatsChartsOrdersChartComponent } from './business/business-stats/charts-panel/charts/orders-chart.component';
+import { BusinessStatsProgressSection } from './business/business-stats/progress-section/business-section.component';
 import { BusinessStatsChartsChartPanelSummaryComponent } from './business/business-stats/charts-panel/chart-panel-summary/chart-panel-summary.component';
-import { BusinessStatsChartsChartPanelHeaderComponent } from './business/business-stats/charts-panel/chart-panel-header/chart-panel-header.component';
+import { BusinessStatsChartPanelHeaderComponent } from './business/business-stats/charts-panel/chart-panel-header/chart-panel-header.component';
 import { BusinessStatsChartsLegendChartComponent } from './business/business-stats/charts-panel/legend-chart/legend-chart.component';
 import { ChartModule } from 'angular2-chartjs';
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -68,6 +66,7 @@ import { SharedModule } from './shared/shared.module';
 import { BusinessServiceComponent } from './business/business-service/business-service.component';
 import { BusinessServiceFormComponent } from './business/business-service-form/business-service-form.component';
 import { BusinessServiceEditFormComponent } from './business/business-service-edit-form/business-service-edit-form.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -78,12 +77,10 @@ import { BusinessServiceEditFormComponent } from './business/business-service-ed
     RegisterBusinessComponent,
     ProviderServiceFormComponent,
     BusinessStatsComponent,
-    BusinessStatsProgressSection,
     BusinessStatsCharts,
-    BusinessStatsChartsProfitChartComponent,
-    BusinessStatsChartsOrdersChartComponent,
+    BusinessStatsProgressSection,
     BusinessStatsChartsChartPanelSummaryComponent,
-    BusinessStatsChartsChartPanelHeaderComponent,
+    BusinessStatsChartPanelHeaderComponent,
     BusinessStatsChartsLegendChartComponent,
     BusinessProfileComponent,
     BusinessAPIComponent,
@@ -143,6 +140,7 @@ import { BusinessServiceEditFormComponent } from './business/business-service-ed
     NbAlertModule,
     NbTagModule,
     NbUserModule,
+    CommonModule,
     // Authentication
     SharedModule
   ],

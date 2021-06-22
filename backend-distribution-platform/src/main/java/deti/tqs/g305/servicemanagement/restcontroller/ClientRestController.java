@@ -1,7 +1,6 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.model.*;
-import deti.tqs.g305.servicemanagement.repository.ClientRepository;
 import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
 import deti.tqs.g305.servicemanagement.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -42,11 +41,6 @@ public class ClientRestController {
     @Autowired
     private ServiceService serviceService;
 
-    @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private ProviderRepository providerRepository;
 
     @PostMapping("/contracts")
     public ResponseEntity<?> createServiceContract( @Valid @RequestBody(required = false) ServiceContract sc){
@@ -141,41 +135,15 @@ public class ClientRestController {
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/matches")
-    public ResponseEntity<?> getMatchingServiceProviders(@Valid @RequestBody(required = true) ServiceContract sc, HttpServletRequest request){
-        if(sc != null) {
-            Principal principal = request.getUserPrincipal();
-            City client_location = (clientRepository.findByEmail(principal.getName()).get()).getLocation_city();
-            List<Provider> response = new ArrayList<>();
+    @GetMapping("/matches/{id}")
+    public ResponseEntity<?> getMatchingServiceProviders(@PathVariable(value = "id") Long serviceTypeId, HttpServletRequest request){
 
-            ProviderService contract_ps = sc.getProviderService();
-            List<Provider> providers = providerRepository.findAll();
-            if(providers != null) {
-                System.out.println("PROVIDER");
-                for (Provider p : providers) {
-                    if (p.getProviderServices().contains(contract_ps)) {
-                        System.out.println("TEM O MESMO SERVICE!");
-                        if (p.getLocation_city().contains(client_location)) {
-                            System.out.println("City do client!");
-                            List<ServiceContract> provider_contracts = serviceService.getProviderServiceContracts(p.getEmail());
-                            if (!isProviderBusy(provider_contracts)) {
-                                response.add(p);
-                            }
-                        }
-                    }
-                }
-            }
-            return new ResponseEntity<List<Provider>>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<String>("Invalid service contract! Could not find Providers!", HttpStatus.NOT_FOUND);
+        Principal principal = request.getUserPrincipal();
+        List<ProviderService>  ps = serviceService.getMatches(principal.getName(),serviceTypeId);
+
+        return new ResponseEntity<List<ProviderService>>(ps, HttpStatus.OK);
+
     }
 
-    private boolean isProviderBusy(List<ServiceContract> serviceContracts) {
-        for (ServiceContract sc: serviceContracts) {
-            if (sc.getStatus() != ServiceStatus.WAITING && sc.getStatus() != ServiceStatus.ACCEPTED) {
-                return false;
-            }
-        }
-        return true;
-    }
+   
 }

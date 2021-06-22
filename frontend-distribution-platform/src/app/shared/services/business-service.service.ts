@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
 import {BusinessService} from '../models/BusinessService';
+import {BusinessStatistics } from '../models/BusinessStatistics';
 import {BusinessServicePage} from '../models/BusinessServicePage';
+import {Business} from '../models/Business';
 import { apiUrl } from '../../../environments/environment';
 import {AuthService} from './auth.service';
 
@@ -42,6 +44,26 @@ export class BusinessServiceService {
     let headers = this.authservice.getOptions();
     headers['responseType'] = 'text';
     return this.http.delete(url, headers);
+  }
+
+  getBusinessStatistics(start: string, end:string): Observable<BusinessStatistics>{
+    let url = apiUrl + "/businesses/statistics?start=" + start + "&end=" + end;
+    return this.http.get<BusinessStatistics>(url,this.authservice.getOptions());
+  }
+
+  registBusiness(b:Business): Observable<Business>{
+    let url = apiUrl + "/business";
+    return this.http.post<Business>(url,b,this.authservice.getOptions() )
+  }
+
+  getBusiness(b: string): Observable<Business>{
+    let url = apiUrl + "/business/"+ b;
+    return this.http.get<Business>(url,this.authservice.getOptions() )
+  }
+
+  putBusiness(b:Business): Observable<Business>{
+    let url = apiUrl + "/business/"+b.email;
+    return this.http.put<Business>(url,b,this.authservice.getOptions() )
   }
 
 }

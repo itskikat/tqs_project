@@ -1,0 +1,6 @@
+export enum ServiceStatus{
+    ACCEPTED="ACCEPTED",
+    FINNISHED="FINNISHED",
+    REJECTED="REJECTED",
+    WAITING="WAITING"
+}
