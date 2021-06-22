@@ -71,8 +71,10 @@ class ProviderUserRestControllerUnitTest {
     private UserService userService;
 
     @MockBean
-    ServiceService serviceService;
+    private ServiceService serviceService;
 
+    @MockBean
+    private WebSecurityConfig webSecurityConfig;
 
     List<Provider> listProvider;
     List<District> districts = new ArrayList<>(List.of(new District(1,"Porto"), new District(2,"Aveiro"), new District(3, "Santarem")));

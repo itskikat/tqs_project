@@ -33,7 +33,7 @@ public class ProviderUserRestController {
     }
 
     //Criando um novo provider (POST /provider)
-    @PostMapping
+    @PostMapping(path = {"/provider"})
     public Optional<Provider> createProvider(@RequestBody Provider provider){
         return providerUserService.createProvider(provider);
     }

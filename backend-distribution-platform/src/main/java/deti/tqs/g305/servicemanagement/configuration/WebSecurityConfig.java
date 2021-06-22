@@ -61,6 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/api/users/login").permitAll()
                     .antMatchers("/api/provider").permitAll()
+                    .antMatchers("/api/business").permitAll()
                     // CLIENT endpoints (require Business API)
                     .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
                 // all other requests need to be authenticated
