@@ -25,8 +25,7 @@ public class City{
     public City(){
 
     }
-    public City(long id, String name, District district){
-        this.id=id;
+    public City( String name, District district){
         this.name=name;
         this.district=district;
     }

@@ -6,6 +6,7 @@ import {ProviderService} from '../models/ProviderService';
 import {ProviderServicePage} from '../models/ProviderServicePage';
 import { apiUrl } from '../../../environments/environment';
 import {ProviderStatistics} from '../models/ProviderStatistics';
+import { Provider } from '../models/Provider';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +49,20 @@ export class ProviderServiceService {
   getProviderStatistics(start: string, end:string): Observable<ProviderStatistics>{
     let url = apiUrl + "/provider/statistics?start=" + start + "&end=" + end;
     return this.http.get<ProviderStatistics>(url,this.authservice.getOptions());
+  }
+
+  registBusiness(p:Provider): Observable<Provider>{
+    let url = apiUrl + "/provider";
+    return this.http.post<Provider>(url,p,this.authservice.getOptions() )
+  }
+
+  getBusiness(p: string): Observable<Provider>{
+    let url = apiUrl + "/provider/"+ p;
+    return this.http.get<Provider>(url,this.authservice.getOptions() )
+  }
+
+  putBusiness(p:Provider): Observable<Provider>{
+    let url = apiUrl + "/provider/"+p.email;
+    return this.http.put<Provider>(url,p,this.authservice.getOptions() )
   }
 }

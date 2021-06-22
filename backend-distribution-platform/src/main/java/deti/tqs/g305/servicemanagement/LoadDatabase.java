@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.io.BufferedReader;  
+import java.io.FileReader;  
+
+import java.util.Map;
+import java.util.HashMap;
 
 import java.time.*;
 
@@ -23,7 +28,8 @@ class LoadDatabase {
 
   @Bean
   CommandLineRunner initDatabase(ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
-  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository) {
+  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository,
+  DistrictRepository districtRepository, CityRepository cityRepository) {
 
     // docker exec -it tqs_project_db_1 bash
     // psql -h 127.0.0.1 -d demo -U demo
@@ -90,6 +96,36 @@ class LoadDatabase {
 
       BusinessService bs3 = new BusinessService(45, st1, b);
       businessServiceRepository.save(bs3);
+
+      String line = "";  
+
+      //Load Locations
+
+      Map<String, Long> dist_cods = new HashMap<String, Long>();
+      try {
+        BufferedReader br = new BufferedReader(new FileReader("distritos.csv"));  
+        br.readLine();
+        while ((line = br.readLine()) != null) {
+          String[] dist_info = line.split(",");
+          District d = new District(dist_info[1]);
+          d= districtRepository.save(d);
+          dist_cods.put(dist_info[0], d.getId());
+        }
+      } catch (Exception e) {
+        e.printStackTrace();  
+      }
+
+      try {
+        BufferedReader br = new BufferedReader(new FileReader("concelhos.csv"));  
+        br.readLine();
+        while ((line = br.readLine()) != null) {
+          String[] city_info = line.split(",");        
+          cityRepository.save( new City(city_info[2],districtRepository.findById(dist_cods.get(city_info[0])).get()));
+        }
+      } catch (Exception e) {
+        e.printStackTrace();  
+      }
+     
       
     };
     

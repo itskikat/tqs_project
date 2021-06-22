@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.http.MediaType;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +21,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import deti.tqs.g305.servicemanagement.model.District;
+import deti.tqs.g305.servicemanagement.model.City;
 import deti.tqs.g305.servicemanagement.model.ServiceType;
+import deti.tqs.g305.servicemanagement.service.LocationsService;
+import deti.tqs.g305.servicemanagement.service.LocationsServiceImpl;
 import deti.tqs.g305.servicemanagement.service.ServiceServiceType;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import deti.tqs.g305.servicemanagement.JsonUtil;
@@ -49,6 +54,9 @@ public class GenericRestControllerUnitTest {
     private ServiceServiceType serviceServiceType;
 
     @MockBean
+    private LocationsService locationsService;
+
+    @MockBean
     private UserServiceImpl userService;
 
     @MockBean
@@ -61,6 +69,8 @@ public class GenericRestControllerUnitTest {
     private BusinessMatcher bm;
 
     List<ServiceType> listServiceType;
+    List<District> ld;
+    List<City> lc;
 
     @BeforeEach
     public void setUp(){
@@ -72,6 +82,9 @@ public class GenericRestControllerUnitTest {
         listServiceType.add(st);
         listServiceType.add(st1);
         listServiceType.add(st2);
+
+        ld= new ArrayList<District>(Arrays.asList(new District("Braga")));
+        lc= new ArrayList<City>(Arrays.asList( new City("Braga" ,new District("Braga"))));
     }
 
     @Test
@@ -126,6 +139,72 @@ public class GenericRestControllerUnitTest {
 
         verify(serviceServiceType, times(1)).getServiceTypes(any());
     }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllDistricts_thenReturnAllDistricts( ) throws IOException, Exception {
+        
+        when( locationsService.getDistricts()).thenReturn(ld);
+
+        mvc.perform(get("/api/districts"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(locationsService, times(1)).getDistricts();
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllCities_thenReturnAllCities( ) throws IOException, Exception {
+        
+        when( locationsService.getCities(Optional.empty())).thenReturn(Optional.of(lc));
+
+        mvc.perform(get("/api/cities"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(locationsService, times(1)).getCities(Optional.empty());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetAllCitiesDistrict_thenReturnAllCities( ) throws IOException, Exception {
+        
+        when( locationsService.getCities(Optional.of(1L))).thenReturn(Optional.of(lc));
+
+        mvc.perform(get("/api/districts/1/cities"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
+
+        verify(locationsService, times(1)).getCities(Optional.of(1L));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetCity_thenReturnCity( ) throws IOException, Exception {
+        
+        when( locationsService.getCityById(1L)).thenReturn(Optional.of(lc.get(0)));
+
+        mvc.perform(get("/api/cities/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", is("Braga")));
+
+        verify(locationsService, times(1)).getCityById(1L);
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetDistrict_thenReturnDistricts( ) throws IOException, Exception {
+        
+        when( locationsService.getDistricById(1L)).thenReturn(Optional.of(ld.get(0)));
+
+        mvc.perform(get("/api/districts/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", is("Braga")));
+
+        verify(locationsService, times(1)).getDistricById(1L);
+    }
+
 
 
 }
