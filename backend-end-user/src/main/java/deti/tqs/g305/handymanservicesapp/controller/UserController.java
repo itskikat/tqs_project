@@ -1,21 +1,15 @@
 package deti.tqs.g305.handymanservicesapp.controller;
 
-import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
-import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
-import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
-import deti.tqs.g305.handymanservicesapp.model.UserResponse;
+import deti.tqs.g305.handymanservicesapp.model.*;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -40,6 +34,24 @@ public class UserController {
     @GetMapping("/logged")
     public ResponseEntity<UserResponse> createAuthenticationToken(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(userService.getUserLogged(request));
+    }
+
+    @PostMapping(path = {"/"})
+    public Optional create(@RequestBody Client client, HttpServletRequest request){
+        log.info("Creating client {} with password {}", client.getEmail(), client.getPassword());
+        return userService.create(client, request);
+    }
+
+    @PutMapping(value="/{email}")
+    public ResponseEntity<?> update(@PathVariable("email") String email, @RequestBody Client client, HttpServletRequest request) {
+        return null;
+        /*
+        Optional<Client> b = userService.update(email, client);
+        if(b.isPresent()){
+            return ResponseEntity.ok().body(b.get());
+        }
+        return new ResponseEntity<String>("Bad business", HttpStatus.BAD_REQUEST);
+        */
     }
 
 }

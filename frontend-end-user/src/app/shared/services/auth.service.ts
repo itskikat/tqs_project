@@ -28,6 +28,10 @@ export class AuthService {
     );
   }
 
+  register(model: any) {
+    return this.http.post(this.authUrl + "/", model);
+  }
+
   loggedIn() {
     const token = localStorage.getItem("token");
     return token!=null;

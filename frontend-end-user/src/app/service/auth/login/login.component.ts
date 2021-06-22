@@ -41,7 +41,7 @@ export class ServiceLoginComponent implements OnInit {
         this.loginForm.reset();
       },
       error: err => {
-        this.invalid = err.error.message;
+        this.invalid = "Invalid username/password";
       }
     }
 
