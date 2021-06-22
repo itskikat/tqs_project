@@ -49,17 +49,19 @@ public class BusinessUserServiceImpl implements BusinessUserService {
     @Override
     public Optional<Business> updateBusiness(String email, Business business) {
         Optional<Business> b = businessRepository.findByEmail(email);
-        if(b.isEmpty()) {
-            if (business.getEmail() != null) { business.setEmail(business.getEmail()); }
-            if (business.getFull_name() != null) { business.setFull_name(business.getFull_name()); }
-            if (business.getApikey() != null) { business.setApikey(business.getApikey()); }
-            if (business.getPassword() != null) { business.setPassword(business.getPassword()); }
-            if (business.getName() != null) { business.setName(business.getName()); }
-            if (business.getAddress() != null) { business.setAddress(business.getAddress()); }
-            if (business.getNif() != null) { business.setNif(business.getNif()); }
-
-            return Optional.of(businessRepository.save(business));
+        if(b.isPresent()) {
+            Business b1= b.get();
+            if (business.getEmail() != null) { b1.setEmail(business.getEmail()); }
+            if (business.getFull_name() != null) { b1.setFull_name(business.getFull_name()); }
+            if (business.getApikey() != null) { b1.setApikey(business.getApikey()); }
+            if (business.getPassword() != null) { b1.setPassword(business.getPassword()); }
+            if (business.getName() != null) { b1.setName(business.getName()); }
+            if (business.getAddress() != null) { b1.setAddress(business.getAddress()); }
+            if (business.getNif() != null) { b1.setNif(business.getNif()); }
+            System.out.println("AQUI");
+            return Optional.of(businessRepository.save(b1));
         }
+        System.out.println(email);
         return Optional.empty();
     }
 }

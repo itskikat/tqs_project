@@ -2,6 +2,8 @@ package deti.tqs.g305.servicemanagement.restcontroller;
 
 import deti.tqs.g305.servicemanagement.model.Business;
 import deti.tqs.g305.servicemanagement.service.BusinessUserService;
+import org.springframework.http.HttpStatus;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,18 +44,13 @@ public class BusinessUserRestController {
     @PutMapping(value="/business/{email}")
     public ResponseEntity<?> updateBusiness(@PathVariable("email") String email,
                                             @RequestBody Business business) {
-        return businessUserService.findByEmail(email)
-                .map(record -> {
-                    record.setFull_name(business.getFull_name());
-                    record.setEmail(business.getEmail());
-                    record.setPassword(business.getPassword());
-                    record.setApikey(business.getApikey());
-                    record.setName(business.getName());
-                    record.setAddress(business.getAddress());
-                    record.setNif(business.getNif());
-                    Optional<Business> updated = businessUserService.createBusiness(record);
-                    return ResponseEntity.ok().body(updated);
-                }).orElse(ResponseEntity.notFound().build());
+
+        Optional<Business> b = businessUserService.updateBusiness(email, business);
+
+        if(b.isPresent()){
+            return ResponseEntity.ok().body(b.get());
+        }
+        return new ResponseEntity<String>("Bad business", HttpStatus.BAD_REQUEST);
     }
 
     //Removendo um business pelo email (DELETE /business/{email})

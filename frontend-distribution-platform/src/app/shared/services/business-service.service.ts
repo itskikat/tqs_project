@@ -51,8 +51,19 @@ export class BusinessServiceService {
     return this.http.get<BusinessStatistics>(url,this.authservice.getOptions());
   }
 
-  registBusiness(Business: b): Observable<Business>{
+  registBusiness(b:Business): Observable<Business>{
+    let url = apiUrl + "/business";
+    return this.http.post<Business>(url,b,this.authservice.getOptions() )
+  }
 
+  getBusiness(b: string): Observable<Business>{
+    let url = apiUrl + "/business/"+ b;
+    return this.http.get<Business>(url,this.authservice.getOptions() )
+  }
+
+  putBusiness(b:Business): Observable<Business>{
+    let url = apiUrl + "/business/"+b.email;
+    return this.http.put<Business>(url,b,this.authservice.getOptions() )
   }
 
 }
