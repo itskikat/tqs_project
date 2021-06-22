@@ -15,6 +15,9 @@ public class Client extends User {
     @Column(name = "address")
     private String address;
 
+    @ManyToOne
+    private City location_city;
+
     @Column(name = "birthdate")
     private LocalDate birthdate;
 
@@ -30,6 +33,13 @@ public class Client extends User {
     public Client(String email, String password, String full_name, String address, LocalDate birthdate) {
         super(email, full_name, password);
         this.address = address;
+        this.birthdate = birthdate;
+    }
+
+    public Client(String email, String password, String full_name, String address,  City location_city, LocalDate birthdate) {
+        super(email, full_name, password);
+        this.address = address;
+        this.location_city = location_city;
         this.birthdate = birthdate;
     }
 }
