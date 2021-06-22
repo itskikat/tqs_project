@@ -1,17 +1,16 @@
 package deti.tqs.g305.handymanservicesapp.controller;
 
+import deti.tqs.g305.handymanservicesapp.model.ServiceContract;
 import deti.tqs.g305.handymanservicesapp.service.GeneralService;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -33,6 +32,23 @@ public class GeneralController {
         HttpServletRequest request
     ) {
         return ResponseEntity.ok(generalService.getContracts(page, status, sort, order, size, request));
+    }
+
+    @GetMapping("/contracts/{id}")
+    public ResponseEntity<?> getServiceContract(
+        @PathVariable(value = "id") Long serviceContractId,
+        HttpServletRequest request
+    ){
+        return ResponseEntity.ok(generalService.getContract(serviceContractId, request));
+    }
+
+    @PutMapping("/contracts/{id}")
+    public ResponseEntity<?> updateServiceContract(
+        @PathVariable(value = "id") Long serviceContractId,
+        @Valid @RequestBody(required = true) ServiceContract sc,
+        HttpServletRequest request
+    ){
+        return ResponseEntity.ok(generalService.updateContract(serviceContractId, sc, request));
     }
 
 }

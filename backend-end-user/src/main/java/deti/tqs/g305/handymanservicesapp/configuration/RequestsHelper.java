@@ -9,18 +9,18 @@ import org.springframework.http.HttpHeaders;
 public class RequestsHelper {
 
     @Value("${enduser.token}")
-    String token;
+    String apitoken;
 
     public HttpHeaders getHeadersWithAuthorization(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("APIToken", token);
+        headers.set("APIToken", apitoken);
         headers.set("Authorization", token);
         return headers;
     }
 
     public HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("APIToken", token);
+        headers.set("APIToken", apitoken);
         return headers;
     }
 

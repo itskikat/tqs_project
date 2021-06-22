@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.HashMap;
 
 import java.time.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Configuration
 class LoadDatabase {
@@ -47,7 +49,23 @@ class LoadDatabase {
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
+      District d1 = new District();
+      d1.setName("Lisbon");
+      districtRepository.save(d1);
+
+      District d2 = new District();
+      d2.setName("Santarém");
+      districtRepository.save(d2);
+
+      City c1 = new City();
+      c1.setName("Almada");
+      c1.setDistrict(d1);
+      cityRepository.save(c1);
+
       Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
+      p.setCategory("Plumber");
+      p.setLocation_city(new ArrayList<>(Arrays.asList(c1)));
+      p.setLocation_district(new ArrayList<>(Arrays.asList(d2)));
       providerRepository.save(p);
 
       ProviderService ps = new ProviderService("bla bla", p, st);
@@ -82,13 +100,13 @@ class LoadDatabase {
 
       businessServiceRepository.save(bs1);
 
-      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.ACCEPTED, c, 5);
+      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc1);
 
       ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 2);
       serviceContractRepository.save(sc2);
 
-      ServiceContract sc3 = new ServiceContract(bs1, ps1, ServiceStatus.REJECTED, c, 2);
+      ServiceContract sc3 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc3);
 
       BusinessService bs2 = new BusinessService(25, st1, b);
