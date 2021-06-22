@@ -2,11 +2,13 @@ package deti.tqs.g305.servicemanagement.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Optional;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Random;
 
 import deti.tqs.g305.servicemanagement.model.*;
 
@@ -154,6 +156,11 @@ public class ServiceServiceImpl implements ServiceService {
                 return null;
         }
         
+    }
+
+    @Override
+    public List<ServiceContract> getProviderServiceContracts(String username) {
+        return serviceContractRepository.findByProviderService_Provider_Email(username);
     }
 
     @Override
@@ -443,5 +450,38 @@ public class ServiceServiceImpl implements ServiceService {
         return Optional.empty();
     }
 
+    @Override
+    public List<ProviderService> getMatches( String clientid, Long serviceId){
+
+        Client c = clientRepository.findByEmail(clientid).get();
+        List<ProviderService> providersServices = providerServiceRepository.findByService_Id(serviceId);
+        List<ProviderService> filtered= new ArrayList<ProviderService>();
+        List<ProviderService> finalList= new ArrayList<ProviderService>();
+        for (ProviderService p : providersServices) {
+            boolean available=true;
+            List<ServiceContract> scs= serviceContractRepository.findByProviderService_Provider_Email(p.getProvider().getEmail());
+            for (ServiceContract sc :scs){
+                if(sc.getStatus()==ServiceStatus.ACCEPTED || sc.getStatus()==ServiceStatus.REJECTED){
+                    available=false;
+                }
+            }
+            if(available && p.getProvider().getLocation_city().contains(c.getLocation_city())){
+                filtered.add(p);
+            }
+
+            Random rand = new Random();
+            for (int i = 0; i < 3; i++) {
+                if(filtered.size()==0){
+                    break;
+                }
+                int randomIndex = rand.nextInt(filtered.size());
+                ProviderService randomElement = filtered.get(randomIndex);
+                finalList.add(randomElement);
+                filtered.remove(randomIndex);
+            }
+        }
+        return finalList;
+        
+    }
 
 }

@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 @Configuration
@@ -37,7 +38,38 @@ class LoadDatabase {
     // psql -h 127.0.0.1 -d demo -U demo
 
     return args -> {
-      Client c = new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala", LocalDate.now());
+
+      String line = "";  
+
+      //Load Locations
+
+      Map<String, Long> dist_cods = new HashMap<String, Long>();
+      try {
+        BufferedReader br = new BufferedReader(new FileReader("distritos.csv"));  
+        br.readLine();
+        while ((line = br.readLine()) != null) {
+          String[] dist_info = line.split(",");
+          District d = new District(dist_info[1]);
+          d= districtRepository.save(d);
+          dist_cods.put(dist_info[0], d.getId());
+        }
+      } catch (Exception e) {
+        e.printStackTrace();  
+      }
+
+      try {
+        BufferedReader br = new BufferedReader(new FileReader("concelhos.csv"));  
+        br.readLine();
+        while ((line = br.readLine()) != null) {
+          String[] city_info = line.split(",");        
+          cityRepository.save( new City(city_info[2],districtRepository.findById(dist_cods.get(city_info[0])).get()));
+        }
+      } catch (Exception e) {
+        e.printStackTrace();  
+      }
+     
+
+      Client c = new Client("xpto@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta", "lala",cityRepository.findById(1L).get(), LocalDate.now());
       clientRepository.save(c);
 
       Business b = new Business("plumber@plumber.com", "Plumber.com, LDA", bcryptEncoder.encode("abc"), "lala", "lele", "lili","lulu");
@@ -49,23 +81,12 @@ class LoadDatabase {
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
-      District d1 = new District();
-      d1.setName("Lisbon");
-      districtRepository.save(d1);
-
-      District d2 = new District();
-      d2.setName("Santarém");
-      districtRepository.save(d2);
-
-      City c1 = new City();
-      c1.setName("Almada");
-      c1.setDistrict(d1);
-      cityRepository.save(c1);
-
       Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
-      p.setCategory("Plumber");
-      p.setLocation_city(new ArrayList<>(Arrays.asList(c1)));
-      p.setLocation_district(new ArrayList<>(Arrays.asList(d2)));
+      City city = cityRepository.findById(1L).get();
+
+      List<City> provider_location = new ArrayList<>();
+      provider_location.add(city);
+      p.setLocation_city(provider_location);
       providerRepository.save(p);
 
       ProviderService ps = new ProviderService("bla bla", p, st);
@@ -115,40 +136,15 @@ class LoadDatabase {
       BusinessService bs3 = new BusinessService(45, st1, b);
       businessServiceRepository.save(bs3);
 
-      String line = "";  
+      Client c2 = new Client("xpto22@ua.pt", bcryptEncoder.encode("abc"), "xpto xpta2", "lalale", cityRepository.findById(1L).get(), LocalDate.now());
+      clientRepository.save(c2);
 
-      //Load Locations
-
-      Map<String, Long> dist_cods = new HashMap<String, Long>();
-      try {
-        BufferedReader br = new BufferedReader(new FileReader("distritos.csv"));  
-        br.readLine();
-        while ((line = br.readLine()) != null) {
-          String[] dist_info = line.split(",");
-          District d = new District(dist_info[1]);
-          d= districtRepository.save(d);
-          dist_cods.put(dist_info[0], d.getId());
-        }
-      } catch (Exception e) {
-        e.printStackTrace();  
-      }
-
-      try {
-        BufferedReader br = new BufferedReader(new FileReader("concelhos.csv"));  
-        br.readLine();
-        while ((line = br.readLine()) != null) {
-          String[] city_info = line.split(",");        
-          cityRepository.save( new City(city_info[2],districtRepository.findById(dist_cods.get(city_info[0])).get()));
-        }
-      } catch (Exception e) {
-        e.printStackTrace();  
-      }
-     
       
-    };
-    
-  }
+
   
 
+    };
+
+  }
 }
 

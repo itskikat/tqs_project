@@ -1,5 +1,8 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
+import deti.tqs.g305.servicemanagement.model.*;
+import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
+import deti.tqs.g305.servicemanagement.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,15 +23,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +40,7 @@ public class ClientRestController {
 
     @Autowired
     private ServiceService serviceService;
+
 
     @PostMapping("/contracts")
     public ResponseEntity<?> createServiceContract( @Valid @RequestBody(required = false) ServiceContract sc){
@@ -135,4 +134,16 @@ public class ClientRestController {
         }
         return new ResponseEntity<String>("Bad Service Contract", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/matches/{id}")
+    public ResponseEntity<?> getMatchingServiceProviders(@PathVariable(value = "id") Long serviceTypeId, HttpServletRequest request){
+
+        Principal principal = request.getUserPrincipal();
+        List<ProviderService>  ps = serviceService.getMatches(principal.getName(),serviceTypeId);
+
+        return new ResponseEntity<List<ProviderService>>(ps, HttpStatus.OK);
+
+    }
+
+   
 }

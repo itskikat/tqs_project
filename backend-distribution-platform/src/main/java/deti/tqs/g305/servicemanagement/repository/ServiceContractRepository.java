@@ -29,7 +29,7 @@ public interface ServiceContractRepository extends JpaRepository<ServiceContract
     public Page<ServiceContract> findByProviderService_Service_IdAndClientEmail( Long type, String username, Pageable page);
 
     // Provider
-
+    public List<ServiceContract> findByProviderService_Provider_Email(String Username);
     public Page<ServiceContract> findByProviderService_Provider_Email(String Username, Pageable page);
     public Page<ServiceContract> findByProviderService_Service_IdAndProviderService_Provider_Email( Long type, String username, Pageable page);
     public Page<ServiceContract> findByStatusAndProviderService_Provider_Email(ServiceStatus status, String username, Pageable page);

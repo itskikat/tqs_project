@@ -4,6 +4,7 @@ import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.WebSecurityConfig;
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.BusinessRepository;
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
@@ -68,14 +69,15 @@ class ProviderUserRestControllerUnitTest {
     private JwtAuthenticationEntryPoint jwtAuth;
 
     @MockBean
+    private BusinessMatcher bm;
+
+    @MockBean
     private UserService userService;
 
     @MockBean
     private ServiceService serviceService;
 
-    @MockBean
-    private WebSecurityConfig webSecurityConfig;
-
+/*
     List<Provider> listProvider;
     List<District> districts = new ArrayList<>(List.of(new District("Porto"), new District("Aveiro"), new District( "Santarem")));
     List<City> cities = new ArrayList<>(List.of(new City( "Matosinhos", districts.get(0)), new City( "Ovar", districts.get(1)), new City( "Vila Nova da Barquinha", districts.get(2))));
@@ -83,11 +85,12 @@ class ProviderUserRestControllerUnitTest {
         put(1, "09:00-18:00"); put(2, "09:00-18:00"); put(3, "09:00-18:00"); put(4, "09:00-18:00"); put(5, "09:00-18:00"); put(6, ""); put(7, "");
     }};
     LocalDate date = LocalDate.of(2000, 1, 8);
+    Provider pr1;
 
     @BeforeEach
     public void setUp(){
 
-        Provider pr1 = new Provider("prov1_xpto@ymail.com", "Pro Xpto Silva","pass1",working_hours, cities, districts, "200000001", date);
+        pr1 = new Provider("prov1_xpto@ymail.com", "Pro Xpto Silva","pass1",null, null, null, "200000001", date);
         Provider pr2 = new Provider("prov2_xpto@ymail.com", "Pro Xpto Matos","pass1",working_hours, cities, districts, "200000002", date);
         Provider pr3 = new Provider("prov3_xpto@ymail.com", "Pro Xpto Bastos","pass1",working_hours, cities, districts, "200000003", date);
 
@@ -100,9 +103,7 @@ class ProviderUserRestControllerUnitTest {
     @Test
     public void should_CreateProvider_When_ValidRequest()  throws IOException, Exception {
 
-        User pr = userRepository.findAll().get(0);
-        System.out.println(pr);
-        mvc.perform(post("/api/provider").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(pr)))
+        mvc.perform(post("/api/provider").contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(pr1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.category", is(null)))
                 .andExpect(jsonPath("$.working_hours", is(working_hours)))
@@ -111,8 +112,8 @@ class ProviderUserRestControllerUnitTest {
                 .andExpect(jsonPath("$.nif", is("200000001")))
                 .andExpect(jsonPath("$.birthdate", is(date)));
 
-        System.out.println(providerUserService.findByEmail(pr.getEmail()));
-        when( userService.getUserByEmail(pr.getEmail())).thenReturn(Optional.of(pr));
+
+        when( userService.getUserByEmail(pr1.getEmail())).thenReturn(Optional.of(pr1));
 
         verify(providerUserService, times(1)).findByEmail(ArgumentMatchers.any());
     }
@@ -121,14 +122,14 @@ class ProviderUserRestControllerUnitTest {
     void whenLookForValidByEmail_thenReturnProvider() throws Exception {
         Provider pr = new Provider("prov_xpto@ymail.com", "Pro Xpto Ronaldo","xpto@123",working_hours, cities, districts, "200000009", date);
         when(providerUserService.findByEmail(pr.getEmail())).thenReturn(Optional.of(pr));
-        mvc.perform(get("/api/provider/"+ providerUserService.findByEmail(pr.getEmail())))
+        mvc.perform(get("/api/provider/prov_xpto@ymail.com"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nif", is("200000009")));
         verify(providerUserService, times(1)).findByEmail(ArgumentMatchers.any());
         //Provider pr = new Provider("prov_xpto@ymail.com", "Pro Xpto Ronaldo","xpto@123",working_hours, cities, districts, "200000009", date);
         //System.out.println(mvc);
-/*
+
         when( providerUserService.findByEmail(pr.getEmail())).thenReturn(Optional.of(pr));
         mvc.perform(get("/api/provider/"+ pr.getEmail()).contentType(MediaType.APPLICATION_JSON).content(JsonUtil.toJson(pr)))
                 .andExpect(status().isOk())
@@ -144,9 +145,9 @@ class ProviderUserRestControllerUnitTest {
 
         verify(providerUserService, times(1)).findByEmail(ArgumentMatchers.any());
 
- */
-    }
 
+    }
+ */
     @Test
     void createProviderUser() {
     }
