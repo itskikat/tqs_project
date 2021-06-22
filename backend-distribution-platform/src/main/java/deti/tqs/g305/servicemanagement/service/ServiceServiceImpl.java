@@ -20,8 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
 import deti.tqs.g305.servicemanagement.repository.ClientRepository;
-
-
+import deti.tqs.g305.servicemanagement.service.messaging.NotificationController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -49,6 +48,9 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
 
+    @Autowired
+    private NotificationController notificationController;
+
     @Override
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
@@ -73,6 +75,10 @@ public class ServiceServiceImpl implements ServiceService {
                 return Optional.empty();
             }
             serviceContract.setClient(c.get());
+            
+            // Send Notification
+            notificationController.send(serviceContract.getProviderService().getProvider().getEmail()+":"+"W");
+
             return Optional.of(serviceContractRepository.save(serviceContract));
         }
         
@@ -106,6 +112,11 @@ public class ServiceServiceImpl implements ServiceService {
             }
             sc.setReview(serviceContract.getReview());
             sc.setStatus(serviceContract.getStatus());
+
+            if(sc.getStatus()==ServiceStatus.ACCEPTED){
+                // Send Notification
+                notificationController.send(sc.getProviderService().getProvider().getEmail()+":"+"A");
+            }
             return Optional.of(serviceContractRepository.save(sc));
         }
         return Optional.empty();

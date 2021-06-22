@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import deti.tqs.g305.servicemanagement.model.ServiceContract;
 import deti.tqs.g305.servicemanagement.repository.*;
+import deti.tqs.g305.servicemanagement.service.messaging.NotificationController;
 import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 public class ServiceServiceUnitTest {
 
+    private static final Logger log = LoggerFactory.getLogger(ServiceServiceUnitTest.class);
 
     @Mock( lenient = true)
     private ServiceContractRepository serviceContractRepository;
@@ -53,6 +57,9 @@ public class ServiceServiceUnitTest {
 
     @Mock( lenient = true)
     private ServiceTypeRepository serviceTypeRepository;
+
+    @Mock( lenient = true)
+    private NotificationController notificationController;
 
     @InjectMocks
     private ServiceServiceImpl serviceService;
@@ -73,18 +80,33 @@ public class ServiceServiceUnitTest {
 
     @BeforeEach
     public void setUp() {
-        sc_wait = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.WAITING, new Client(),0);
+        Mockito.when(notificationController.send(any())).thenReturn("");
+
+        ProviderService ps = new ProviderService();
+        Provider p = new Provider();
+        p.setEmail("abc@ua.pt");
+        ps.setProvider(p);
+        BusinessService bs = new BusinessService();
+        b = new Business();
+        b.setEmail("def@ua.pt");
+        bs.setBusiness(b);
+        Client c = new Client();
+        c.setEmail("ghi@ua.pt");
+
+        sc_wait = new ServiceContract(bs, ps, ServiceStatus.WAITING, c,0);
+        sc_wait.setId(3L);
         Mockito.when(serviceContractRepository.save(sc_wait)).thenReturn(sc_wait);
 
-        sc_accept = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.ACCEPTED, new Client(),0);
-        sc_fin = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.FINNISHED, new Client(),0);
-        sc_rej = new ServiceContract(new BusinessService(), new ProviderService(), ServiceStatus.REJECTED, new Client(),0);
+        sc_accept = new ServiceContract(bs, ps, ServiceStatus.ACCEPTED, c,0);
+        sc_fin = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c,0);
+        sc_rej = new ServiceContract(bs, ps, ServiceStatus.REJECTED, c,0);
         sc_accept.setId(sc_wait.getId());
         sc_fin.setId(sc_accept.getId());
         sc_rej.setId(sc_accept.getId());
 
         Mockito.when(serviceContractRepository.save(sc_accept)).thenReturn(sc_accept);
         Mockito.when(serviceContractRepository.findById(sc_wait.getId())).thenReturn(sc_wait);
+        Mockito.when(serviceContractRepository.findById(sc_accept.getId())).thenReturn(sc_accept);
         Mockito.when(serviceContractRepository.findById(-99L)).thenReturn(null);
 
         // BusinessService
@@ -318,15 +340,6 @@ public class ServiceServiceUnitTest {
 
         assertThat(scProviderfromDB.getContent()).isEqualTo(scs);
         assertThat(scClientfromDB.getContent()).isEqualTo(scs);
-    }
-
-    @Test
-    public void givenServiceContract_whenGetServiceContract_thenReturnServiceContract( ){
-        sc_wait.setClient(new Client("xpto@ua.pt", "abc", "xpto xpta", "lala", LocalDate.now()));
-        Optional<ServiceContract> optSc = serviceService.getServiceContract("xpto@ua.pt", sc_wait.getId());
-        assertThat(optSc.get()).isEqualTo(sc_wait);
-
-        verify(serviceContractRepository, times(1)).findById(anyLong());
     }
 
 
