@@ -142,7 +142,6 @@ public class ClientRestController {
         List<ProviderService>  ps = serviceService.getMatches(principal.getName(),serviceTypeId);
 
         return new ResponseEntity<List<ProviderService>>(ps, HttpStatus.OK);
-
     }
 
    

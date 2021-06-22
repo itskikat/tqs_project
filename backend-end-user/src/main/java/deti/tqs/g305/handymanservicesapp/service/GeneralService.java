@@ -2,6 +2,8 @@ package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
+import deti.tqs.g305.handymanservicesapp.model.BusinessService;
+import deti.tqs.g305.handymanservicesapp.model.ProviderService;
 import deti.tqs.g305.handymanservicesapp.model.ServiceContract;
 import deti.tqs.g305.handymanservicesapp.model.UserResponse;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -63,6 +66,17 @@ public class GeneralService {
     ) {
         HttpEntity<ServiceContract> entity = new HttpEntity<>(sc, requestsHelper.getHeadersWithAuthorization(request.getHeader("Authorization")));
         return restTemplate.exchange(apiBaseUrl + "/clients/contracts/" + id.toString(), HttpMethod.PUT, entity, ServiceContract.class).getBody();
+    }
+
+    public List match(
+        Long id,
+        HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/clients/matches/" + id.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), List.class).getBody();
+    }
+
+    public List<BusinessService> services(HttpServletRequest request) {
+        return (List<BusinessService>) restTemplate.exchange(apiBaseUrl + "/businesses/allservices", HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), List.class).getBody();
     }
 
 }
