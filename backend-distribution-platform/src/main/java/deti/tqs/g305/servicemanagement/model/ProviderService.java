@@ -1,7 +1,7 @@
 package deti.tqs.g305.servicemanagement.model;
 
 /**
- * ProviderService
+ * ProviderUserService
  */
 
 
