@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // dont authenticate this particular requests
                 .authorizeRequests()
                     .antMatchers("/api/users/login").permitAll()
+                    .antMatchers("/api/provider").permitAll()
                     // CLIENT endpoints (require Business API)
                     .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
                 // all other requests need to be authenticated
