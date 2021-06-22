@@ -2,30 +2,19 @@ package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
-import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
-import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
-import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
-import deti.tqs.g305.handymanservicesapp.model.UserResponse;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import deti.tqs.g305.handymanservicesapp.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -68,6 +57,11 @@ public class UserService {
             throw new UnauthorizedException("Session expired!");
         }
         return ud;
+    }
+
+    public Optional create(Client c, HttpServletRequest request) {
+        HttpEntity<Client> entity = new HttpEntity<>(c, requestsHelper.getHeadersWithAuthorization(request.getHeader("Authorization")));
+        return restTemplate.exchange(apiBaseUrl + "/client/", HttpMethod.POST, entity, Optional.class).getBody();
     }
 
 

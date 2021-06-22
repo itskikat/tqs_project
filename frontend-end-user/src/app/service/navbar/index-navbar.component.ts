@@ -22,7 +22,7 @@ export class ServiceNavbarComponent implements OnInit {
     this.authService.loggedData().then(data => {
       this.user=data;
     }).catch(error => {
-      if (this.router.url.split('?')[0]!="/" && this.router.url.split('?')[0]!="/login") {
+      if (this.router.url.split('?')[0]!="/" && this.router.url.split('?')[0]!="/login" && this.router.url.split('?')[0]!="/register") {
         if (error.status==401) {
           this.authService.logOut();
           alert("Your session has expired!");
