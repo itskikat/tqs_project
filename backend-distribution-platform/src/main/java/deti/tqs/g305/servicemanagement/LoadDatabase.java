@@ -97,13 +97,13 @@ class LoadDatabase {
 
       businessServiceRepository.save(bs1);
 
-      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.ACCEPTED, c, 5);
+      ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc1);
 
       ServiceContract sc2 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 2);
       serviceContractRepository.save(sc2);
 
-      ServiceContract sc3 = new ServiceContract(bs1, ps1, ServiceStatus.REJECTED, c, 2);
+      ServiceContract sc3 = new ServiceContract(bs1, ps1, ServiceStatus.FINNISHED, c, 0);
       serviceContractRepository.save(sc3);
 
       BusinessService bs2 = new BusinessService(25, st1, b);

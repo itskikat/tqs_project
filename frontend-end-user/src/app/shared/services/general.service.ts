@@ -29,5 +29,9 @@ export class GeneralService {
   getContract(id: number) {
     return this.http.get<ServiceContract>(apiUrl + "/contracts/" + id, this.authService.getOptions()).toPromise();
   }
+
+  updateContract(id: number, contract: ServiceContract) {
+    return this.http.put<ServiceContract>(apiUrl + "/contracts/" + id, contract, this.authService.getOptions()).toPromise();
+  }
   
 }
