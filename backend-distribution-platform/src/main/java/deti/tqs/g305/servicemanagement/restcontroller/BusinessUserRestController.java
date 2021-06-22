@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,5 +64,15 @@ public class BusinessUserRestController {
                     businessUserService.deleteBusiness(email);
                     return ResponseEntity.ok().build();
                 }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/business/token")
+    public ResponseEntity<String> generateToken(HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+        Optional<Business> optB = businessUserService.generateToken(principal.getName());
+        if(optB.isPresent()){
+            return new ResponseEntity<String>(optB.get().getApikey(), HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Could not generate token", HttpStatus.BAD_REQUEST);
     }
 }

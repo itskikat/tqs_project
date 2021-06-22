@@ -11,4 +11,6 @@ public interface BusinessUserService {
     boolean deleteBusiness(String email);
     Optional<Business> createBusiness(Business provider);
     Optional<Business> updateBusiness(String email, Business provider);
+    Optional<Business> generateToken(String email);
+    String getRandomToken();
 }

@@ -9,15 +9,28 @@
         <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
             <nb-card-body>
                 <nb-stepper orientation="horizontal">
-                    <nb-step [label]="labelTwo">
+                    <nb-step [label]="labelTwo" [stepControl]="businessAccountForm">
                         <ng-template #labelTwo>Account</ng-template>
                         <h3>Register Account</h3>
-                        <p>For a greater commodity our platform allows logging in with google account.</p>
-                        <div class="row" style="margin-top: 5%;">
-                            <button nbButton nbStepperNext class="p-3 mx-auto col-5">
-                                <img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png">
-                                <span>Login with Google</span>
-                            </button>
+                        <form [formGroup]="businessAccountForm">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Enter account email"
+                                    class="form-control" type="email" required formControlName="email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Password"
+                                    class="form-control" type="password" required formControlName="pass">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input nbInput style="max-width: 100%;" placeholder="Confirm password"
+                                    class="form-control" type="password" required formControlName="newpass">
+                            </div>
+                        </form>
+                        <div class="row">
+                            <button nbButton nbStepperNext class="mr-auto ml-auto">next</button>
                         </div>
                     </nb-step>
                     <nb-step [label]="labelOne" [stepControl]="businessDataForm">
@@ -41,49 +54,10 @@
                                     class="form-control" required formControlName="address">
                             </div>
                             
-                            <div class="form-group">
-                                <label>Country</label>
-                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCountry">
-                                    <nb-option value="0">Portugal</nb-option>
-                                    <nb-option value="1">Spain</nb-option>
-                                    <nb-option value="2">France</nb-option>
-                                    <nb-option value="3">Germany</nb-option>
-                                </nb-select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Coverage</label>
-                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCoverage">
-                                    <nb-option value="0">Regional</nb-option>
-                                    <nb-option value="1">National</nb-option>
-                                    <nb-option value="2">Continental</nb-option>
-                                    <nb-option value="3">Worldwide</nb-option>
-                                </nb-select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Business area</label>
-                                <nb-select class="col-12 p-0" style="max-width: 100%;" placeholder="" [(selected)]="selectedCategory">
-                                    <nb-option value="0">Diverse</nb-option>
-                                    <nb-option value="1">House maintenance</nb-option>
-                                    <nb-option value="2">Human care</nb-option>
-                                    <nb-option value="3">Cooking</nb-option>
-                                </nb-select>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label>Operation date (prevision)</label>
-                                <input nbInput style="max-width: 100%;"
-                                    placeholder="Enter the date your business is expected to be operating"
-                                    class="form-control" [nbDatepicker]="formpicker" formControlName="operationstart">
-                                <nb-datepicker [min]="minDate" #formpicker></nb-datepicker>
-                            </div>
-
                         </form>
                         <div class="row">
                             <button nbButton nbStepperPrevious class="ml-auto mr-3">previous</button>
-                            <button nbButton nbStepperNext class="mr-auto ml-3">next</button>
+                            <button nbButton nbStepperNext class="mr-auto ml-3" (click)="saveBusiness()">regist</button>
                         </div>
 
                     </nb-step>
@@ -96,7 +70,7 @@
                             <p>This token is going to be used by your app in order itself to the API.</p>
                             
                             <nb-alert status="warning">
-                                Attention! You will only be able to see the token once. Generate it only when you have a safe place to store it.
+                                Attention! You will only be able to see the token once. Ensure that you store it safely
                             </nb-alert>
     
                             <button 
@@ -113,13 +87,12 @@
                         <div *ngIf="tokenGenerated">
                             <p>Your token has been generated successfully and is shown below!</p>
                             <nb-alert outline="success" class="my-5 text-center">
-                                ULab6..PzmKj4!;$&@Yw`+s4tun04
+                                {{token}}
                             </nb-alert>
                             <p>You must use it every time your app calls the API. See how in the <a>documentation</a>.</p>
                             <p>You can now access the dashboard and monitor your app stats. To do so press FINISH.</p>
                             
                             <div class="row">
-                                <button nbButton (click)="revertToken()" class="ml-auto mr-3">previous</button>
                                 <button nbButton (click)="finishRegister()" class="mr-auto ml-3">finnish</button>
                             </div>
                         </div>

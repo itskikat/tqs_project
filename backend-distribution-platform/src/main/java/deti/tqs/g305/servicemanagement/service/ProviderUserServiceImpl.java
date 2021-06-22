@@ -40,7 +40,7 @@ public class ProviderUserServiceImpl implements ProviderUserService {
 
         Optional<Provider> p = providerRepository.findById(provider.getEmail());
         if(p.isEmpty()) {
-            return Optional.of(providerRepository.save(provider));
+            return Optional.of(providerRepository.saveAndFlush(provider));
         }
         return Optional.empty();
     }
@@ -59,7 +59,7 @@ public class ProviderUserServiceImpl implements ProviderUserService {
             if (provider.getLocation_district() != null) { provider.setLocation_district(provider.getLocation_district()); }
             if (provider.getNif() != null) { provider.setNif(provider.getNif()); }
 
-            return Optional.of(providerRepository.save(provider));
+            return Optional.of(providerRepository.saveAndFlush(provider));
         }
         return Optional.empty();
     }

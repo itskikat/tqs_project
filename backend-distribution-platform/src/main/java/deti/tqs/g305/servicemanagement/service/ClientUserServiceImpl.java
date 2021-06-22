@@ -24,7 +24,7 @@ public class ClientUserServiceImpl implements ClientUserService {
         if(c.isEmpty()) {
             // Encrypt password
             client.setPassword(bcryptEncoder.encode(client.getPassword()));
-            return Optional.of(clientRepository.save(client));
+            return Optional.of(clientRepository.saveAndFlush(client));
         }
         return Optional.empty();
     }

@@ -52,7 +52,7 @@ export class BusinessServiceService {
   }
 
   registBusiness(b:Business): Observable<Business>{
-    let url = apiUrl + "/business";
+    let url = apiUrl + "/business/";
     return this.http.post<Business>(url,b,this.authservice.getOptions() )
   }
 
@@ -64,6 +64,11 @@ export class BusinessServiceService {
   putBusiness(b:Business): Observable<Business>{
     let url = apiUrl + "/business/"+b.email;
     return this.http.put<Business>(url,b,this.authservice.getOptions() )
+  }
+
+  generateToken(): Observable<Business>{
+    let url = apiUrl + "/business/token";
+    return this.http.get<Business>(url,this.authservice.getOptions() )
   }
 
 }
