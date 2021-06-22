@@ -3,7 +3,7 @@ import { ServiceType } from './ServiceType';
 
 export interface ProviderService{
     id?: number;
-    provider?: Provider;
+    provider: Provider;
     service?: ServiceType;
     description?: String;
 }

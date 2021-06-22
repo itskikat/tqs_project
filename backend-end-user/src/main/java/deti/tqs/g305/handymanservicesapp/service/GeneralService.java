@@ -2,6 +2,7 @@ package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
+import deti.tqs.g305.handymanservicesapp.model.ServiceContract;
 import deti.tqs.g305.handymanservicesapp.model.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,10 @@ public class GeneralService {
         }
         log.info("query: {}", query.toString());
         return restTemplate.exchange(apiBaseUrl + "/clients/contracts" + query.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), Map.class).getBody();
+    }
+
+    public ServiceContract getContract(Long id, HttpServletRequest request) {
+        return restTemplate.exchange(apiBaseUrl + "/clients/contracts/" + id.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), ServiceContract.class).getBody();
     }
 
 }

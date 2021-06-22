@@ -3,10 +3,7 @@ package deti.tqs.g305.handymanservicesapp.controller;
 import deti.tqs.g305.handymanservicesapp.JsonUtil;
 import deti.tqs.g305.handymanservicesapp.configuration.ClientBearerMatcher;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
-import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
-import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
-import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
-import deti.tqs.g305.handymanservicesapp.model.UserResponse;
+import deti.tqs.g305.handymanservicesapp.model.*;
 import deti.tqs.g305.handymanservicesapp.service.GeneralService;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +58,22 @@ public class GeneralControllerUnitTest {
 
         // Validate that service was called with right parameters
         verify(generalService, times(1)).getContracts(eq(3), eq("FINISHED"), eq("price"), eq("DESC"), eq(99), any());
+    }
+
+    @Test
+    void whenGetContract_thenReturnContract() throws Exception {
+        // Mock service
+        ServiceContract s = new ServiceContract();
+        s.setId(3);
+        when(generalService.getContract(any(), any())).thenReturn(s);
+
+        // Call controller and validate response
+        mvc.perform(get("/api/contracts/" + 3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(3)));
+
+        // Validate that service was called with right parameters
+        verify(generalService, times(1)).getContract(eq(3L), any());
     }
 
 }

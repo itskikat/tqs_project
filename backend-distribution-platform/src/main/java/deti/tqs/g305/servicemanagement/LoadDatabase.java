@@ -12,6 +12,8 @@ import deti.tqs.g305.servicemanagement.repository.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Configuration
 class LoadDatabase {
@@ -22,8 +24,11 @@ class LoadDatabase {
   private PasswordEncoder bcryptEncoder;
 
   @Bean
-  CommandLineRunner initDatabase(ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
-  ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository) {
+  CommandLineRunner initDatabase(
+      ClientRepository clientRepository, ServiceContractRepository serviceContractRepository, ProviderRepository providerRepository,
+      ProviderServiceRepository providerServiceRepository, BusinessRepository businessRepository, BusinessServiceRepository businessServiceRepository, ServiceTypeRepository serviceTypeRepository,
+      DistrictRepository districtRepository, CityRepository cityRepository
+  ) {
 
     // docker exec -it tqs_project_db_1 bash
     // psql -h 127.0.0.1 -d demo -U demo
@@ -41,7 +46,23 @@ class LoadDatabase {
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
+      District d1 = new District();
+      d1.setName("Lisbon");
+      districtRepository.save(d1);
+
+      District d2 = new District();
+      d2.setName("Santarém");
+      districtRepository.save(d2);
+
+      City c1 = new City();
+      c1.setName("Almada");
+      c1.setDistrict(d1);
+      cityRepository.save(c1);
+
       Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
+      p.setCategory("Plumber");
+      p.setLocation_city(new ArrayList<>(Arrays.asList(c1)));
+      p.setLocation_district(new ArrayList<>(Arrays.asList(d2)));
       providerRepository.save(p);
 
       ProviderService ps = new ProviderService("bla bla", p, st);
