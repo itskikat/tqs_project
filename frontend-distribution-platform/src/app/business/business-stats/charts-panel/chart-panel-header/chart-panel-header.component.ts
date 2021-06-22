@@ -8,7 +8,7 @@ import { takeWhile } from 'rxjs/operators';
   styleUrls: ['./chart-panel-header.component.scss'],
   templateUrl: './chart-panel-header.component.html',
 })
-export class BusinessStatsChartsChartPanelHeaderComponent implements OnDestroy {
+export class BusinessStatsChartPanelHeaderComponent implements OnDestroy {
 
   private alive = true;
 
@@ -45,15 +45,7 @@ export class BusinessStatsChartsChartPanelHeaderComponent implements OnDestroy {
     this.chartLegend = [
       {
         iconColor: orderProfitLegend.firstItem,
-        title: 'This week',
-      },
-      {
-        iconColor: orderProfitLegend.secondItem,
-        title: 'Last week',
-      },
-      {
-        iconColor: orderProfitLegend.thirdItem,
-        title: 'Average week',
+        title: 'Orders',
       },
     ];
   }

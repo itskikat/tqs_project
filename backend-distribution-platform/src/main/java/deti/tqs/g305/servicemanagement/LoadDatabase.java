@@ -71,7 +71,9 @@ class LoadDatabase {
       ProviderService ps1 = new ProviderService("bla bla", p, st1);
       providerServiceRepository.save(ps1);
 
+
       BusinessService bs1 = new BusinessService(15, st1, b);
+
       businessServiceRepository.save(bs1);
 
       ServiceContract sc1 = new ServiceContract(bs1, ps1, ServiceStatus.ACCEPTED, c, 5);
