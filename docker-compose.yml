@@ -1,14 +1,19 @@
 version: '3'
 services:
-  #
-  #frontend-distribution-platform:
-  #  build: ./frontend-distribution-platform
-  #  volumes:
-  #    - ./frontend-distribution-platform:/usr/src/app/
-  #    - ./frontend-distribution-platform/node_modules:/usr/src/app/node_modules
-  #  ports:
-  #    - "80:80"
+  
+  frontend-distribution-platform:
+    build: ./frontend-distribution-platform
+    volumes:
+      - ./frontend-distribution-platform:/usr/src/app/
+      - ./frontend-distribution-platform/node_modules:/usr/src/app/node_modules
+    ports:
+      - "80:80"
 
+  frontend-end-user:
+    build: ./frontend-end-user
+    volumes:
+      - ./frontend-end-user:/usr/src/app/
+      - ./frontend-end-user:/node_modules:/usr/src/app/node_modules
   db:
     image: postgres
     ports:
