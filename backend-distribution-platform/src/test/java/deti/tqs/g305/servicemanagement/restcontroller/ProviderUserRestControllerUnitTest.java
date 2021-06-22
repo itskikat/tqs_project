@@ -75,8 +75,8 @@ class ProviderUserRestControllerUnitTest {
 
 
     List<Provider> listProvider;
-    List<District> districts = new ArrayList<>(List.of(new District(1,"Porto"), new District(2,"Aveiro"), new District(3, "Santarem")));
-    List<City> cities = new ArrayList<>(List.of(new City(1, "Matosinhos", districts.get(0)), new City(2, "Ovar", districts.get(1)), new City(3, "Vila Nova da Barquinha", districts.get(2))));
+    List<District> districts = new ArrayList<>(List.of(new District("Porto"), new District("Aveiro"), new District( "Santarem")));
+    List<City> cities = new ArrayList<>(List.of(new City( "Matosinhos", districts.get(0)), new City( "Ovar", districts.get(1)), new City( "Vila Nova da Barquinha", districts.get(2))));
     Map<Integer, String> working_hours = new HashMap<Integer, String>() {{
         put(1, "09:00-18:00"); put(2, "09:00-18:00"); put(3, "09:00-18:00"); put(4, "09:00-18:00"); put(5, "09:00-18:00"); put(6, ""); put(7, "");
     }};
