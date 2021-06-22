@@ -4,12 +4,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Requests',
     icon: 'bell-outline',
-    link: '/requests',
+    link: '/provider/requests',
   },
   {
     title: 'Services',
     icon: 'shopping-cart-outline',
-    link: '/services',
+    link: '/provider/services',
   },
   {
     title: 'Statistics',

@@ -1,7 +1,12 @@
 package deti.tqs.g305.servicemanagement.configuration;
 
+import deti.tqs.g305.servicemanagement.exception.UnauthorizedException;
 import deti.tqs.g305.servicemanagement.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +24,8 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
+
     @Autowired
     private UserService userService;
 
@@ -31,6 +38,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader("Authorization");
 
+        log.info("Validating token {}", requestTokenHeader);
+
         String username = null;
         String jwtToken = null;
         // JWT Token is in the form "Bearer token". Remove Bearer word and get
@@ -40,9 +49,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                log.error("Unable to get JWT Token: {}", e.getMessage());
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                log.error("JWT Token has expired: {}", e.getMessage());
+            } catch (MalformedJwtException e) {
+                log.error("Invalid JTW Token: {}", e.getMessage());
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");

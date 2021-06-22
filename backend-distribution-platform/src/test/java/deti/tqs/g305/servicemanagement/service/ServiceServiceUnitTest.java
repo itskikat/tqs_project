@@ -19,8 +19,12 @@ import deti.tqs.g305.servicemanagement.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
@@ -536,14 +540,12 @@ public class ServiceServiceUnitTest {
         serviceService.deleteBusinessService(bs_withId.getId());
 
         verify(businessServiceRepository, times(1)).delete(bs_withId);
-
     }
 
     @Test
     void whenDeleteInvalidBusinessServiceID_thenExceptionShouldBeThrown() {
         assertFalse(serviceService.deleteBusinessService(-99L));
         verify(businessServiceRepository, times(0)).delete(any());
-
     }
 
     @Test
@@ -554,9 +556,9 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByStatusAndBusinessService_Business_Email(any(), any())).thenReturn(listServiceContract);
 
-        float expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail());
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail(), Optional.empty(), Optional.empty());
 
-        assertThat(0.0f).isEqualTo(expected);
+        assertThat(0.0).isEqualTo(expected);
         verify(serviceContractRepository, times(1)).findByStatusAndBusinessService_Business_Email(any(), any());
         
     }
@@ -576,9 +578,9 @@ public class ServiceServiceUnitTest {
 
         Mockito.when(serviceContractRepository.findByBusinessService_Business_Email(any())).thenReturn(listServiceContract);
 
-        List<ServiceContract> expected = serviceService.getBusinessServiceContracts(b.getEmail());
+        Integer expected = serviceService.getTotalBusinessServiceContracts(b.getEmail(), Optional.empty(), Optional.empty());
 
-        assertThat(listServiceContract).isEqualTo(expected);
+        assertThat(listServiceContract.size()).isEqualTo(expected);
 
         verify(serviceContractRepository, times(1)).findByBusinessService_Business_Email(any());
     }
@@ -595,7 +597,7 @@ public class ServiceServiceUnitTest {
         Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeId(any())).thenReturn(st.getId());
         Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
 
-        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail());
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.empty(), Optional.empty()).get();
 
         assertThat(st).isEqualTo(expected);
 
@@ -603,4 +605,195 @@ public class ServiceServiceUnitTest {
         verify(serviceTypeRepository, times(1)).findById(anyLong());
     }
 
+    @Test
+    void givenServiceContracts_whenGetBusinessBusinessServicesProfitDateInterval_thenReturnProfitDateInterval() {
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_TotalProfitDateInterval(any(), any(), any())).thenReturn(0.0);
+
+        double expected = serviceService.getBusinessBusinessServiceProfit(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1)));
+
+        assertThat(0.0).isEqualTo(expected);
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_TotalProfitDateInterval(any(), any(), any());
+    }
+
+    @Test
+    void givenBusinessServiceContracts_whenGetBusinessServiceContractsDateInterval_thenReturnServiceContractsDateInterval() {
+        bs_withId.setBusiness(b);
+
+        sc_wait.setBusinessService(bs_withId);
+        sc_accept.setBusinessService(bs_withId);
+        sc_fin.setBusinessService(bs_withId);
+
+        List<ServiceContract> listServiceContract = new ArrayList<>();
+        listServiceContract.add(sc_wait);
+        listServiceContract.add(sc_accept);
+        listServiceContract.add(sc_fin);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_TotalContractsFinishedDateInterval(any(), any(), any())).thenReturn(listServiceContract.size());
+
+        Integer expected = serviceService.getTotalBusinessServiceContracts(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1)));
+
+        assertThat(listServiceContract.size()).isEqualTo(expected);
+
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_TotalContractsFinishedDateInterval(any(), any(), any());
+    }
+
+    @Test
+    void givenBusinessBusinessServices_whenGetMostRequestedServiceTypeDateInterval_thenReturnMostRequestServiceTypeDateInterval() {
+        ServiceType st = new ServiceType("canalizacao", true);
+
+        BusinessService bs1 = new BusinessService(0, st, b);
+        BusinessService bs2 = new BusinessService(0, new ServiceType(), b);
+        bs_withId.setService(st);
+        bs_withId.setBusiness(b);
+
+        Mockito.when(businessServiceRepository.findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(any(), any(), any())).thenReturn(st.getId());
+        Mockito.when(serviceTypeRepository.findById(anyLong())).thenReturn(st);
+
+        ServiceType expected = serviceService.getBusinessMostRequestedServiceType(b.getEmail(), Optional.of(LocalDate.now().minusWeeks(1)), Optional.of(LocalDate.now().plusWeeks(1))).get();
+
+        assertThat(st).isEqualTo(expected);
+
+        verify(businessServiceRepository, times(1)).findByBusiness_Email_MostRequestedServiceTypeIdDateInterval(any(), any(), any());
+        verify(serviceTypeRepository, times(1)).findById(anyLong());
+    }
+
+    @Test
+    void whenGetTotalProfit_ReturnTotalProfit(){
+        Mockito.when(providerServiceRepository.getTotalProfit(eq("hello"), any(), any())).thenReturn(6.0);
+        
+        double profit = serviceService.getTotalProfit("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+
+        assertThat(profit).isEqualTo(6.0);
+
+        verify(providerServiceRepository, times(1)).getTotalProfit(any(),any(),any());
+    }
+
+    @Test
+    void whenGetTotalProfitInvalidDate_ReturnTotalProfit(){
+        Mockito.when(providerServiceRepository.getTotalProfit(eq("hello"), any(), any())).thenReturn(6.0);
+        
+        Optional<Double> profit = serviceService.getTotalProfit("hello", LocalDate.now().plusWeeks(1),  LocalDate.now().minusWeeks(1));
+
+        assertThat(profit).isEqualTo(Optional.empty());
+
+        verify(providerServiceRepository, times(0)).getTotalProfit(any(),any(),any());
+    }
+
+    @Test
+    void whenGetTotalFinished_ReturnTotalFinished(){
+        Mockito.when(providerServiceRepository.getTotalFinished(eq("hello"), any(), any())).thenReturn(6);
+        
+        int contracts = serviceService.getTotalFinished("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+
+        assertThat(contracts).isEqualTo(6);
+
+        verify(providerServiceRepository, times(1)).getTotalFinished(any(),any(),any());
+    }
+
+    @Test
+    void whenGetTotalFinishedInvalidDate_ReturnTotalFinished(){
+        
+        Optional<Integer> contracts = serviceService.getTotalFinished("hello", LocalDate.now().plusWeeks(1),  LocalDate.now().minusWeeks(1));
+
+        assertThat(contracts).isEqualTo(Optional.empty());
+
+        verify(providerServiceRepository, times(0)).getTotalProfit(any(),any(),any());
+    }
+
+    @Test
+    void whenGetTotalMostContractsProviderService_ReturnProviderService(){
+        Mockito.when(providerServiceRepository.getTotalMostContractsProviderService(eq("hello"), any(), any())).thenReturn(Long.valueOf(1));
+        Mockito.when(providerServiceRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(ps_withId));
+    
+
+        Optional<ProviderService> ps = serviceService.getTotalMostContractsProviderService("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1));
+
+        assertThat(ps.get()).isEqualTo(ps_withId);
+
+        verify(providerServiceRepository, times(1)).getTotalMostContractsProviderService(any(),any(),any());
+        verify(providerServiceRepository, times(1)).findById(Long.valueOf(1));
+    }
+
+    @Test
+    void whenGetTotalMostContractsProviderServiceInvalidDate_ReturnProviderService(){
+        
+        Optional<ProviderService> ps = serviceService.getTotalMostContractsProviderService("hello",  LocalDate.now().plusWeeks(1),  LocalDate.now().minusWeeks(1));
+
+        assertThat(ps).isEqualTo(Optional.empty());
+
+        verify(providerServiceRepository, times(0)).getTotalMostContractsProviderService(any(),any(),any());
+    }
+
+    @Test
+    void whenGetTotalMostProfitProviderService_ReturnProviderService(){
+        Mockito.when(providerServiceRepository.getTotalMostProfitProviderService(eq("hello"), any(), any())).thenReturn(Long.valueOf(1) );
+        Mockito.when(providerServiceRepository.findById(Long.valueOf(1))).thenReturn(Optional.of(ps_withId));
+        
+        ProviderService ps = serviceService.getTotalMostProfitProviderService("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+
+        assertThat(ps).isEqualTo(ps_withId);
+
+        verify(providerServiceRepository, times(1)).getTotalMostProfitProviderService(any(),any(),any());
+        verify(providerServiceRepository, times(1)).findById(Long.valueOf(1));
+    }
+
+    @Test
+    void whenGetTotalMostProfitProviderServiceInvalidDate_ReturnProviderService(){
+        
+        Optional<ProviderService> ps = serviceService.getTotalMostContractsProviderService("hello",  LocalDate.now().plusWeeks(1),  LocalDate.now().minusWeeks(1));
+
+        assertThat(ps).isEqualTo(Optional.empty());
+
+        verify(providerServiceRepository, times(0)).getTotalMostProfitProviderService(any(),any(),any());
+    }
+
+    @Test
+    void whenGetProfitHistory_ReturnProfitHistory(){
+        List<Object[]> profit = new ArrayList<Object[]>();
+        Timestamp date = Timestamp.valueOf(LocalDateTime.now());
+        profit.add( new Object[]{(Object) date, (Object) 2.0 });
+
+        Mockito.when(providerServiceRepository.getProfitHistory(eq("hello"), any() , any())).thenReturn(profit);
+
+        Map<LocalDate,Double> hist = serviceService.getProfitHistory("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+
+        assertThat(hist.get(date.toLocalDateTime().toLocalDate())).isEqualTo(2.0);
+        verify(providerServiceRepository, times(1)).getProfitHistory(any(),any(),any());
+    }
+
+    @Test
+    void whenGetProfitHistoryInvalidDate_ReturnProfitHistory(){
+        
+        Optional<Map<LocalDate,Double>> hist = serviceService.getProfitHistory("hello",   LocalDate.now().plusWeeks(1), LocalDate.now().minusWeeks(1));
+        assertThat(hist).isEqualTo(Optional.empty());
+        verify(providerServiceRepository, times(0)).getProfitHistory(any(),any(),any());
+    }
+
+    @Test
+    void whenGetContractsHistory_ReturnContractsHistory(){
+        
+        List<Object[]> profit = new ArrayList<Object[]>();
+        Timestamp date = Timestamp.valueOf(LocalDateTime.now());
+        profit.add( new Object[]{(Object) date, (Object) BigInteger.valueOf(2) });
+
+        Mockito.when(providerServiceRepository.getContractsHistory(eq("hello"), any() , any())).thenReturn(profit);
+
+        Map<LocalDate,Integer> hist = serviceService.getContractsHistory("hello", LocalDate.now().minusWeeks(1),  LocalDate.now().plusWeeks(1)).get();
+
+        assertThat(hist.get(date.toLocalDateTime().toLocalDate())).isEqualTo(2);
+        verify(providerServiceRepository, times(1)).getContractsHistory(any(),any(),any());
+
+    }
+
+    @Test
+    void whenGetContractsHistoryInvalidDate_ReturnContractsHistory(){
+        
+        Optional<Map<LocalDate,Integer>> hist = serviceService.getContractsHistory("hello",   LocalDate.now().plusWeeks(1), LocalDate.now().minusWeeks(1));
+        assertThat(hist).isEqualTo(Optional.empty());
+        verify(providerServiceRepository, times(0)).getContractsHistory(any(),any(),any());
+    }
 }

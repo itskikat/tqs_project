@@ -1,0 +1,10 @@
+<nb-card size="large">
+
+      <div class="chart-container">
+        <ngx-provider-stats-charts-chart-panel-summary [summary]="chartPanelSummary"></ngx-provider-stats-charts-chart-panel-summary>
+        <ngx-provider-stats-charts-chart-panel-header [type]="period"
+                                (periodChange)="setPeriodAndGetChartData($event)">
+        </ngx-provider-stats-charts-chart-panel-header>
+        <div echarts [options]="option_order" class="echart" ></div>
+      </div>
+</nb-card>

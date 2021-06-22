@@ -16,11 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Optional;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.security.Principal;
-import java.util.HashMap;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +39,7 @@ public class BusinessRestController {
     public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String name,
                                                  @RequestParam(defaultValue = "service_name") String sort, @RequestParam(defaultValue = "ASC") String order, HttpServletRequest request){
+
         Principal principal = request.getUserPrincipal();
 
         Pageable paging;
@@ -60,7 +60,7 @@ public class BusinessRestController {
             bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.of(name));
         }
         else {
-            bsPage= serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
+            bsPage = serviceService.getBusinessBusinessServices(principal.getName(), paging, Optional.empty());
         }
 
         List <BusinessService> bsList;
@@ -115,7 +115,7 @@ public class BusinessRestController {
         Principal principal = request.getUserPrincipal();
 
         Optional<BusinessService> optBs = serviceService.getBusinessService(principal.getName(), businessServiceId);
-        if(optBs.isPresent()){
+        if(optBs.isPresent()) {
             return new ResponseEntity<BusinessService>(optBs.get(), HttpStatus.OK);
         }
         return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
@@ -124,9 +124,9 @@ public class BusinessRestController {
 
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateBusinessService(@PathVariable(value = "id") Long businessServiceId, @Valid @RequestBody(required = false) BusinessService bs){
-        if(bs != null){
+        if(bs != null) {
             Optional<BusinessService> optBs = serviceService.updateBusinessService(businessServiceId, bs);
-            if(optBs.isPresent()){
+            if(optBs.isPresent() ){
                 return new ResponseEntity<BusinessService>(bs, HttpStatus.OK);
             }
             return new ResponseEntity<String>("Could not find requested business service", HttpStatus.BAD_REQUEST);
@@ -147,18 +147,50 @@ public class BusinessRestController {
     }
 
     @GetMapping("/statistics")
-    public ResponseEntity<?> getStatistics(HttpServletRequest request) {
-        
+    public ResponseEntity<?> getStatistics(@RequestParam(required = false) String start,
+                                           @RequestParam(required = false) String end,
+                                           HttpServletRequest request) {
+
         Principal principal = request.getUserPrincipal();
-
-        Float business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName());
-        List <ServiceContract> business_contracts = serviceService.getBusinessServiceContracts(principal.getName());
-        ServiceType business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName());
-
         Map<String, Object> response = new HashMap<>();
-        response.put("profit", business_profit);
-        response.put("total-contracts", business_contracts.size());
-        response.put("most-requested-ServiceType", business_most_requested);
+        Double business_profit = 0.0;
+        Integer business_contracts = 0;
+        Optional<ServiceType> business_most_requested = null;
+        Optional<Map<LocalDate,Double>> hist_profit = Optional.empty();
+
+        if (start != null && end != null) {
+            LocalDate start_date;
+            LocalDate end_date;
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                start_date = LocalDate.parse(start, dateTimeFormatter);
+                end_date = LocalDate.parse(end, dateTimeFormatter);
+            } catch (Exception e) {
+                return new ResponseEntity<String>("Bad date format", HttpStatus.BAD_REQUEST);
+            }
+
+            response.put("start_date", start_date);
+            response.put("end_date", end_date);
+            business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName(), Optional.of(start_date), Optional.of(end_date));
+            business_contracts = serviceService.getTotalBusinessServiceContracts(principal.getName(), Optional.of(start_date), Optional.of(end_date));
+            business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.of(start_date), Optional.of(end_date));
+            hist_profit = serviceService.getBusinessProfitHistory(principal.getName(), start_date, end_date);
+        }
+        else {
+            business_profit = serviceService.getBusinessBusinessServiceProfit(principal.getName(), Optional.empty(), Optional.empty());
+            business_contracts = serviceService.getTotalBusinessServiceContracts(principal.getName(), Optional.empty(), Optional.empty());
+            business_most_requested = serviceService.getBusinessMostRequestedServiceType(principal.getName(), Optional.empty(), Optional.empty());
+        }
+        
+        response.put("PROFIT", business_profit);
+        response.put("TOTAL_CONTRACTS", business_contracts);
+        if(business_most_requested.isPresent()){
+            response.put("MOST_REQUESTED_SERVICETYPE", business_most_requested);
+        }
+        if(hist_profit.isPresent()){
+            response.put("PROFIT_HISTORY", hist_profit);
+        }
+        
         
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }

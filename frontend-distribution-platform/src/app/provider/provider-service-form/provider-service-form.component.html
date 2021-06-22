@@ -1,0 +1,50 @@
+<nb-layout windowMode>
+    <nb-layout-header fixed>
+        <ngx-header></ngx-header>
+    </nb-layout-header>
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <nb-menu [items]="menu"></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <nb-card>
+            <nb-card-body>
+                <form class="form d-flex flex-column" [formGroup]="serviceForm">
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="title"> Service Title: </label>
+                            <div *ngIf="!edit">
+                                <input 
+                                    class="form-control col-12" 
+                                    style="max-width:none"
+                                    formControlName="title"
+                                    nbInput
+                                    type="text"
+                                    (input)="onSelectionChange()"
+                                    placeholder="Service Title"
+                                    [nbAutocomplete]="autoControl" 
+                                />
+                                <nb-autocomplete #autoControl (selectedChange)="onSelectionChange()" [activeFirst]="true">
+    
+                                    <nb-option *ngFor="let s of filteredOptions$ | async" [value]="s">
+                                        {{ s }}
+                                    </nb-option>
+        
+                                </nb-autocomplete>
+                            </div>
+                            <input *ngIf="edit" nbInput id="title" placeholder="Enter service title" class="form-control mw-100"  type="text" formControlName="title">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-12">
+                            <label for="subject"> Description </label>
+                            <textarea nbInput id="subject" placeholder="Enter service description" class="form-control mw-100"   formControlName="description"></textarea>
+                        </div>
+                    </div>
+                    <button (click)="saveService()" nbButton class="ml-auto" status="success">Save</button>
+                </form>
+            </nb-card-body>
+        </nb-card>
+
+    </nb-layout-column>
+<nb-layout-footer></nb-layout-footer>
+</nb-layout>
