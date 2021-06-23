@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { apiUrl } from '../../../environments/environment';
+import { BusinessService } from '../models/BusinessService';
+import { ProviderService } from '../models/ProviderService';
 import { ServiceContract } from '../models/ServiceContract';
 import { ServiceContractPage } from '../models/ServiceContractPage';
 import { AuthService } from './auth.service';
@@ -15,7 +17,7 @@ export class GeneralService {
     private authService: AuthService
   ) { }
 
-  // Operations
+  // Past services
   getContracts(status: string, sort: string, order: string, page: number) {
     let url = apiUrl + "/contracts?size=3&";
     if (status!="ALL") { url += "status=" + status + "&"; }
@@ -33,5 +35,29 @@ export class GeneralService {
   updateContract(id: number, contract: ServiceContract) {
     return this.http.put<ServiceContract>(apiUrl + "/contracts/" + id, contract, this.authService.getOptions()).toPromise();
   }
-  
+
+  // Matching
+  match(id: number) {
+    return this.http.get<ProviderService[]>(apiUrl + "/matches/" + id, this.authService.getOptions()).toPromise();
+  }
+
+  getServices() {
+    return this.http.get<BusinessService[]>(apiUrl + "/services/", this.authService.getOptions()).toPromise();
+  }
+
+  signContract(businessService: number, providerService: number) {
+    let contract = {
+      'providerService': {
+        'id': providerService
+      },
+      'businessService': {
+        'id': businessService
+      },
+      'client': {
+        'email': localStorage.getItem('email')
+      },
+      'status': 'WAITING'
+    }
+    return this.http.post<ServiceContract>(apiUrl + "/contracts/", contract, this.authService.getOptions()).toPromise();
+  }
 }

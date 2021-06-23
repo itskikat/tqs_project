@@ -54,6 +54,11 @@ public class ServiceServiceImpl implements ServiceService {
     private NotificationController notificationController;
 
     @Override
+    public List<BusinessService> getBusinessServices(String token) {
+        return businessServiceRepository.findByBusiness_Apikey(token);
+    }
+
+    @Override
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract) {
         ServiceContract sc = serviceContractRepository.findById(serviceContract.getId());
 
