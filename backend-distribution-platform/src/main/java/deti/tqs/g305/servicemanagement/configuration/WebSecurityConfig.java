@@ -84,7 +84,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/business/").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/districts").permitAll()
                     .antMatchers(HttpMethod.GET,"/api/districts/*/cities").permitAll()
-                    // .antMatchers("/api/districts/.*/cities").permitAll()
+                    .antMatchers("/api/districts*/**").permitAll()
+                    .antMatchers("/api/cities*/**").permitAll()
                     // CLIENT endpoints (require Business API)
                     .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
                 // all other requests need to be authenticated

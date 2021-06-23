@@ -7,6 +7,7 @@ import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -63,6 +65,36 @@ public class GeneralController {
         HttpServletRequest request
     ){
         return ResponseEntity.ok(generalService.updateContract(serviceContractId, sc, request));
+    }
+
+    // Dynamic matching
+    @GetMapping("/services")
+    public ResponseEntity<List> getBusinessServices(HttpServletRequest request) { // Returns List<BusinessService>
+        return ResponseEntity.ok(generalService.services(request));
+    }
+
+    @GetMapping("/matches/{id}")
+    public ResponseEntity<List> getMatchingServiceProviders( // Returns List<ProviderService>
+        @PathVariable(value = "id") Long serviceTypeId,
+        HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(generalService.match(serviceTypeId, request));
+    }
+
+    @GetMapping("/services/{id}")
+    public ResponseEntity<Optional> getService(
+        @PathVariable(value = "id") Long id,
+        HttpServletRequest request
+    ) { // Returns Optional<ProviderService>
+        return ResponseEntity.ok(generalService.getService(id, request));
+    }
+
+    @PostMapping("/contracts")
+    public ResponseEntity<?> createServiceContract(
+        @Valid @RequestBody(required = false) ServiceContract sc,
+        HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(generalService.createContract(sc, request));
     }
 
 }

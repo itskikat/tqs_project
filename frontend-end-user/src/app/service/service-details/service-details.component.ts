@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProviderService } from 'src/app/shared/models/ProviderService';
 import { ServiceContract } from 'src/app/shared/models/ServiceContract';
+import { ServiceStatus } from 'src/app/shared/models/ServiceStatus';
 import { GeneralService } from 'src/app/shared/services/general.service';
 import { Service } from '../service';
 
@@ -19,15 +20,42 @@ export class ServiceDetailsComponent implements OnInit {
   user_rate = 0;
   id: number;
 
+  // Service or contract?
+  service: boolean;
 
   constructor(public router: Router, private route: ActivatedRoute, private generalService: GeneralService) {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'));
-    // Get contract from service
-    this.generalService.getContract(this.id).then(data => {
-      console.log(data);
-      this.contract = data;
-      this.user_rate = this.contract.review;
-    });
+    // Is service or contract?
+    this.service = (this.router.url.split('?')[0]).indexOf("/contracts")<0;
+    // Get contract
+    if (!this.service) {
+      // By contract API
+      this.generalService.getContract(this.id).then(data => {
+        console.log("GOT CONTRACT");
+        console.log(data);
+        this.contract = data;
+        this.user_rate = this.contract.review;
+      });
+    } else {
+      // By service API and create fake contract with other fields null
+      this.generalService.getService(this.id).then(data => {
+        console.log("GOT SERVICE");
+        console.log(data);
+        this.contract = {
+          id: 0,
+          providerService: data,
+          client: null,
+          businessService: {
+            price: 0,
+            service: {
+              hasExtras: false
+            }
+          },
+          status: ServiceStatus.WAITING,
+          review: 0,
+        }
+      });
+    }
   }
 
   ngOnInit(): void {

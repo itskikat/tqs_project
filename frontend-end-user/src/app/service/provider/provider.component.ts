@@ -19,16 +19,19 @@ export class ServiceProviderComponent implements OnInit {
 
   constructor(public router: Router, private route: ActivatedRoute, private generalService: GeneralService) {
     this.id = parseInt(this.route.snapshot.paramMap.get('id'));
-    // Get contract from service
-    this.generalService.getContract(this.id).then(data => {
-      this.provider = data.providerService.provider;
-      console.log(this.provider);
-    });
+    // Get provider info from contract or service, depending on the URL
+    if ((this.router.url.split('?')[0]).indexOf("/contracts")<0) {
+      this.generalService.getService(this.id).then(data => {
+        this.provider = data.provider;
+        console.log(this.provider);
+      });
+    } else {
+      this.generalService.getContract(this.id).then(data => {
+        this.provider = data.providerService.provider;
+        console.log(this.provider);
+      });
+    }
   }
 
   ngOnInit(): void {}
-
-  details(id: number): void{
-    this.router.navigate(["/services/"+ id.toString()])
-  }
 }

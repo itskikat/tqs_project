@@ -20,6 +20,9 @@ import java.util.Map;
  */
 public interface ServiceService {
 
+    // API Token
+    public List<BusinessService> getBusinessServices(String token);
+
     //Service Contracts
     public Optional<ServiceContract> saveServiceContract(ServiceContract serviceContract);
     public Optional<ServiceContract> updateServiceContract(long serviceContractId, ServiceContract serviceContract);

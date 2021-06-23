@@ -20,6 +20,7 @@ import java.util.List;
 public interface BusinessServiceRepository extends JpaRepository<BusinessService, Long>{
     
     public BusinessService findById(long id);
+    public List<BusinessService> findByBusiness_Apikey(String apikey);
     public Page<BusinessService> findByBusiness_Email(String business_id, Pageable page);
     public Page<BusinessService> findByBusiness_EmailAndService_NameContains(String business_id, Pageable page, String name);
 

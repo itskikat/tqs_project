@@ -9,18 +9,30 @@
 <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
     <nb-card-body>
         <nb-stepper orientation="horizontal">
-        <nb-step [label]="labelTwo">
+        <nb-step [label]="labelTwo" [stepControl]="providerAccountForm">
             <ng-template #labelTwo>Account</ng-template>
             <h3>Register Account</h3>
-            <p>For a greater commodity our platform allows logging in with google account.</p>
-            <div class="row" style="margin-top: 5%;">
-                <button nbButton nbStepperNext class="p-3 mx-auto col-5">
-                    <img style="max-width: 20%; margin-right: 5%;" src="../../assets/images/google.png">
-                    <span>Login with Google</span>
-                </button>                
+            <form [formGroup]="providerAccountForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Enter account email"
+                        class="form-control" type="email" required formControlName="email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Password"
+                        class="form-control" type="password" required formControlName="pass">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Confirm password"
+                        class="form-control" type="password" required formControlName="newpass">
+                </div>
+            </form>
+            <div class="row">
+                <button nbButton nbStepperNext class="mr-auto ml-auto">next</button>
             </div>
-            
-        </nb-step>    
+        </nb-step>   
         <nb-step [label]="labelOne" [stepControl]="personalDataForm" >
             <ng-template #labelOne>Personal Data</ng-template>
             <h3>Personal Data</h3>
@@ -35,13 +47,88 @@
                     <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="lastName">
                 </div>
                 <div class="form-group">
-                    <label>Address</label>
-                    <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="address">
-                </div>
-                <div class="form-group">
                     <label>Birth Date</label>
                     <input nbInput style="max-width: 100%;" placeholder="Form Picker" class="form-control"  [nbDatepicker]="formpicker" formControlName="bdate">
                     <nb-datepicker [max]="minDate" #formpicker></nb-datepicker>
+                </div>
+                <div class="form-group">
+                    <label>VAT</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Enter your VAT"
+                        class="form-control" required formControlName="vat">
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="title"> Working Area District </label>
+                        <input 
+                            class="form-control col-12" 
+                            style="max-width:none"
+                            formControlName="district"
+                            nbInput
+                            type="text"
+                            placeholder="District"
+                            [nbAutocomplete]="autoControl" />
+
+                        <nb-autocomplete #autoControl (selectedChange)="onDistrictChange()" >
+
+                        <nb-option *ngFor="let s of filteredOptions$ | async" [value]="s">
+                            {{ s }}
+                        </nb-option>
+
+                        </nb-autocomplete>
+
+                    </div>
+                </div>
+                
+                <table class="table">
+                    <tr *ngFor="let d of selected_districts"  >
+                        <td col="6" >
+                            {{d}}
+                        </td>
+                        <td col="6" >
+                            <button (click)="deleteDistrict(d)" nbButton status="danger" class="ml-3 ">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="title"> Working Area City </label>
+                        <input 
+                            class="form-control col-12" 
+                            style="max-width:none"
+                            formControlName="city"
+                            nbInput
+                            type="text"
+                            placeholder="City"
+                            [nbAutocomplete]="autoControlCity" />
+
+                        <nb-autocomplete #autoControlCity (selectedChange)="onCityChange()"  >
+
+                        <nb-option *ngFor="let c of filteredOptionsCity$ | async" [value]="c">
+                            {{ c }}
+                        </nb-option>
+
+                        </nb-autocomplete>
+
+                    </div>
+                </div>
+
+                <table class="table">
+                    <tr *ngFor="let c of selected_cities"  >
+                        <td col="6" >
+                            {{c}}
+                        </td>
+                        <td col="6" >
+                            <button (click)="deleteCity(c)" nbButton status="danger" class="ml-3 ">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="form-group">
+                    <label>Type of Work</label>
+                    <input nbInput style="max-width: 100%;" placeholder="Tell us the type of work you do" class="form-control" required formControlName="category">
                 </div>
 
             </form>
@@ -54,7 +141,7 @@
         <nb-step [label]="labelTwo">
             <ng-template #labelTwo>Finnish</ng-template>
             <h3>All set</h3>
-            <p>Are you sure the data is correct if yes press finnish and welcome to xxx</p>
+            <p>Are you sure the data is correct? If yes press finnish and welcome to WeDo4U</p>
             <div class="row">
                 <button nbButton nbStepperPrevious class="ml-auto mr-3">previous</button>
                 <button nbButton  (click)="finishRegister()" class="mr-auto ml-3">finnish</button>                

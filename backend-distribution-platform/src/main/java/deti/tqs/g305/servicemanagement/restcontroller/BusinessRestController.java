@@ -35,6 +35,11 @@ public class BusinessRestController {
     @Autowired
     private ServiceService serviceService;
 
+    @GetMapping("/allservices")
+    public ResponseEntity<List<BusinessService>> getBusinessServices(HttpServletRequest request){
+        return ResponseEntity.ok(serviceService.getBusinessServices(request.getHeader("APIToken")));
+    }
+
     @GetMapping("/services")
     public ResponseEntity<?> getBusinessServices(@RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size, @RequestParam(required=false) String name,
