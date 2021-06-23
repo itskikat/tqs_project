@@ -1,12 +1,7 @@
 package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
-<<<<<<< HEAD
-import deti.tqs.g305.handymanservicesapp.model.City;
-import deti.tqs.g305.handymanservicesapp.model.District;
-=======
 import deti.tqs.g305.handymanservicesapp.model.*;
->>>>>>> develop
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
