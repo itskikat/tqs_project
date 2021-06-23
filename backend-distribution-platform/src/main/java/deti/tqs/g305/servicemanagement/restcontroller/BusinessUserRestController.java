@@ -8,7 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -61,5 +66,17 @@ public class BusinessUserRestController {
                     businessUserService.deleteBusiness(email);
                     return ResponseEntity.ok().build();
                 }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/business/token")
+    public ResponseEntity<?> generateToken(HttpServletRequest request){
+        Principal principal = request.getUserPrincipal();
+        Optional<Business> optB = businessUserService.generateToken(principal.getName());
+        if(optB.isPresent()){
+            Map<String, String> response = new HashMap<String,String>();
+            response.put("key",optB.get().getApikey() );
+            return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Could not generate token", HttpStatus.BAD_REQUEST);
     }
 }

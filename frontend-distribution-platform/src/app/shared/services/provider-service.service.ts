@@ -6,7 +6,7 @@ import {ProviderService} from '../models/ProviderService';
 import {ProviderServicePage} from '../models/ProviderServicePage';
 import { apiUrl } from '../../../environments/environment';
 import {ProviderStatistics} from '../models/ProviderStatistics';
-import { Provider } from '../models/Provider';
+import { District, Provider , City} from '../models/Provider';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +51,8 @@ export class ProviderServiceService {
     return this.http.get<ProviderStatistics>(url,this.authservice.getOptions());
   }
 
-  registBusiness(p:Provider): Observable<Provider>{
-    let url = apiUrl + "/provider";
+  registProvider(p:Provider): Observable<Provider>{
+    let url = apiUrl + "/provider/";
     return this.http.post<Provider>(url,p,this.authservice.getOptions() )
   }
 
@@ -64,5 +64,25 @@ export class ProviderServiceService {
   putBusiness(p:Provider): Observable<Provider>{
     let url = apiUrl + "/provider/"+p.email;
     return this.http.put<Provider>(url,p,this.authservice.getOptions() )
+  }
+
+  getdistricts(): Observable<District[]>{
+    let url = apiUrl + "/districts";
+    return this.http.get<District[]>(url,this.authservice.getOptions() )
+  }
+
+  getcities(): Observable<City[]>{
+    let url = apiUrl + "/cities";
+    return this.http.get<City[]>(url,this.authservice.getOptions() )
+  }
+
+  getProvider(p: string): Observable<Provider>{
+    let url = apiUrl + "/provider/"+ p;
+    return this.http.get<Provider>(url,this.authservice.getOptions() )
+  }
+
+  putProvider(email: String, p: Provider): Observable<Provider>{
+    let url = apiUrl + "/provider/" + email;
+    return this.http.put<Provider>(url, p, this.authservice.getOptions())
   }
 }

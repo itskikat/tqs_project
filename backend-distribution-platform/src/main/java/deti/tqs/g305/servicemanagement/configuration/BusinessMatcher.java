@@ -22,7 +22,7 @@ public class BusinessMatcher implements RequestMatcher {
     @Override
     public boolean matches(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("APIToken");
-        log.info("Validating that token {} is a valid Business API token...", token);
+        log.info("Validating that token {} is a valid Business API token (request {}, {})...", token, httpServletRequest.getRequestURI(), httpServletRequest.getMethod());
         if (token != null) {
             return userService.getBusinessByApiKey(token).isPresent() && httpServletRequest.getUserPrincipal()!=null;
         }

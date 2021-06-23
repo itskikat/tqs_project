@@ -1,5 +1,5 @@
 export interface ServiceType {
-    id: number,
-    name: string,
-    hasExtras: boolean
+    id?: number,
+    name?: string,
+    hasExtras?: boolean
 }

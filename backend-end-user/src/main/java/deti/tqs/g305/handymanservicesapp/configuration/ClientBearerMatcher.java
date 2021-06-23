@@ -24,7 +24,7 @@ public class ClientBearerMatcher implements RequestMatcher {
     public boolean matches(HttpServletRequest httpServletRequest) {
         log.info("httpServletRequest: {}", httpServletRequest);
         String token = httpServletRequest.getHeader("Authorization");
-        log.info("Validating that client authorization token {} is a valid one...", token);
+        log.info("Validating that client authorization token {} is a valid one (at {}, {})...", token, httpServletRequest.getRequestURI(), httpServletRequest.getMethod());
         if (token != null) {
             try {
                 return userService.getUserLogged(httpServletRequest)!=null;
