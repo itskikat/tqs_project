@@ -68,7 +68,7 @@ export class BusinessServiceComponent implements OnInit {
       else{
         this.previous=true;
       }
-      if(this.currentPage==data.totalPages-1){
+      if(this.currentPage<=data.totalPages-1){
         this.next= false;
       }
       else{

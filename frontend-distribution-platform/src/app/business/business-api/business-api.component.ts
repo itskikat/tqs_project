@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MENU_ITEMS } from '../../business-menu';
 import { Router } from '@angular/router';
+import {BusinessServiceService} from '../../shared/services/business-service.service';
 
 @Component({
   selector: 'ngx-business-api',
@@ -11,16 +12,20 @@ export class BusinessAPIComponent implements OnInit {
 
   menu=MENU_ITEMS;
   tokenGenerated: boolean;
-  lastAPIGenerated: Date;
+  token: String;
 
-  constructor(public router: Router) { }
+  constructor(public router: Router, private businessService: BusinessServiceService ) { }
 
   ngOnInit(): void {
     this.tokenGenerated = false;
-    this.lastAPIGenerated = new Date();
   }
 
   generateToken() {
-    this.tokenGenerated = true;
+    this.businessService.generateToken().subscribe( data =>{ 
+        this.token= data.key;
+        this.tokenGenerated = true;
+      }
+    );
+    
   }
 }

@@ -19,14 +19,12 @@ public class ProviderUserRestController {
     //Obtendo a lista de providers (GET /provider)
     @GetMapping(path = {"/provider"})
     public List<?> getProviders(){
-        System.out.println("Careful...");
         return providerUserService.getProviders();
     }
 
     //Obtendo um provider específico pelo email (GET /provider/{email})
     @GetMapping(path = {"/provider/{email}"})
     public ResponseEntity<?> findByEmail(@PathVariable String email){
-        System.out.println("You made it!");
         return providerUserService.findByEmail(email)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
@@ -42,20 +40,7 @@ public class ProviderUserRestController {
     @PutMapping(value="/provider/{email}")
     public ResponseEntity<?> updateProvider(@PathVariable("email") String email,
                                  @RequestBody Provider provider) {
-        return providerUserService.findByEmail(email)
-                .map(record -> {
-                    record.setFull_name(provider.getFull_name());
-                    record.setEmail(provider.getEmail());
-                    record.setPassword(provider.getPassword());
-                    record.setCategory(provider.getCategory());
-                    record.setWorking_hours(provider.getWorking_hours());
-                    record.setLocation_city(provider.getLocation_city());
-                    record.setLocation_district(provider.getLocation_district());
-                    record.setNif(provider.getNif());
-                    record.setBirthdate(provider.getBirthdate());
-                    Optional<Provider> updated = providerUserService.createProvider(record);
-                    return ResponseEntity.ok().body(updated);
-                }).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok().body(providerUserService.updateProvider(email, provider));
     }
 
     //Removendo um provider pelo email (DELETE /provider/{email})

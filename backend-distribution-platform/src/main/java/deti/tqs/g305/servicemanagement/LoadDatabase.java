@@ -81,8 +81,11 @@ class LoadDatabase {
       BusinessService bs = new BusinessService(10, st, b);
       businessServiceRepository.save(bs);
 
-      Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.now());
+
+      Provider p = new Provider("bob.hard@outlook.com", "Bob Dickard", bcryptEncoder.encode("abc"), null,null,null,"alal", LocalDate.of(2000,9,10));
+
       p.setCategory("Plumber");
+
       City city = cityRepository.findById(1L).get();
 
       List<City> provider_location = new ArrayList<>();
