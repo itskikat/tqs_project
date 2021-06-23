@@ -61,8 +61,6 @@ export class ProviderRequestsListComponent implements OnInit {
 
 
   getContracts(): void{
-    console.log(this.statusSelected)
-    console.log(this.orderSelected)
     let query="?page=" + this.currentPage.toString()
     if(this.statusSelected!="ALL"){
       query+="&status="+ this.statusSelected
@@ -77,7 +75,7 @@ export class ProviderRequestsListComponent implements OnInit {
       else{
         this.previous=true;
       }
-      if(this.currentPage==data.totalPages-1){
+      if(this.currentPage>=data.totalPages-1){
         this.next= false;
       }
       else{
