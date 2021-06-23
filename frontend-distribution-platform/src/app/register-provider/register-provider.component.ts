@@ -98,7 +98,7 @@ export class RegisterProviderComponent implements OnInit {
     provider.email= this.providerAccountForm.value.email;
     provider.password= this.providerAccountForm.get("pass").value;
     provider.birthdate= this.personalDataForm.get("bdate").value;
-    provider.full_name= this.personalDataForm.get("firstName").value + this.personalDataForm.get("lastName").value ;
+    provider.full_name= this.personalDataForm.get("firstName").value + ' ' +this.personalDataForm.get("lastName").value ;
     provider.nif= this.personalDataForm.get("vat").value;
     let cities_final: City[]=[]
     for(var i=0; i< this.selected_cities.length; i++){

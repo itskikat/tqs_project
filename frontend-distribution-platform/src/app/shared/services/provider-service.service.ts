@@ -75,4 +75,14 @@ export class ProviderServiceService {
     let url = apiUrl + "/cities";
     return this.http.get<City[]>(url,this.authservice.getOptions() )
   }
+
+  getProvider(p: string): Observable<Provider>{
+    let url = apiUrl + "/provider/"+ p;
+    return this.http.get<Provider>(url,this.authservice.getOptions() )
+  }
+
+  putProvider(email: String, p: Provider): Observable<Provider>{
+    let url = apiUrl + "/provider/" + email;
+    return this.http.put<Provider>(url, p, this.authservice.getOptions())
+  }
 }
