@@ -2,6 +2,7 @@ package deti.tqs.g305.handymanservicesapp.integration;
 
 import deti.tqs.g305.handymanservicesapp.integration.pages.DashboardPage;
 import deti.tqs.g305.handymanservicesapp.integration.pages.Page;
+import deti.tqs.g305.handymanservicesapp.integration.pages.PastServicesPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -65,6 +66,35 @@ public class GeneralControllerTestIT {
         // Sign contract
         page.clickSignContract();
         assertThat(page.getTitle()).contains("You have requested the service with success!");
+
+        page.close();
+    }
+
+    @Test
+    void checkPastServices() throws InterruptedException {
+        PastServicesPage page = new PastServicesPage(driver, baseUrl);
+
+        TimeUnit time = TimeUnit.SECONDS;
+        time.sleep(2);
+
+        // Initial validations
+        assertThat(page.getUrl()).contains("/past");
+
+        // Validate page content
+        assertThat(page.getStatusOptions()).contains("ALL");
+        assertThat(page.getStatusOptions()).contains("ACCEPTED");
+        assertThat(page.getStatusOptions()).contains("FINNISHED");
+        assertThat(page.getStatusOptions()).contains("WAITING");
+        assertThat(page.getStatusOptions()).contains("REJECTED");
+
+        assertThat(page.getSortingOptions()).contains("Newest");
+        assertThat(page.getSortingOptions()).contains("Oldest");
+
+        assertThat(page.getPageNumber()).isEqualTo("1");
+
+        assertThat(page.getTitle()).isEqualTo("My Services");
+
+        assertThat(page.cardButtonText()).isEqualTo("SERVICE DETAILS");
 
         page.close();
     }
