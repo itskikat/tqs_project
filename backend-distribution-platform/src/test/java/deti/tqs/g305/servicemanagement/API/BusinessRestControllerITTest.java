@@ -109,7 +109,7 @@ public class BusinessRestControllerITTest {
     }
 
     @Test
-    void whenGetContracts_thenReturnContracts() throws Exception {
+    void whenGetContracts_thenReturnContracts() {
 
         // Create business and save to db
         Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
@@ -146,8 +146,92 @@ public class BusinessRestControllerITTest {
     }
 
     @Test
-    void whenGetValidServiceID_thenReturnValidServiceID() throws Exception {
-        // TODO
+    void whenGetStatistics_thenReturnStatistics() {
+
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 5);
+        serviceContractRepository.saveAndFlush(sc);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<Map> response = restTemplate.exchange(
+                "/api/businesses/statistics",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                Map.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("TOTAL_CONTRACTS")).isEqualTo(1);
+        assertThat(response.getBody().get("PROFIT")).isEqualTo(25.0);
+
     }
 
+    @Test
+    void whenGetValidServiceID_thenReturnValidServiceID() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<BusinessService> response = restTemplate.exchange(
+                "/api/businesses/services/"+bs.getId(),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                BusinessService.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getBusiness()).isEqualTo(b);
+    }
+
+    @Test
+    void whenGetInvalidServiceID_thenReturnError() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/businesses/services/999",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }
