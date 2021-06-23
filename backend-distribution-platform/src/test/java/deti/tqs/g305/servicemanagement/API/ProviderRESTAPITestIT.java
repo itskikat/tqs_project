@@ -237,7 +237,7 @@ public class ProviderRESTAPITestIT {
     }
 
     @Test
-    void whenGetValidContractID_thenReturnValidServiceID() {
+    void whenGetValidContractID_thenReturnValidContractID() {
         // Create provider and save to db
         Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
         userRepository.saveAndFlush(p);
@@ -294,6 +294,197 @@ public class ProviderRESTAPITestIT {
         // Validate response
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
+    }
+
+    @Test
+    void whenUpdateValidContract_thenReturnContract() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 0);
+        serviceContractRepository.saveAndFlush(sc);
+        ServiceContract updatedsc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 5);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<ServiceContract> response = restTemplate.exchange(
+                "/api/provider/contracts/"+sc.getId(),
+                HttpMethod.PUT,
+                new HttpEntity<>(updatedsc, headers),
+                ServiceContract.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getReview()).isEqualTo(updatedsc.getReview());
+
+    }
+
+    @Test
+    void whenUpdateInvalidContract_thenReturnBadRequest() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/provider/contracts/9999",
+                HttpMethod.PUT,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void whenUpdateValidService_thenReturnService() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ProviderService updatedps = new ProviderService("Working on the Pool At Night cuz yolo", p, st);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<ProviderService> response = restTemplate.exchange(
+                "/api/provider/services/"+ps.getId(),
+                HttpMethod.PUT,
+                new HttpEntity<>(updatedps, headers),
+                ProviderService.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getDescription()).isEqualTo(updatedps.getDescription());
+
+    }
+
+    @Test
+    void whenUpdateInvalidService_thenReturnBadRequest() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/provider/services/9999",
+                HttpMethod.PUT,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void whenPostService_thenReturnService() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        // Make request to API
+        ResponseEntity<ProviderService> response = restTemplate.postForEntity(
+                "/api/provider/services",
+                new HttpEntity<>(ps, headers),
+                ProviderService.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getDescription()).isEqualTo(ps.getDescription());
+    }
+
+    @Test
+    void whenDeleteValidService_thenDeleteService() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/provider/services/delete/"+ps.getId(),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void whenDeleteInvalidService_thenReturnBadRequest() {
+        // Create provider and save to db
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(p.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/provider/services/delete/9999",
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
 }
