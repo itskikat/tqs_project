@@ -16,7 +16,7 @@ public class GeneralControllerTestIT {
 
     WebDriver driver;
 
-    String baseUrl = "http://localhost:4200";
+    String baseUrl = "http://deti-tqs-14.ua.pt:81";
 
     @BeforeEach
     void setup(){
