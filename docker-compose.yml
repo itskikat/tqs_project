@@ -10,11 +10,13 @@ services:
     ports:
       - "80:80"
 
-  frontend-end-user:
-    build: ./frontend-end-user
-    volumes:
-      - ./frontend-end-user:/usr/src/app/
-      - ./frontend-end-user:/node_modules:/usr/src/app/node_modules
+  #frontend-end-user:
+    #build: ./frontend-end-user
+    #volumes:
+    #  - ./frontend-end-user:/usr/src/app/
+    #  - ./frontend-end-user:/node_modules:/usr/src/app/node_modules
+    #ports:
+    #  - "81:81"
   db:
     image: postgres
     ports:
@@ -38,6 +40,16 @@ services:
       SPRING_DATASOURCE_USERNAME: demo
       SPRING_DATASOURCE_PASSWORD: password
     restart: on-failure
+    
+  backend-end-user:
+    build: ./backend-end-user
+    ports:
+      - "8081:8081"
+    depends_on:
+      - backend-distribution-platform
+    environment:
+      SPRING_ENDUSER_APIURL: http://deti-tqs-14.ua.pt:8080/api
+    restart: on-failure    
 
 volumes:
-  db-data:
+    db-data:

@@ -6,7 +6,6 @@ WORKDIR /usr/src/app
 
 COPY package.json  /usr/src/app/
 
-COPY package-lock.json /usr/src/app/
 RUN npm install --quiet
 RUN npm install -g @angular/cli@latest
 
@@ -16,6 +15,8 @@ RUN npm run build
 
 FROM nginx:latest
 
-COPY --from=build /usr/src/app/dist /var/www/distribution
+COPY --from=build /usr/src/app/dist /var/www/end-user
 
-EXPOSE 80
+COPY nginx-end-user.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 81
