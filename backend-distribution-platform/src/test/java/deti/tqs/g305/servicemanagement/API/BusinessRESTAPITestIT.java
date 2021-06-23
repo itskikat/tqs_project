@@ -4,6 +4,8 @@ import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.*;
 import deti.tqs.g305.servicemanagement.service.UserService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +76,15 @@ public class BusinessRESTAPITestIT {
 
     @Autowired
     private UserService userService;
+
+    @AfterEach
+    void cleanUp() {
+        serviceContractRepository.deleteAll();
+        businessServiceRepository.deleteAll();
+        providerServiceRepository.deleteAll();
+        serviceTypeRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     void whenGetServices_thenReturnServices() {
