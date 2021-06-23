@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -142,6 +143,27 @@ public class GeneralControllerUnitTest {
 
         // Validate that service was called with right parameters
         verify(generalService, times(1)).match(eq(1L), any());
+    }
+
+    @Test
+    void whenGetProviderService_thenReturnService() throws Exception {
+        // Mock service
+        Provider p = new Provider("provider@ua.pt", "Provider Name", "abc", null, Arrays.asList(), Arrays.asList(), "123456789", null);
+        ServiceType s = new ServiceType("Type1", true);
+        ProviderService ps1 = new ProviderService();
+        ps1.setId(1L);
+        ps1.setService(s);
+        ps1.setProvider(p);
+        when(generalService.getService(any(), any())).thenReturn(Optional.of(ps1));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/services/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.provider.email", is(ps1.getProvider().getEmail())))
+                .andExpect(jsonPath("$.service.name", is(ps1.getService().getName())));
+
+        // Validate that service was called with right parameters
+        verify(generalService, times(1)).getService(eq(ps1.getId()), any());
     }
 
     @Test

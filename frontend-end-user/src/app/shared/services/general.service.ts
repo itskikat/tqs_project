@@ -45,6 +45,10 @@ export class GeneralService {
     return this.http.get<BusinessService[]>(apiUrl + "/services/", this.authService.getOptions()).toPromise();
   }
 
+  getService(id: number) {
+    return this.http.get<ProviderService>(apiUrl + "/services/" + id, this.authService.getOptions()).toPromise();
+  }
+
   signContract(businessService: number, providerService: number) {
     let contract = {
       'providerService': {
