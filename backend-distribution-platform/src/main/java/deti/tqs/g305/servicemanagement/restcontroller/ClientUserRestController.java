@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,16 @@ public class ClientUserRestController {
 
     @PutMapping(value="/{email}")
     public ResponseEntity<?> update(@PathVariable("email") String email, @RequestBody Client client) {
+        log.info("Updating client {} with data: {}", email, client);
         Optional<Client> b = clientUserService.update(email, client);
         if(b.isPresent()){
             return ResponseEntity.ok().body(b.get());
         }
         return new ResponseEntity<String>("Bad business", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping(path = {"/"})
+    public Optional<Client> get(HttpServletRequest request){
+        return clientUserService.getLogged(request.getUserPrincipal().getName());
     }
 }

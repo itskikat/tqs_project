@@ -20,6 +20,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/users/login").permitAll()
             .antMatchers(HttpMethod.POST, "/api/users/").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/districts/*").permitAll()
             .antMatchers("*").hasAuthority("*").requestMatchers(clientBearerMatcher).permitAll();
     }
 }

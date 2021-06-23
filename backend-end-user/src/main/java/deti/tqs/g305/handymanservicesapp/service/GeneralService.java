@@ -91,4 +91,17 @@ public class GeneralService {
         return restTemplate.exchange(apiBaseUrl + "/clients/contracts/", HttpMethod.POST, entity, ServiceContract.class).getBody();
     }
 
+    // Register
+    public List getDistricts(
+        HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/districts", HttpMethod.GET, null, List.class).getBody();
+    }
+
+    public List getDistrictCities(
+        Long districtId,
+        HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/districts/" + districtId.toString() + "/cities", HttpMethod.GET, null, List.class).getBody();
+    }
 }

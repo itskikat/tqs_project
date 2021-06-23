@@ -1,5 +1,6 @@
 package deti.tqs.g305.handymanservicesapp.controller;
 
+import deti.tqs.g305.handymanservicesapp.model.District;
 import deti.tqs.g305.handymanservicesapp.model.ServiceContract;
 import deti.tqs.g305.handymanservicesapp.service.GeneralService;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +25,17 @@ public class GeneralController {
 
     @Autowired
     private GeneralService generalService;
+
+    // Register
+    @GetMapping("/districts")
+    public ResponseEntity<List> getDistricts(HttpServletRequest request){
+        return ResponseEntity.ok().body(generalService.getDistricts(request));
+    }
+
+    @GetMapping("/districts/{id}")
+    public ResponseEntity<List> getDistricts(@PathVariable(value = "id") Long districtId, HttpServletRequest request){
+        return ResponseEntity.ok().body(generalService.getDistrictCities(districtId, request));
+    }
 
     // Past services
     @GetMapping("/contracts")

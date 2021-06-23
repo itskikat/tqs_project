@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { apiUrl } from '../../../environments/environment';
 import { BusinessService } from '../models/BusinessService';
 import { ProviderService } from '../models/ProviderService';
+import { District } from '../models/District';
 import { ServiceContract } from '../models/ServiceContract';
 import { ServiceContractPage } from '../models/ServiceContractPage';
 import { AuthService } from './auth.service';
@@ -17,7 +18,16 @@ export class GeneralService {
     private authService: AuthService
   ) { }
 
-  // Past services
+  // Register
+  getDistricts() {
+    return this.http.get<District[]>(apiUrl + "/districts", this.authService.getOptions()).toPromise();
+  }
+
+  getDistrictCities(districtId: number) {
+    return this.http.get<District[]>(apiUrl + "/districts/" + districtId, this.authService.getOptions()).toPromise();
+  }
+
+  // Operations
   getContracts(status: string, sort: string, order: string, page: number) {
     let url = apiUrl + "/contracts?size=3&";
     if (status!="ALL") { url += "status=" + status + "&"; }

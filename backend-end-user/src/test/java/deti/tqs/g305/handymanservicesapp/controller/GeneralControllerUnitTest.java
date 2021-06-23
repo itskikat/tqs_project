@@ -196,4 +196,42 @@ public class GeneralControllerUnitTest {
 
 
 
+    // Register
+    @Test
+    void whenGetDistricts_thenReturnList() throws Exception {
+        // Mock service
+        District d1 = new District(1L, "Santarém");
+        District d2 = new District(2L, "Aveiro");
+        when(generalService.getDistricts(any())).thenReturn(Arrays.asList(d1, d2));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/districts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(d1.getName())))
+                .andExpect(jsonPath("$[1].name", is(d2.getName())));
+
+        // Validate that service was called with right parameters
+        verify(generalService, times(1)).getDistricts(any());
+    }
+
+    @Test
+    void whenGetDistrictCities_thenReturnList() throws Exception {
+        // Mock service
+        District d1 = new District(1L, "Santarém");
+        City c1 = new City(1L, "Vila Nova da Barquinha", d1);
+        City c2 = new City(1L, "Entroncamento", d1);
+        when(generalService.getDistrictCities(anyLong(), any())).thenReturn(Arrays.asList(c1, c2));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/districts/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(c1.getName())))
+                .andExpect(jsonPath("$[0].district.name", is(c1.getDistrict().getName())))
+                .andExpect(jsonPath("$[1].name", is(c2.getName())))
+                .andExpect(jsonPath("$[1].district.name", is(c1.getDistrict().getName())));
+
+        // Validate that service was called with right parameters
+        verify(generalService, times(1)).getDistrictCities(eq(d1.getId()), any());
+    }
+
 }
