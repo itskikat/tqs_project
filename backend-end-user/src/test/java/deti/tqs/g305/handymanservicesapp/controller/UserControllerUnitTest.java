@@ -3,10 +3,7 @@ package deti.tqs.g305.handymanservicesapp.controller;
 import deti.tqs.g305.handymanservicesapp.JsonUtil;
 import deti.tqs.g305.handymanservicesapp.configuration.ClientBearerMatcher;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
-import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
-import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
-import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
-import deti.tqs.g305.handymanservicesapp.model.UserResponse;
+import deti.tqs.g305.handymanservicesapp.model.*;
 import deti.tqs.g305.handymanservicesapp.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,9 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
@@ -105,6 +104,21 @@ public class UserControllerUnitTest {
 
         // Validate that service was called
         verify(userService, times(1)).getUserLogged(any());
+    }
+
+    @Test
+    void whenGetClient_thenReturnClient() throws Exception {
+        // Mock service
+        Client client = new Client("client@ua.pt", "abc", "First Last Name", "Client's address street", null, LocalDate.now());
+        when(userService.getClientLogged(any())).thenReturn(Optional.of(client));
+
+        // Call controller and validate response
+        mvc.perform(get("/api/users/"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.email", is(client.getEmail())));
+
+        // Validate that service was called
+        verify(userService, times(1)).getClientLogged(any());
     }
 
 }

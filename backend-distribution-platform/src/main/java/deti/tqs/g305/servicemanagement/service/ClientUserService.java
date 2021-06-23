@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ClientUserService {
     Optional<Client> create(Client client);
     Optional<Client> update(String email, Client client);
+    Optional<Client> getLogged(String email);
 }
