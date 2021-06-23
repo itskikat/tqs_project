@@ -270,5 +270,21 @@ public class ClientRestControllerUnitTest {
         verify(serviceService, times(1)).getMatches(any(),eq(1L));
     }
 
+    @Test
+    @WithMockUser("duke")
+    public void whenGetExistentProviderService_thenReturnProviderService() throws  Exception {
+        ProviderService bs = new ProviderService(null, new Provider(), new ServiceType());
+        bs.setId(2);
+        bs.setDescription("I have tests");
+
+        when(serviceService.getProviderService(any(), anyLong())).thenReturn(Optional.of(bs));
+
+        mvc.perform(get("/api/clients/services/" + bs.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description", is(bs.getDescription())));
+
+        verify(serviceService, times(1)).getProviderService(any(), anyLong());
+    }
+
 
 }

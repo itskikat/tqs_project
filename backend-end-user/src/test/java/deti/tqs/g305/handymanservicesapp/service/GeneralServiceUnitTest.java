@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -80,6 +81,28 @@ public class GeneralServiceUnitTest {
 
         // Validate that API was called with right parameters
         verify(restTemplate, times(1)).exchange(contains("/clients/matches/2"), eq(HttpMethod.GET), any(), eq(List.class));
+    }
+
+    @Test
+    void whenGetProviderService_thenReturnService() {
+        // Mock service
+        Provider p = new Provider("provider@ua.pt", "Provider Name", "abc", null, Arrays.asList(), Arrays.asList(), "123456789", null);
+        ServiceType s = new ServiceType("Type1", true);
+        ProviderService ps1 = new ProviderService();
+        ps1.setId(1L);
+        ps1.setService(s);
+        ps1.setProvider(p);
+        when(restTemplate.exchange(contains("/clients/services/"), any(), any(), eq(Optional.class))).thenReturn(new ResponseEntity<Optional>(Optional.of(ps1), HttpStatus.OK));
+
+        // Call service
+        Optional<ProviderService> response = generalService.getService(ps1.getId(), new MockHttpServletRequest());
+
+        // Validate response
+        assertThat(response.isPresent()).isTrue();
+        assertThat(response.get().getProvider().getEmail()).isEqualTo(ps1.getProvider().getEmail());
+
+        // Validate that API was called with right parameters
+        verify(restTemplate, times(1)).exchange(contains("/clients/services"), eq(HttpMethod.GET), any(), eq(Optional.class));
     }
 
     @Test

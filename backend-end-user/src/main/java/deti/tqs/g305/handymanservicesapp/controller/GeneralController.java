@@ -70,6 +70,14 @@ public class GeneralController {
         return ResponseEntity.ok(generalService.match(serviceTypeId, request));
     }
 
+    @GetMapping("/services/{id}")
+    public ResponseEntity<Optional> getService(
+        @PathVariable(value = "id") Long id,
+        HttpServletRequest request
+    ) { // Returns Optional<ProviderService>
+        return ResponseEntity.ok(generalService.getService(id, request));
+    }
+
     @PostMapping("/contracts")
     public ResponseEntity<?> createServiceContract(
         @Valid @RequestBody(required = false) ServiceContract sc,

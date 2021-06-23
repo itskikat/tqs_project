@@ -19,8 +19,10 @@ const routes: Routes = [
   // Service
   { path: "", component: ServiceIndexComponent },
   { path: "services/:id", component: ServiceDetailsComponent, canActivate: [ClientGuard] },
-  { path: "dashboard", component: ServiceDashboardComponent, canActivate: [ClientGuard] },
   { path: "services/:id/provider", component: ServiceProviderComponent, canActivate: [ClientGuard] },
+  { path: "contracts/:id", component: ServiceDetailsComponent, canActivate: [ClientGuard] },
+  { path: "contracts/:id/provider", component: ServiceProviderComponent, canActivate: [ClientGuard] },
+  { path: "dashboard", component: ServiceDashboardComponent, canActivate: [ClientGuard] },
   { path: "past", component: PastServicesComponent, canActivate: [ClientGuard]  },
   { path: "login", component: ServiceLoginComponent  },
   { path: "register", component: ServiceRegisterComponent  },

@@ -3,6 +3,8 @@ package deti.tqs.g305.servicemanagement.restcontroller;
 import deti.tqs.g305.servicemanagement.model.*;
 import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
 import deti.tqs.g305.servicemanagement.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -37,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RestController
 @RequestMapping("/api/clients")
 public class ClientRestController {
+
+    private static final Logger log = LoggerFactory.getLogger(ClientRestController.class);
 
     @Autowired
     private ServiceService serviceService;
@@ -144,5 +148,10 @@ public class ClientRestController {
         return new ResponseEntity<List<ProviderService>>(ps, HttpStatus.OK);
     }
 
-   
+    @GetMapping("/services/{id}")
+    public ResponseEntity<?> getProviderService(@PathVariable(value = "id") Long ProviderServiceId, HttpServletRequest request){
+        return new ResponseEntity<Optional<ProviderService>>(serviceService.getProviderService(request.getUserPrincipal().getName(), ProviderServiceId), HttpStatus.OK);
+    }
+
+
 }

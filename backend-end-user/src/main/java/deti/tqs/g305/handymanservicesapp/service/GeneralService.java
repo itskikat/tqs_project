@@ -1,6 +1,7 @@
 package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
+import deti.tqs.g305.handymanservicesapp.model.ProviderService;
 import deti.tqs.g305.handymanservicesapp.model.ServiceContract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class GeneralService {
@@ -72,6 +74,13 @@ public class GeneralService {
             HttpServletRequest request
     ) { // Returns List<ProviderService>
         return restTemplate.exchange(apiBaseUrl + "/clients/matches/" + id.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), List.class).getBody();
+    }
+
+    public Optional<ProviderService> getService(
+            Long providerServiceId,
+            HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/clients/services/" + providerServiceId.toString(), HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), Optional.class).getBody();
     }
 
     public ServiceContract createContract(

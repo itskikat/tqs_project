@@ -49,7 +49,7 @@ export class PastServicesComponent implements OnInit {
   }
 
   details(id: number): void{
-    this.router.navigate(["/services/"+ id.toString()])
+    this.router.navigate(["/contracts/"+ id.toString()])
   }
 
   updatePage(page: number) {
