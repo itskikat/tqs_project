@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -213,7 +210,7 @@ public class BusinessRestControllerITTest {
     }
 
     @Test
-    void whenGetInvalidServiceID_thenReturnError() {
+    void whenGetInvalidServiceID_thenReturnBadRequest() {
         // Create business and save to db
         Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
         userRepository.saveAndFlush(b);
@@ -234,4 +231,134 @@ public class BusinessRestControllerITTest {
         // Validate response
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    @Test
+    void whenPostService_thenReturnService() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request
+        BusinessService bs = new BusinessService(25.0, st, b);
+        // Make request to API
+        ResponseEntity<BusinessService> response = restTemplate.postForEntity(
+                "/api/businesses/services",
+                new HttpEntity<>(bs, headers),
+                BusinessService.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getPrice()).isEqualTo(bs.getPrice());
+    }
+
+    @Test
+    void whenUpdateValidService_thenReturnService() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        BusinessService updatedbs = new BusinessService(55.0, st, b);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<BusinessService> response = restTemplate.exchange(
+                "/api/businesses/services/"+bs.getId(),
+                HttpMethod.PUT,
+                new HttpEntity<>(updatedbs, headers),
+                BusinessService.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getPrice()).isEqualTo(updatedbs.getPrice());
+    }
+
+    @Test
+    void whenUpdateInvalidService_thenReturnBadRequest() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/businesses/services/9999",
+                HttpMethod.PUT,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void whenDeleteValidService_thenDeleteService() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/businesses/services/delete/"+bs.getId(),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    void whenDeleteInvalidService_thenReturnBadRequest() {
+        // Create business and save to db
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(b.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/businesses/services/delete/9999",
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
 }
