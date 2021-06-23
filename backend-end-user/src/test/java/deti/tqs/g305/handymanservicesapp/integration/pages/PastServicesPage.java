@@ -13,6 +13,9 @@ public class PastServicesPage extends LoginPage {
         this.writePassword("abc");
         this.clickLogin();
 
+        TimeUnit time = TimeUnit.SECONDS;
+        time.sleep(2);
+
         this.driver.get(baseUrl + "/past");
     }
 
