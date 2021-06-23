@@ -1,3 +1,4 @@
+import { ThisReceiver } from "@angular/compiler";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -17,14 +18,18 @@ export class ServiceRegisterComponent implements OnInit {
   // Form
   registerForm: FormGroup;
   maxDate: String;
+  birthDate: String;
   invalid: String = "";
+  submitted: boolean;
   // Options
   districts: District[];
   districtSelected: number;
   cities: City[];
   citySelected: number;
-  // Edit
   client: Client;
+  
+  // Edit
+  edit: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -32,30 +37,67 @@ export class ServiceRegisterComponent implements OnInit {
     private generalService: GeneralService,
     public router: Router
   ) {
+    // If /profile on edit mode, else on register
+    this.edit = this.router.url.split('?')[0]=="/profile";
   }
 
   ngOnInit(): void {
-    this.redirect();
+    this.submitted = false;
+
+    if (!this.edit) {
+      this.redirect();
+    }
 
     // Form restrictions
     let d = new Date();
     d.setFullYear(d.getFullYear() - 18);
     this.maxDate = d.getFullYear() + "-0" + d.getMonth() + '-' + d.getDate();
+
     // Form builder
     this.registerForm = this.fb.group({
-      email: ['', Validators.email],
-      password: ['', Validators.minLength(3)],
+      email: [{value: '', disabled: true}, Validators.email],
+      password: ['', ],
       full_name: ['', Validators.minLength(3)],
       address: ['', Validators.minLength(3)],
       birthdate: ['',],
       district: ['',],
       location_city: [{ value: '', disabled: true },],
     });
+
     // Populate select options
     this.generalService.getDistricts().then(data => {
       this.districts = data;
       console.log("DISTRICTS", data);
     });
+
+    // If edit, get data from API
+    console.log("EDIT?", this.edit);
+    if (this.edit) {
+      this.authService.clientLogged().then(d => {
+        console.log("GOT CLIENT LOGGEF", d);
+        this.client = d;
+        this.populateForm(d);
+      })
+    } else {
+      // If registering, password is mandatory
+      this.registerForm.controls['password'].setValidators([Validators.minLength(3)]);
+      // If registering, enable email (disabled by default)
+      this.registerForm.controls['email'].enable();
+    }
+  }
+
+  // Populate form
+  populateForm(d: Client) {
+    this.registerForm.controls['email'].patchValue(d['email']);
+    this.registerForm.controls['full_name'].patchValue(d['full_name']);
+    this.registerForm.controls['address'].patchValue(d['address']);
+    this.registerForm.controls['birthdate'].patchValue(d['birthdate']);
+    this.registerForm.controls['district'].patchValue(d['location_city']['district']['id']);
+    this.registerForm.controls['location_city'].patchValue(d['location_city']['id']);
+    this.districtSelected = d['location_city']['district']['id'];
+    // Load cities for district
+    this.getCities();
+    this.citySelected = d['location_city']['id'];
   }
 
   // Choices change handlers
@@ -84,10 +126,19 @@ export class ServiceRegisterComponent implements OnInit {
       const loginObserver = {
         next: x => {
           if (x == null) {
-            this.invalid = "Invalid data. Please make sure you are not already registered."
+            if (!this.edit) {
+              this.invalid = "Invalid data. Please make sure you are not already registered."
+            } else {
+              this.invalid = "Invalid data. Make sure all fields are valid and try again."
+            }
           } else {
             this.registerForm.reset();
+            this.populateForm(x);
+            this.submitted = true;
             this.client = x;
+          }
+          if (this.edit) {
+            localStorage.setItem("name", x['full_name']);
           }
           console.log(x);
         },
@@ -98,7 +149,11 @@ export class ServiceRegisterComponent implements OnInit {
 
       this.registerForm.controls['location_city'].patchValue({'id': this.citySelected});
       console.log("FORM NEW", this.registerForm.value);
-      this.authService.register(this.registerForm.value).subscribe(loginObserver);
+      if (!this.edit) {
+        this.authService.register(this.registerForm.value).subscribe(loginObserver);
+      } else {
+        this.authService.update(this.registerForm.value, this.client.email).subscribe(loginObserver);
+      }
     } else {
       this.invalid = "Please fill all the fields before submitting."
     }

@@ -2,10 +2,7 @@ package deti.tqs.g305.handymanservicesapp.service;
 
 import deti.tqs.g305.handymanservicesapp.configuration.RequestsHelper;
 import deti.tqs.g305.handymanservicesapp.exceptions.UnauthorizedException;
-import deti.tqs.g305.handymanservicesapp.model.JwtRequest;
-import deti.tqs.g305.handymanservicesapp.model.JwtResponse;
-import deti.tqs.g305.handymanservicesapp.model.UserAuthority;
-import deti.tqs.g305.handymanservicesapp.model.UserResponse;
+import deti.tqs.g305.handymanservicesapp.model.*;
 import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -24,14 +21,14 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceUnitTest {
@@ -80,6 +77,9 @@ public class UserServiceUnitTest {
         // Validate response
         assertThat(jwt.getToken()).isEqualTo(responseClient.getToken());
         assertThat(jwt.getEmail()).isEqualTo(responseClient.getEmail());
+
+        // Validate API usage
+        verify(restTemplate, times(1)).postForEntity(eq(apiBaseUrl + "/users/login"), any(), eq(JwtResponse.class));
     }
 
     @Test
@@ -92,6 +92,9 @@ public class UserServiceUnitTest {
         assertThatThrownBy(() -> userService.logIn(clientNeg))
             .isInstanceOf(UnauthorizedException.class)
             .hasMessageContaining("Invalid credentials!");
+
+        // Validate API usage
+        verify(restTemplate, times(1)).postForEntity(eq(apiBaseUrl + "/users/login"), any(), eq(JwtResponse.class));
     }
 
     @Test
@@ -106,6 +109,9 @@ public class UserServiceUnitTest {
         assertThatThrownBy(() -> userService.logIn(business))
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessageContaining(String.format("Your authority \"%s\" does not grant you access to this service!", responseBusiness.getType().getAuthority()));
+
+        // Validate API usage
+        verify(restTemplate, times(1)).postForEntity(eq(apiBaseUrl + "/users/login"), any(), eq(JwtResponse.class));
     }
 
     @Test
@@ -120,6 +126,9 @@ public class UserServiceUnitTest {
         // Validate response
         assertThat(response.getEmail()).isEqualTo(ur.getEmail());
         assertThat(response.getType()).isEqualTo(ur.getType());
+
+        // Validate API usage
+        verify(restTemplate, times(1)).exchange(eq(apiBaseUrl + "/users/logged"), eq(HttpMethod.GET), any(), eq(UserResponse.class));
     }
 
     @Test
@@ -132,6 +141,40 @@ public class UserServiceUnitTest {
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessageContaining("Session expired!");
 
+        // Validate API usage
+        verify(restTemplate, times(1)).exchange(eq(apiBaseUrl + "/users/logged"), eq(HttpMethod.GET), any(), eq(UserResponse.class));
+    }
+
+    @Test
+    void whenUpdateUser_thenReturnUser() {
+        // Mock API
+        Client client = new Client("client@ua.pt", "abc", "First Last Name", "Client's address street", null, LocalDate.now());
+        when(restTemplate.exchange(contains(apiBaseUrl + "/client/" + client.getEmail()), eq(HttpMethod.PUT), any(), eq(Optional.class))).thenReturn(ResponseEntity.ok(Optional.of(client)));
+
+        // Call service
+        Optional<Client> response = userService.update(client.getEmail(), new Client(), new MockHttpServletRequest());
+
+        // Validate response
+        assertThat(response.get().getEmail()).isEqualTo(client.getEmail());
+
+        // Validate API usage
+        verify(restTemplate, times(1)).exchange(contains(apiBaseUrl + "/client/" + client.getEmail()), eq(HttpMethod.PUT), any(), eq(Optional.class));
+    }
+
+    @Test
+    void whenGetLogged_thenReturnLogged() {
+        // Mock API
+        Client client = new Client("client@ua.pt", "abc", "First Last Name", "Client's address street", null, LocalDate.now());
+        when(restTemplate.exchange(contains(apiBaseUrl + "/client/"), eq(HttpMethod.GET), any(), eq(Optional.class))).thenReturn(ResponseEntity.ok(Optional.of(client)));
+
+        // Call service
+        Optional<Client> response = userService.getClientLogged(new MockHttpServletRequest());
+
+        // Validate response
+        assertThat(response.get().getEmail()).isEqualTo(client.getEmail());
+
+        // Validate API usage
+        verify(restTemplate, times(1)).exchange(contains(apiBaseUrl + "/client/"), eq(HttpMethod.GET), any(), eq(Optional.class));
     }
 
 

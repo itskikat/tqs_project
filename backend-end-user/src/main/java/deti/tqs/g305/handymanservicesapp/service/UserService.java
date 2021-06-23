@@ -64,5 +64,16 @@ public class UserService {
         return restTemplate.exchange(apiBaseUrl + "/client/", HttpMethod.POST, entity, Optional.class).getBody();
     }
 
+    public Optional update(String email, Client c, HttpServletRequest request) {
+        log.info("PUT to {}/client/{}", apiBaseUrl, email);
+        HttpEntity<Client> entity = new HttpEntity<>(c, requestsHelper.getHeadersWithAuthorization(request.getHeader("Authorization")));
+        return restTemplate.exchange(apiBaseUrl + "/client/" + email, HttpMethod.PUT, entity, Optional.class).getBody();
+    }
+
+    public Optional getClientLogged(HttpServletRequest request) {
+        log.info("Getting client logged for user ", request.getUserPrincipal());
+        return restTemplate.exchange(apiBaseUrl + "/client/", HttpMethod.GET, requestsHelper.getEntityWithAuthorization(request.getHeader("Authorization")), Optional.class).getBody();
+    }
+
 
 }

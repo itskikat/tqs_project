@@ -36,6 +36,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserLogged(request));
     }
 
+    @GetMapping("/")
+    public ResponseEntity<Optional> getClient(HttpServletRequest request) throws Exception {
+        return ResponseEntity.ok(userService.getClientLogged(request));
+    }
+
     @PostMapping(path = {"/"})
     public Optional create(@RequestBody Client client, HttpServletRequest request){
         log.info("Creating client {} with password {} and location {}", client.getEmail(), client.getPassword(), client.getLocation_city());
@@ -43,15 +48,9 @@ public class UserController {
     }
 
     @PutMapping(value="/{email}")
-    public ResponseEntity<?> update(@PathVariable("email") String email, @RequestBody Client client, HttpServletRequest request) {
-        return null;
-        /*
-        Optional<Client> b = userService.update(email, client);
-        if(b.isPresent()){
-            return ResponseEntity.ok().body(b.get());
-        }
-        return new ResponseEntity<String>("Bad business", HttpStatus.BAD_REQUEST);
-        */
+    public Optional update(@PathVariable("email") String email, @RequestBody Client client, HttpServletRequest request) {
+        log.info("Updating client {} ({}) with password {} and location {}", client.getEmail(), email, client.getPassword(), client.getLocation_city());
+        return userService.update(email, client, request);
     }
 
 }

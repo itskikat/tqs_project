@@ -22,6 +22,7 @@ const routes: Routes = [
   { path: "dashboard", component: ServiceDashboardComponent, canActivate: [ClientGuard] },
   { path: "services/:id/provider", component: ServiceProviderComponent, canActivate: [ClientGuard] },
   { path: "past", component: PastServicesComponent, canActivate: [ClientGuard]  },
+  { path: "profile", component: ServiceRegisterComponent, canActivate: [ClientGuard]  },
   { path: "login", component: ServiceLoginComponent  },
   { path: "register", component: ServiceRegisterComponent  },
   { path: "**", redirectTo: "", pathMatch: "full" },

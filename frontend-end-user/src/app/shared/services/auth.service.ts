@@ -32,9 +32,17 @@ export class AuthService {
     return this.http.post(this.authUrl + "/", model);
   }
 
+  update(model: any, email: String) {
+    return this.http.put(this.authUrl + "/" + email, model, this.getOptions());
+  }
+
   loggedIn() {
     const token = localStorage.getItem("token");
     return token!=null;
+  }
+
+  clientLogged() {
+    return this.http.get(this.authUrl + "/", this.getOptions()).toPromise();
   }
 
   logOut() {
