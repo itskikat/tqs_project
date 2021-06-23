@@ -51,7 +51,7 @@ CI/CD Environment - [Deployment](#Deployment)
 
 We have deployed our project at a Virtual Machine provided by the university ICT services.
 
-The VM has DNS http://deti-tqs-14.ua.pt/.
+The VM has DNS http://deti-tqs-14.ua.pt/. (*NOTE - This is only accessible when using the University's Internal Network.*)
 
 
 #### Credentials [WeDo4U](#Deployment)
