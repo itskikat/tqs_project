@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { apiUrl } from '../../../environments/environment';
+import { District } from '../models/District';
 import { ServiceContract } from '../models/ServiceContract';
 import { ServiceContractPage } from '../models/ServiceContractPage';
 import { AuthService } from './auth.service';
@@ -14,6 +15,15 @@ export class GeneralService {
     private http: HttpClient,
     private authService: AuthService
   ) { }
+
+  // Register
+  getDistricts() {
+    return this.http.get<District[]>(apiUrl + "/districts", this.authService.getOptions()).toPromise();
+  }
+
+  getDistrictCities(districtId: number) {
+    return this.http.get<District[]>(apiUrl + "/districts/" + districtId, this.authService.getOptions()).toPromise();
+  }
 
   // Operations
   getContracts(status: string, sort: string, order: string, page: number) {

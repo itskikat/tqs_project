@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping(path = {"/"})
     public Optional create(@RequestBody Client client, HttpServletRequest request){
-        log.info("Creating client {} with password {}", client.getEmail(), client.getPassword());
+        log.info("Creating client {} with password {} and location {}", client.getEmail(), client.getPassword(), client.getLocation_city());
         return userService.create(client, request);
     }
 

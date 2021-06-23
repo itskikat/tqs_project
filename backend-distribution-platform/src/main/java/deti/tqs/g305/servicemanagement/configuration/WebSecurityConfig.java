@@ -5,6 +5,7 @@ import deti.tqs.g305.servicemanagement.model.UserAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -81,6 +82,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/client/").permitAll()
                     .antMatchers("/api/provider/").permitAll()
                     .antMatchers("/api/business/").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/districts").permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/districts/*/cities").permitAll()
+                    // .antMatchers("/api/districts/.*/cities").permitAll()
                     // CLIENT endpoints (require Business API)
                     .antMatchers("/api/dumbclient").hasAuthority(UserAuthorities.CLIENT.name()).requestMatchers(businessMatcher).permitAll()
                 // all other requests need to be authenticated

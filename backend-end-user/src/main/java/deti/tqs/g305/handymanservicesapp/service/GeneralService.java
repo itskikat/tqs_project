@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,6 +36,7 @@ public class GeneralService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
+    // Past services
     public Map getContracts(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(required=false) String status,
@@ -65,4 +67,17 @@ public class GeneralService {
         return restTemplate.exchange(apiBaseUrl + "/clients/contracts/" + id.toString(), HttpMethod.PUT, entity, ServiceContract.class).getBody();
     }
 
+    // Register
+    public List getDistricts(
+        HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/districts", HttpMethod.GET, null, List.class).getBody();
+    }
+
+    public List getDistrictCities(
+        Long districtId,
+        HttpServletRequest request
+    ) {
+        return restTemplate.exchange(apiBaseUrl + "/districts/" + districtId.toString() + "/cities", HttpMethod.GET, null, List.class).getBody();
+    }
 }
