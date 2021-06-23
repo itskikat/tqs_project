@@ -81,7 +81,7 @@ public class ServiceServiceImpl implements ServiceService {
             // Send Notification
             notificationController.send(serviceContract.getProviderService().getProvider().getEmail()+":"+"W");
 
-            return Optional.of(serviceContractRepository.save(serviceContract));
+            return Optional.of(serviceContractRepository.saveAndFlush(serviceContract));
         }
         
         return Optional.empty();
@@ -119,7 +119,7 @@ public class ServiceServiceImpl implements ServiceService {
                 // Send Notification
                 notificationController.send(sc.getProviderService().getProvider().getEmail()+":"+"A");
             }
-            return Optional.of(serviceContractRepository.save(sc));
+            return Optional.of(serviceContractRepository.saveAndFlush(sc));
         }
         return Optional.empty();
     }
@@ -187,7 +187,7 @@ public class ServiceServiceImpl implements ServiceService {
                 return Optional.empty();
             }
             providerService.setService(st);
-            return Optional.of(providerServiceRepository.save(providerService));
+            return Optional.of(providerServiceRepository.saveAndFlush(providerService));
         }
         return Optional.empty();
     }
@@ -219,7 +219,7 @@ public class ServiceServiceImpl implements ServiceService {
                 ps.setProvider(providerService.getProvider());
             }
             ps.setDescription(providerService.getDescription());
-            return Optional.of(providerServiceRepository.save(ps));
+            return Optional.of(providerServiceRepository.saveAndFlush(ps));
         }
         return Optional.empty();
     }
@@ -255,7 +255,7 @@ public class ServiceServiceImpl implements ServiceService {
                 return Optional.empty();
             }
             businessService.setService(st);
-            return Optional.of(businessServiceRepository.save(businessService));
+            return Optional.of(businessServiceRepository.saveAndFlush(businessService));
         }
         return Optional.empty();
     }
@@ -287,7 +287,7 @@ public class ServiceServiceImpl implements ServiceService {
             }
             bs.setPrice(businessService.getPrice());
 
-            return Optional.of(businessServiceRepository.save(bs));
+            return Optional.of(businessServiceRepository.saveAndFlush(bs));
         }
         return Optional.empty();
     }

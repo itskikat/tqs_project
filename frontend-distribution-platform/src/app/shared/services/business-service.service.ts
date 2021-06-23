@@ -66,9 +66,9 @@ export class BusinessServiceService {
     return this.http.put<Business>(url,b,this.authservice.getOptions() )
   }
 
-  generateToken(): Observable<Business>{
+  generateToken(): Observable<any>{
     let url = apiUrl + "/business/token";
-    return this.http.get<Business>(url,this.authservice.getOptions() )
+    return this.http.get<any>(url,this.authservice.getOptions() )
   }
 
 }

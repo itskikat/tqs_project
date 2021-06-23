@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -67,11 +69,13 @@ public class BusinessUserRestController {
     }
 
     @GetMapping("/business/token")
-    public ResponseEntity<String> generateToken(HttpServletRequest request){
+    public ResponseEntity<?> generateToken(HttpServletRequest request){
         Principal principal = request.getUserPrincipal();
         Optional<Business> optB = businessUserService.generateToken(principal.getName());
         if(optB.isPresent()){
-            return new ResponseEntity<String>(optB.get().getApikey(), HttpStatus.OK);
+            Map<String, String> response = new HashMap<String,String>();
+            response.put("key",optB.get().getApikey() );
+            return new ResponseEntity<Map<String,String>>(response, HttpStatus.OK);
         }
         return new ResponseEntity<String>("Could not generate token", HttpStatus.BAD_REQUEST);
     }

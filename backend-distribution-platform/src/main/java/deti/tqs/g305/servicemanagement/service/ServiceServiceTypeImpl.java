@@ -36,7 +36,7 @@ public class ServiceServiceTypeImpl implements ServiceServiceType {
         Optional<ServiceType> optSt = serviceTypeRepository.findByName(st.getName());
         if(optSt.isEmpty()){
             ServiceType st_final = new ServiceType(st.getName(), st.getHasExtras());
-            st_final=serviceTypeRepository.save(st_final);
+            st_final=serviceTypeRepository.saveAndFlush(st_final);
             return Optional.of(st_final);
         }
         return Optional.empty();
