@@ -114,4 +114,199 @@ public class ClientRESTAPITestIT {
         assertThat(response.getBody().getClient()).isEqualTo(c);
     }
 
+    @Test
+    void whenGetContracts_thenReturnContracts() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 0);
+        serviceContractRepository.saveAndFlush(sc);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request to API
+        ResponseEntity<Map> response = restTemplate.exchange(
+                "/api/clients/contracts",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                Map.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("totalItems")).isEqualTo(1);
+    }
+
+    @Test
+    void whenGetValidContractID_thenReturnValidContractID() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 0);
+        serviceContractRepository.saveAndFlush(sc);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request to API
+        ResponseEntity<ServiceContract> response = restTemplate.exchange(
+                "/api/clients/contracts/"+sc.getId(),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                ServiceContract.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getClient()).isEqualTo(c);
+    }
+
+    @Test
+    void whenGetInvalidContractID_thenReturnNotFound() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/clients/contracts/9999",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    void whenUpdateValidContract_thenReturnContract() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+        ServiceContract sc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 0);
+        serviceContractRepository.saveAndFlush(sc);
+        ServiceContract updatedsc = new ServiceContract(bs, ps, ServiceStatus.FINNISHED, c, 5);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<ServiceContract> response = restTemplate.exchange(
+                "/api/clients/contracts/"+sc.getId(),
+                HttpMethod.PUT,
+                new HttpEntity<>(updatedsc, headers),
+                ServiceContract.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getReview()).isEqualTo(updatedsc.getReview());
+
+    }
+
+    @Test
+    void whenUpdateInvalidContract_thenReturnBadRequest() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<String> response = restTemplate.exchange(
+                "/api/clients/contracts/9999",
+                HttpMethod.PUT,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void whenGetMatches_thenReturnMatches() {
+        // Create client and save to db
+        Client c = new Client("client@ua.pt", bcryptEncoder.encode("abc"), "First Last Name", "Client's address street", LocalDate.now());
+        userRepository.saveAndFlush(c);
+
+        ServiceType st = new ServiceType("pool work", true);
+        serviceTypeRepository.saveAndFlush(st);
+        Business b = new Business("business@ua.pt", "MyBusiness", bcryptEncoder.encode("abc"), "Sample Key", "FirstNameBus", "Random Address", "NIF1234");
+        userRepository.saveAndFlush(b);
+        BusinessService bs = new BusinessService(25.0, st, b);
+        businessServiceRepository.saveAndFlush(bs);
+        Provider p = new Provider("provider@ua.pt", "First Last Name", bcryptEncoder.encode("abc"), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "123456789", LocalDate.now());
+        userRepository.saveAndFlush(p);
+        ProviderService ps = new ProviderService("Working on the Pool", p, st);
+        providerServiceRepository.saveAndFlush(ps);
+
+        // Create token for user and use it to build request header
+        String token = tokenUtil.generateToken(userService.loadUserByUsername(c.getEmail()));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + token);
+
+        // Make request and validate it
+        ResponseEntity<List> response = restTemplate.exchange(
+                "/api/clients/matches/"+ps.getId(),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                List.class
+        );
+
+        // Validate response
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+
 }
