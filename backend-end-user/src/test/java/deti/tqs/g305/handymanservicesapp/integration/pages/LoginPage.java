@@ -4,15 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage {
-
-    private WebDriver driver;
+public class LoginPage extends Page {
 
     public LoginPage(WebDriver driver, String baseUrl) {
-        this.driver = driver;
-        driver.get(baseUrl + "/login");
-        //Initialise Elements
-        PageFactory.initElements(driver, this);
+        super(driver, baseUrl + "/login");
     }
 
     // Actions
@@ -28,10 +23,6 @@ public class LoginPage {
         driver.findElement(By.cssSelector(".bg-blueGray-800")).click();
     }
 
-    public void close() {
-        driver.close();
-    }
-
     // Analyse
     public String getTitle() {
         return driver.findElement(By.cssSelector(".mb-3 > .text-blueGray-500")).getText();
@@ -43,10 +34,6 @@ public class LoginPage {
 
     public String errorMessage() {
         return driver.findElement(By.cssSelector(".align-middle")).getText();
-    }
-
-    public String getUrl() {
-        return driver.getCurrentUrl();
     }
 
 }

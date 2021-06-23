@@ -1,6 +1,7 @@
 package deti.tqs.g305.handymanservicesapp.integration;
 
 import deti.tqs.g305.handymanservicesapp.integration.pages.LoginPage;
+import deti.tqs.g305.handymanservicesapp.integration.pages.RegisterPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +15,7 @@ public class UserControllerTestIT {
 
     WebDriver driver;
 
-    String baseUrl = "http://localhost:4200/";
+    String baseUrl = "http://localhost:4200";
 
     @BeforeEach
     void setup(){
