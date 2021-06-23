@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BusinessRestControllerITTest {
+public class BusinessRESTAPITestIT {
 
     private static final Logger log = LoggerFactory.getLogger(UserRESTAPITestIT.class);
 
