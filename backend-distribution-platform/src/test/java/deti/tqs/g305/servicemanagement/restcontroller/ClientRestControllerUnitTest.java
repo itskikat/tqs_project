@@ -1,10 +1,14 @@
 package deti.tqs.g305.servicemanagement.restcontroller;
 
+import deti.tqs.g305.servicemanagement.model.*;
+import deti.tqs.g305.servicemanagement.repository.ClientRepository;
+import deti.tqs.g305.servicemanagement.repository.ProviderRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.mockito.Mockito.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
@@ -20,16 +24,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import deti.tqs.g305.servicemanagement.model.ServiceContract;
-import deti.tqs.g305.servicemanagement.model.ServiceStatus;
-import deti.tqs.g305.servicemanagement.model.ProviderService;
-import deti.tqs.g305.servicemanagement.model.BusinessService;
-import deti.tqs.g305.servicemanagement.model.Client;
 import deti.tqs.g305.servicemanagement.service.ServiceService;
 import deti.tqs.g305.servicemanagement.service.UserServiceImpl;
 import deti.tqs.g305.servicemanagement.JsonUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtTokenUtil;
 import deti.tqs.g305.servicemanagement.configuration.JwtAuthenticationEntryPoint;
+
+import deti.tqs.g305.servicemanagement.configuration.BusinessMatcher;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,16 @@ public class ClientRestControllerUnitTest {
     private JwtTokenUtil jwtToken;
 
     @MockBean
+    private BusinessMatcher bm;
+
+    @MockBean
     private JwtAuthenticationEntryPoint jwtAuth;
+
+    @MockBean
+    private ClientRepository clientRepository;
+
+    @MockBean
+    private ProviderRepository providerRepository;
 
     List<ServiceContract> listServiceContract;
 
@@ -231,6 +241,49 @@ public class ClientRestControllerUnitTest {
         .andExpect(status().isNotFound());
        
         verify(serviceService, times(1)).getServiceContract(any(),anyLong());
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetMatchingServiceProviders_thenReturnMatchingServiceProviders() throws Exception {
+        Provider p = new Provider();
+        District district = new District( "Lisbon");
+        City city = new City( "Almada", district);
+        List<City> provider_location = new ArrayList<>();
+        provider_location.add(city);
+        p.setLocation_city(provider_location);
+        Client c2 = new Client();
+        c2.setEmail("demo@demo.com");
+        c2.setLocation_city(city);
+
+        ProviderService ps = new ProviderService();
+        ps.setProvider(p);
+        ServiceContract sc = new ServiceContract(new BusinessService(), ps, ServiceStatus.FINNISHED, c2,0);
+        List<ProviderService> provider_services = new ArrayList<>();
+        provider_services.add(ps);
+
+        when( serviceService.getMatches(any(),eq(1L))).thenReturn(provider_services);
+
+        mvc.perform(get("/api/clients/matches/1"))
+                .andExpect(status().isOk());
+
+        verify(serviceService, times(1)).getMatches(any(),eq(1L));
+    }
+
+    @Test
+    @WithMockUser("duke")
+    public void whenGetExistentProviderService_thenReturnProviderService() throws  Exception {
+        ProviderService bs = new ProviderService(null, new Provider(), new ServiceType());
+        bs.setId(2);
+        bs.setDescription("I have tests");
+
+        when(serviceService.getProviderService(any(), anyLong())).thenReturn(Optional.of(bs));
+
+        mvc.perform(get("/api/clients/services/" + bs.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description", is(bs.getDescription())));
+
+        verify(serviceService, times(1)).getProviderService(any(), anyLong());
     }
 
 

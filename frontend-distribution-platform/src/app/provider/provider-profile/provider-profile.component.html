@@ -1,0 +1,53 @@
+<nb-layout windowMode>
+    <nb-layout-header fixed>
+        <ngx-header></ngx-header>
+    </nb-layout-header>
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
+        <nb-menu [items]="menu"></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <nb-card class="col-md-12 col-lg-12 col-xxxl-12">
+            <nb-card-header>
+                <h3>Your Profile</h3>
+            </nb-card-header>
+            <nb-card-body>
+                <form [formGroup]="personalDataForm" class="form d-flex flex-column">
+
+                    <div class="form-group">
+                        <label for="fistName">Email</label>
+                        <input nbInput style="max-width: 100%;" id="firstName" [placeholder]="email" disabled class="form-control" required >
+                    </div>
+                    <div class="form-group">
+                        <label for="fistName">First Name</label>
+                        <input nbInput style="max-width: 100%;" id="firstName" placeholder="Enter your name" class="form-control" required formControlName="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input nbInput style="max-width: 100%;" placeholder="Enter your name" class="form-control" required formControlName="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label>Birth Date</label>
+                        <input nbInput style="max-width: 100%;" [placeholder]="bdate" class="form-control" disabled [nbDatepicker]="formpicker" >
+                        <nb-datepicker [max]="minDate" #formpicker></nb-datepicker>
+                    </div>
+                    <div class="form-group">
+                        <label>VAT</label>
+                        <input nbInput style="max-width: 100%;" placeholder="Enter your VAT"
+                            class="form-control" required formControlName="vat">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input nbInput style="max-width: 100%;" placeholder="The type of work you do"
+                            class="form-control" required formControlName="category">
+                    </div>
+                    <div class="row" style="margin-top: 2rem;">
+                        <button (click)="editProfile()" nbButton class="col-1 ml-auto mr-3"  status="warning">Edit</button>
+                        <button (click)="saveProfile()" nbButton class="col-1 mr-auto" [disabled]="formDisabled" status="success">Save</button>
+                    </div>
+                    
+                </form>
+            </nb-card-body>
+        </nb-card>
+    </nb-layout-column>
+<nb-layout-footer></nb-layout-footer>
+</nb-layout>

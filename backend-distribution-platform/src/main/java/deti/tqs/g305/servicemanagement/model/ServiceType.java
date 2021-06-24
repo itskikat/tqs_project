@@ -48,4 +48,11 @@ public class ServiceType{
         this.hasExtras= hasExtras;
     }
 
+    public void setHasExtras(boolean extra){
+        this.hasExtras= extra;
+    }
+    public boolean getHasExtras(){
+        return this.hasExtras;
+    }
+
 }

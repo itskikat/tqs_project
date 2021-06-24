@@ -21,16 +21,43 @@
       id="example-navbar-warning"
     >
       <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
-        <li class="flex items-center mr-2">
-          <a href="/past"> Past Services</a>
+        <!-- Not logged -->
+        <li class="flex items-center" *ngIf="!user && router.url.indexOf('/#/login')<0">
+          <a 
+            href="/login"
+          >
+            <button
+              class="bg-lightBlue-600 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
+              type="button"
+            >
+              <i class="fas fa-sign-in-alt mr-1"></i> Log in
+            </button>
+          </a>
         </li>
-        <li class="flex items-center">
-          <a href="/login">
+        <!-- Logged -->
+        <li class="flex items-center mr-2" *ngIf="user">
+          <a href="/#/past"> Past Services</a>
+        </li>
+        <li class="flex items-center" *ngIf="user">
+          <a 
+            onclick="alert('Soon available')"
+            *ngIf="user"
+          >
             <button
               class="bg-lightBlue-600 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none lg:mr-1 lg:mb-0 ml-3 mb-3 ease-linear transition-all duration-150"
               type="button"
             >
               <i class="far fa-user mr-1"></i> My account
+            </button>
+          </a>
+        </li>
+        <li class="flex items-center" *ngIf="user">
+          <a 
+            (click)="logOut()"
+            *ngIf="user"
+          >
+            <button class="text-lightBlue-500 bg-transparent border border-solid border-lightBlue-500 hover:bg-lightBlue-500 hover:text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+              <i class="fas fa-sign-out-alt mr-1"></i> Log out
             </button>
           </a>
         </li>

@@ -16,6 +16,6 @@ RUN npm run build
 
 FROM nginx:latest
 
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
-
+COPY --from=build /usr/src/app/dist /var/www/distribution
+COPY nginx-distribution.conf etc/nginx/conf.d/default.conf
 EXPOSE 80

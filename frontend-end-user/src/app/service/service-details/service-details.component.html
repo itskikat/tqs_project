@@ -37,49 +37,38 @@
         <div class="relative container mx-auto px-4  break-words bg-white w-10/12 mb-8  shadow-lg rounded-lg">
             <div class="flex flex-wrap  text-center">
                 <div class="w-full px-4 flex-1">
-                    <h2 class="text-4xl mt-10 mb-8 font-semibold" >{{service.name}}</h2>
-                </div>
-                <div class="w-full px-4 flex-1">
-                    <p class="w-full mt-10 mb-8 text-2xl text-center text-blueGray-400 ">
-                        <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                        <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                        <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                        <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                        <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
-                        ({{service.number_reviews}} reviews)
-                    </p>
-                    <br/>
+                    <h2 class="text-4xl mt-10 mb-8 font-semibold" >{{contract.providerService.service.name}}</h2>
                 </div>
             </div>
             <div class="flex flex-wrap">
                 <div class="w-full px-4 flex-1">
                     <p class="w-full text-xl text-center text-blueGray-400 ">
-                        <strong>Area: </strong>{{service.area}}
+                        <strong>Areas:</strong>
+                        <span *ngFor="let c of contract.providerService.provider.location_city"><br/>{{c.name}} city, district of {{c.district.name}}</span>
+                        <span *ngFor="let d of contract.providerService.provider.location_district"><br/>{{d.name}} district</span>
                     </p>
                     <br/>
                 </div>
                 <div class="w-full px-4 flex-1">
                     <p class="w-full text-xl text-center text-blueGray-400 ">
-                        <a href="/provider">
-                            <strong>Provider: </strong>{{service.provider.name}}
+                        <a [href]="'/#/contracts/' + contract.id + '/provider'" *ngIf="!service">
+                            <strong>Provider:</strong><br/>{{contract.providerService.provider.full_name}}
+                        </a>
+                        <a [href]="'/#/services/' + contract.providerService.id + '/provider'" *ngIf="service">
+                            <strong>Provider:</strong><br/>{{contract.providerService.provider.full_name}}
                         </a>
                     </p>
                     <br/>
                 </div>
             </div>
 
-            <div class="flex flex-wrap">
+            <div class="flex flex-wrap" *ngIf="!service">
                 <div class="w-full px-4 flex-1">
                     <p class="w-full text-xl text-center text-blueGray-400 ">
-                        <strong>Category: </strong>{{service.category}}
-                    </p>
-                </div>
-                <div class="w-full px-4 flex-1">
-                    <p class="w-full text-xl text-center text-blueGray-400 ">
-                        <strong>Price: </strong> {{service.price}}€
+                        <strong>Price: </strong> {{contract.businessService.price}}€
                         
                     </p>
-                    <p class="small text-blueGray-400 text-center" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+                    <p class="small text-blueGray-400 text-center" *ngIf="contract.businessService.service.hasExtras"><small>Extra fees may apply</small></p>
                 </div>
             </div>
             <div class="flex flex-wrap ">
@@ -88,31 +77,22 @@
                         <strong>Description </strong>
                     </p>
                     <p class="w-full mb-5 text-xl text-center text-blueGray-400 ">
-                        {{service.description}}
+                        {{contract.providerService.description}}
                     </p>
                 </div>                  
             </div>
-            <div class="flex flex-wrap ">
-                <div class="w-full px-4 text-center flex-1">
-                    <button class="bg-lightBlue-500  mb-5 text-white active:bg-lightBlue-600 font-bold uppercase text-base px-4 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
-                        Request This Service 
-                        </button>
-                        
-                </div>
-                                
-            </div>
-
         </div>
     </section>
-    <section class="pb-20 bg-blueGray-200 -mt-20">
+    <section class="pb-20 bg-blueGray-200 -mt-20" *ngIf="contract.status == 'FINNISHED'">
         <div class="relative container mx-auto px-4 w-10/12 break-words bg-white mb-8  shadow-lg rounded-lg">
             <div class="flex flex-wrap  text-center">
                 <div class="w-full px-4 flex-1">
-                    <h2 class="text-2xl mt-10 mb-4 font-semibold" >Review This Service</h2>
+                    <h2 class="text-2xl mt-10 mb-4 font-semibold" *ngIf="contract.review == 0">Review This Service</h2>
+                    <h2 class="text-2xl mt-10 mb-4 font-semibold" *ngIf="contract.review != 0">Your review</h2>
                 </div>
             </div>
-            <div class="flex flex-wrap  text-center">
-                <div class="w-full px-4 flex-1"> </div>
+            <div class="flex flex-wrap text-center flex-1">
+                <div class="w-full px-4 flex-1"></div>
                 <div class="w-full px-4 flex-1">
                     <p class="w-full mt-4 mb-8 text-2xl text-center text-blueGray-400 ">
                         <i (click)="rate(1)" [class]="user_rate <= 0 ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
@@ -121,12 +101,11 @@
                         <i (click)="rate(4)" [class]="user_rate <= 3 ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
                         <i (click)="rate(5)" [class]="user_rate <= 4 ? 'far fa-star mr-1' : 'fas fa-star mr-1'" style="color: dodgerblue;"></i>
                     </p>
-                    <br/>
                 </div>
-                <div class="w-full px-4 flex-1">
-                    <button class="bg-lightBlue-500  mt-2 mb-8 text-white active:bg-lightBlue-600 font-bold uppercase text-base px-4 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
+                <div class="w-full px-4 flex-1" *ngIf="contract.review == 0">
+                    <button (click)="submitReview()"  class="bg-lightBlue-500  mt-2 mb-8 text-white active:bg-lightBlue-600 font-bold uppercase text-base px-4 py-3 rounded shadow-md hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button">
                         Submit Review
-                        </button>
+                    </button>
                 </div>
                 <div class="w-full px-4 flex-1"> </div>
             </div>

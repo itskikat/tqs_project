@@ -14,3 +14,6 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+export const apiUrl = "http://deti-tqs-14.ua.pt:8081/api";
+export const distributionPlatform = "http://deti-tqs-14.ua.pt:8080/";

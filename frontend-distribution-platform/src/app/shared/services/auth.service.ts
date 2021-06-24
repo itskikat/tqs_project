@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { apiUrl } from '../../../environments/environment';
+import { User } from '../models/User';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,6 @@ export class AuthService {
 
   loggedIn() {
     const token = localStorage.getItem("token");
-    // TODO! Call api to check if valid
     return token!=null;
   }
 
@@ -39,6 +39,11 @@ export class AuthService {
     localStorage.removeItem("name");
     localStorage.removeItem("email");
   }
+
+  loggedData() {
+    return this.http.get<User>(this.authUrl + "/logged", this.getOptions()).toPromise();
+  }
+
 
   // Getters
     role() {

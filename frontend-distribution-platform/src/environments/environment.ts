@@ -12,5 +12,5 @@ export const environment = {
   production: false,
 };
 
-export const apiUrl = "http://localhost:8080/api";
+export const apiUrl = "http://deti-tqs-14.ua.pt:8080/api";
 

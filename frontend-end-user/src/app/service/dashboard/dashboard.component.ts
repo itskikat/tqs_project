@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { Service } from "../service";
 import { Provider } from "../provider";
 import { Router } from "@angular/router";
+import { GeneralService } from "src/app/shared/services/general.service";
+import { BusinessService } from "src/app/shared/models/BusinessService";
+import { ProviderService } from "src/app/shared/models/ProviderService";
 
 
 
@@ -105,12 +108,28 @@ export class ServiceDashboardComponent implements OnInit {
 
   services: Service[];
   searched: boolean=false;
+  
+  // Matchine
+  clientName: String;
+  serviceTypes: BusinessService[];
+  serviceTypeSelected: number;
+  serviceType: BusinessService;
+  matches: ProviderService[];
+  signed: boolean = false;
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private generalService: GeneralService) {
     this.services = servicesList;
+    this.clientName = localStorage.getItem("name").split(" ")[0];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Get services from API
+    this.generalService.getServices().then(data => {
+      console.log("GOT SERVICES", data);
+      this.serviceTypes = data;
+      this.serviceTypeSelected = data[0]['service']['id'];
+    });
+  }
 
   details(id: number): void{
     this.router.navigate(["/services/"+ id.toString()])
@@ -118,9 +137,28 @@ export class ServiceDashboardComponent implements OnInit {
 
   search() {
     this.searched = true;
+    // Get matches from API
+    this.generalService.match(this.serviceTypeSelected).then(data => {
+      console.log("GOT MATCHES", data);
+      this.matches = data;
+      this.serviceType = this.serviceTypes.filter(st => st.id==this.serviceTypeSelected)[0]
+    });
   }
 
   searchRevert() {
     this.searched = false;
+    this.matches = [];
+  }
+
+  contract(businessService: number) {
+    console.log("Business service", businessService);
+    console.log("Provider service", this.serviceTypeSelected);
+    this.generalService.signContract(businessService, this.serviceTypeSelected).then(data => {
+      console.log("SIGNED");
+      console.log(data);
+      this.signed = true;
+      this.matches = [];
+    });
+
   }
 }

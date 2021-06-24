@@ -12,12 +12,8 @@
         <div class="w-full lg:w-6/12 px-4 text-left">
           <div class="pr-12">
             <h1 class="text-white font-semibold text-5xl">
-              We have all the services you need!
+              {{clientName}}, we have all the services you need!
             </h1>
-            <p class="mt-4 text-lg text-blueGray-200">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Auctor urna nunc id cursus metus. Nisl suscipit adipiscing bibendum est.
-            </p>
           </div>
         </div>
 
@@ -41,29 +37,15 @@
                   </label>
                   <select
                     class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    id="search-city">
-                    <option value="0">Water Leak</option>
-                    <option value="1">Pool cleaning</option>
-                    <option value="2">Maintenance</option>
-                  </select>
-                </div>
-              </div>
-              <div class="w-full px-4">
-                <div class="relative w-full mb-3">
-                  <label class="block uppercase text-blueGray-600 text-xs text-left font-bold mb-2"
-                    htmlFor="search-city">
-                    Favour
-                  </label>
-                  <select
-                    class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    id="search-city">
-                    <option value="0">Quality</option>
-                    <option value="1">Price</option>
+                    id="search-city"
+                    [(ngModel)]="serviceTypeSelected"
+                  >
+                    <option *ngFor="let s of serviceTypes" [ngValue]="s.service.id">{{s.service.name}}</option>
                   </select>
                 </div>
               </div>
               <button
-                class="w-full mx-4 bg-lightBlue-600 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
+                class="w-full mx-4 mt-5 bg-lightBlue-600 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
                 type="button" (click)="search()">
                 <i class="fas fa-search mr-1"></i> Find me a provider
               </button>
@@ -78,17 +60,35 @@
               class="mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
               <i class="fas fa-search"></i>
             </div>
-            <h6 class="w-full text-center text-xl font-semibold">
-              We have found 3 offers that match your requirements!
-            </h6>
+            <div *ngIf="matches.length>0">
+              <h6 class="w-full text-center text-xl font-semibold">
+                We have found {{matches.length}} offers that match your requirements!
+              </h6>
 
-            <p class="w-full text-center">
-              Check them below and choose the one that best fits you. :)
-            </p>
+              <p class="w-full text-center">
+                Check them below and choose the one that best fits you. :)
+              </p>
+            </div>  
+            <div *ngIf="matches.length==0 && !signed">
+              <h6 class="w-full text-center text-xl font-semibold">
+                Unfortunately the service you are looking for is not available in your location.
+              </h6>
+              <p class="w-full text-center">
+                Try again later.
+              </p>
+            </div>  
+            <div *ngIf="matches.length==0 && signed">
+              <h6 class="w-full text-center text-xl font-semibold">
+                You have requested the service with success!
+              </h6>
+              <p class="w-full text-center">
+                The provider will get in touch soon to arranje all the details. You can check the request status in the Past Services tab.
+              </p>
+            </div>  
             <div class="w-full mt-10 flex flex-row flex-wrap">
               <button
                 class="w-full mx-4 bg-lightBlue-400 text-white active:bg-lightBlue-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
-                type="button" (click)="revertSearch()">
+                type="button" (click)="searchRevert()">
                 <i class="fas fa-undo mr-1"></i> Undo search
               </button>
             </div>
@@ -109,44 +109,47 @@
     </div>
   </div>
 
-  <section *ngIf="searched" class="pb-20 bg-blueGray-200 -mt-24">
+  <section *ngIf="searched && matches" class="pb-20 bg-blueGray-200 -mt-24">
     <div class="container mx-auto px-4">
       <div class="flex flex-wrap">
-        <div class="flex w-full md:w-4/12 px-4 text-center" *ngFor="let service of services">
-          <div class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+        <div class="mx-auto flex w-full md:w-4/12 px-4 text-center" *ngFor="let match of matches; let i = index">
+          <div
+            class="relative flex flex-col flex-wrap min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg"
+          >
             <div class="flex flex-column flex-grow flex-wrap px-4 py-5">
               <div
-                [class]="'mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full ' + service.color">
-                <i [class]="service.icon"></i>
+                class="mx-auto text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full"
+                [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
+              >
+                <i class="fas fa-truck"></i>
               </div>
-              <h6 class="w-full text-center text-xl font-semibold">{{service.name}}</h6>
+              <h6 class="w-full text-center text-xl font-semibold">{{match.service.name}}</h6>
               <p class="w-full text-center text-blueGray-400 small">
-                <i class="fas fa-map-marked-alt mr-1"></i>{{service.area}}<br />
-                <a href="/provider">
-                  <i class="fas fa-user-circle mr-1"></i>{{service.provider.name}}<br />
-                </a>
-                <i class="fas fa-tag mr-1"></i>{{service.category}}<br />
-                <i [class]="(service.rate <= 0 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 0 && service.rate  < 1) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"
-                  style="color: dodgerblue;"></i>
-                <i [class]="(service.rate <= 1 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 1 && service.rate  < 2) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"
-                  style="color: dodgerblue;"></i>
-                <i [class]="(service.rate <= 2 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 2 && service.rate  < 3) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"
-                  style="color: dodgerblue;"></i>
-                <i [class]="(service.rate <= 3 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 3 && service.rate  < 4) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"
-                  style="color: dodgerblue;"></i>
-                <i [class]="(service.rate <= 4 || service.rate==null) ? 'far fa-star mr-1' : (service.rate  > 4 && service.rate  < 5) ? 'fas fa-star-half-alt mr-1' : 'fas fa-star mr-1'"
-                  style="color: dodgerblue;"></i>
-                ({{service.number_reviews}} reviews)<br />
+                <a [href]="'/#/services/' + match.id + '/provider'">
+                    <i class="fas fa-user-circle mr-1"></i>{{match.provider.full_name}}<br/>
+                  </a>
               </p>
-              <p class="w-full text-center mt-2 mb-4">{{service.description}}</p>
               <div class="w-full text-center mb-4">
-                <h5 class="text-xl font-semibold">{{service.price}}€</h5>
-                <p class="small text-blueGray-400" *ngIf="service.hasExtras"><small>Extra fees may apply</small></p>
+                <h5 class="text-xl font-semibold">{{serviceType.price}}€</h5>
+                <p class="small text-blueGray-400" *ngIf="match.service.hasExtras"><small>Extra fees may apply</small></p>
               </div>
               <button
-                [class]="service.color + ' mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150'"
-                type="button" style="margin-top: auto;" (click)="details(service.id)">
-                <i class="fas fa-plus mr-1"></i> Service details
+                  class="mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
+                  [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
+                  type="button"
+                  style="margin-top: auto;"
+                  (click)="details(match.id)"
+                >
+                  <i class="fas fa-plus mr-1" ></i> See details
+              </button>
+              <button
+                  class="mt-auto mx-auto text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-3 ease-linear transition-all duration-150"
+                  [ngClass]="{'0': 'bg-lightBlue-500', '1':'bg-lightBlue-600'}[(i%2).toString()]"
+                  type="button"
+                  style="margin-top: auto;"
+                  (click)="contract(match.id)"
+                >
+                  <i class="fas fa-plus mr-1" ></i> Request service
               </button>
             </div>
           </div>

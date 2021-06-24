@@ -15,7 +15,7 @@
                     <p>Here you can check your API Key status and generate a new one if necessary.</p>
                     
                     <nb-alert status="warning">
-                        Attention! You have generated an API key at {{lastAPIGenerated.toLocaleString()}}. If you generate a new one, the existing will be invalidated!
+                        Attention! If you generate a new apiKey, the existing will be invalidated!
                     </nb-alert>
 
                     <nb-alert status="warning">
@@ -32,7 +32,7 @@
                 <div *ngIf="tokenGenerated">
                     <p>Your token has been generated successfully and is shown below!</p>
                     <nb-alert outline="success" class="my-5 text-center">
-                        ULab6..PzmKj4!;$&@Yw`+s4tun04
+                        {{token}}
                     </nb-alert>
                     <p>You must use it every time your app calls the API. See how in the <a>documentation</a>.</p>
                 </div>

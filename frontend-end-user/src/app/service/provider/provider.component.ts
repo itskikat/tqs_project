@@ -1,62 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Service } from "../service";
-import { Provider } from "../provider";
-import { Router } from "@angular/router";
-
-
-var servicesList:Service[] = [
-  {
-    id: 1,
-    name: 'Pipe broken',
-    icon: 'fas fa-water',
-    area: 'Aveiro',
-    price: 30,
-    color: 'bg-lightBlue-600',
-    description: 'Loren ipsum...',
-    hasExtras: true,
-    provider: {
-      name: 'Bob Dickard',
-      id: 1
-    },
-    category: "Water shortages",
-    rate: 4,
-    number_reviews: 28
-  },
-  {
-    id: 4,
-    name: 'Tap instalation',
-    icon: 'fas fa-faucet',
-    area: 'Aveiro Region',
-    price: 10,
-    color: 'bg-lightBlue-500',
-    description: 'Loren ipsum...',
-    hasExtras: true,
-    provider: {
-      name: 'Bob Dickard',
-      id: 1
-    },
-    category: "Bathroom",
-    rate: 4,
-    number_reviews: 28
-  },
-  {
-    id: 5,
-    name: 'Bathroom pipes maintenance',
-    icon: 'fas fa-shower',
-    area: 'Aveiro',
-    price: 560,
-    color: 'bg-lightBlue-600',
-    description: 'Loren ipsum...',
-    hasExtras: true,
-    provider: {
-      name: 'Bob Dickard',
-      id: 1
-    },
-    category: "Tap instalation",
-    rate: 4,
-    number_reviews: 28
-  }
-];
+import { ActivatedRoute, Router } from "@angular/router";
+import { GeneralService } from "src/app/shared/services/general.service";
+import { Provider } from "src/app/shared/models/Provider";
 
 @Component({
   selector: "service-provider",
@@ -66,14 +12,26 @@ var servicesList:Service[] = [
 export class ServiceProviderComponent implements OnInit {
   
   services: Service[];
+  id: number;
+  provider: Provider = {
+  
+  };
 
-  constructor(public router: Router) {
-    this.services = servicesList;
+  constructor(public router: Router, private route: ActivatedRoute, private generalService: GeneralService) {
+    this.id = parseInt(this.route.snapshot.paramMap.get('id'));
+    // Get provider info from contract or service, depending on the URL
+    if ((this.router.url.split('?')[0]).indexOf("/contracts")<0) {
+      this.generalService.getService(this.id).then(data => {
+        this.provider = data.provider;
+        console.log(this.provider);
+      });
+    } else {
+      this.generalService.getContract(this.id).then(data => {
+        this.provider = data.providerService.provider;
+        console.log(this.provider);
+      });
+    }
   }
 
   ngOnInit(): void {}
-
-  details(id: number): void{
-    this.router.navigate(["/services/"+ id.toString()])
-  }
 }
