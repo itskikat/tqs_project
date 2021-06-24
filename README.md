@@ -39,7 +39,7 @@ Project Backlog - [ZenHub Workspace](https://app.zenhub.com/workspaces/g305-work
 
 Shared Documentation - [Google Drive](https://drive.google.com/drive/folders/1n0ijPP6LSFY4bgSBD9A0NWrg2F0YHeD3?usp=sharing)
 
-API Documentation - [WeDo4U Swagger API Documentation](http://deti-tqs-14.ua.pt/80/swagger-ui/index.html)
+API Documentation - [WeDo4U Swagger API Documentation](http://deti-tqs-14.ua.pt:80/swagger-ui/index.html)
 
 Static Analysis - [Frontend Distribution Platform](https://sonarcloud.io/dashboard?id=frontend-distribution-platform) + [Frontend End User](https://sonarcloud.io/dashboard?id=frontend-end-user) + [Backend Distribution Platform](https://sonarcloud.io/dashboard?id=backend-distribution-platform) + [Backend End User](https://sonarcloud.io/dashboard?id=backend-end-user) 
 
@@ -54,7 +54,7 @@ We have deployed our project at a Virtual Machine provided by the university ICT
 The VM has DNS http://deti-tqs-14.ua.pt/. The links to each platform are available below (*NOTE - This is only accessible when using the University's Internal Network.*)
 
 
-#### Credentials [WeDo4U](http://deti-tqs-14.ua.pt/80)
+#### Credentials [WeDo4U](http://deti-tqs-14.ua.pt:80)
 
 | *Username/Email*     | *Password* | *Role*    |
 |----------------------|------------|-----------|
@@ -62,7 +62,7 @@ The VM has DNS http://deti-tqs-14.ua.pt/. The links to each platform are availab
 | bob.hard@outlook.com | abc        | Provider  |
 
 
-#### Credentials [Plumber.com](http://deti-tqs-14.ua.pt/81)
+#### Credentials [Plumber.com](http://deti-tqs-14.ua.pt:81)
 
 | *Username/Email* | *Password* | *Role*    |
 |------------------|------------|-----------|
