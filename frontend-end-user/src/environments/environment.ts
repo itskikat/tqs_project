@@ -15,5 +15,5 @@ export const environment = {
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
-export const apiUrl = "http://localhost:8081/api";
-export const distributionPlatform = "http://localhost:8080/";
+export const apiUrl = "http://deti-tqs-14.ua.pt:8081/api";
+export const distributionPlatform = "http://deti-tqs-14.ua.pt:8080/";

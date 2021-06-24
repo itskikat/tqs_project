@@ -22,7 +22,7 @@
     >
       <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
         <!-- Not logged -->
-        <li class="flex items-center" *ngIf="!user && router.url.indexOf('/login')<0">
+        <li class="flex items-center" *ngIf="!user && router.url.indexOf('/#/login')<0">
           <a 
             href="/login"
           >
@@ -36,7 +36,7 @@
         </li>
         <!-- Logged -->
         <li class="flex items-center mr-2" *ngIf="user">
-          <a href="/past"> Past Services</a>
+          <a href="/#/past"> Past Services</a>
         </li>
         <li class="flex items-center" *ngIf="user">
           <a 

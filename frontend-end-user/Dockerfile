@@ -11,11 +11,11 @@ RUN npm install -g @angular/cli@latest
 
 COPY . /usr/src/app
 
-RUN npm run build
+RUN node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build
 
 FROM nginx:latest
 
-COPY --from=build /usr/src/app/dist /var/www/end-user
+COPY --from=build /usr/src/app/dist/notus-angular /var/www/enduser
 
 COPY nginx-end-user.conf /etc/nginx/conf.d/default.conf
 

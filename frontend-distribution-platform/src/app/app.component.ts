@@ -20,13 +20,13 @@ export class AppComponent implements OnInit {
 
 
   connect() {
-    const socket = new SockJS('http://localhost:8080/notification/');
+    const socket = new SockJS('http://deti-tqs-14.ua.pt:8080/notification/');
     this.stompClient = Stomp.over(socket);
 
     const _this = this;
     var headers = {
       // additional header
-      "Access-Control-Allow-Origin":"http://localhost:8080",
+      "Access-Control-Allow-Origin":"http://deti-tqs-14.ua.pt:8080",
     };
 
     this.stompClient.connect(headers, function (frame) {

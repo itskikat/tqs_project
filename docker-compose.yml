@@ -10,13 +10,13 @@ services:
     ports:
       - "80:80"
 
-  #frontend-end-user:
-    #build: ./frontend-end-user
-    #volumes:
-    #  - ./frontend-end-user:/usr/src/app/
-    #  - ./frontend-end-user:/node_modules:/usr/src/app/node_modules
-    #ports:
-    #  - "81:81"
+  frontend-end-user:
+    build: ./frontend-end-user
+    volumes:
+      - ./frontend-end-user:/usr/src/app/
+      - ./frontend-end-user/node_modules:/usr/src/app/node_modules
+    ports:
+      - "81:81"
   db:
     image: postgres
     ports:
